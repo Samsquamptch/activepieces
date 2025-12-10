@@ -11,6 +11,8 @@ services:
     depends_on:
       - postgres
       - redis
+    environment:
+      AP_WEBHOOK_URL: "https://your-domain.com/api/v1/webhooks"
     env_file: .env
     volumes:
       - ./cache:/usr/src/app/cache
