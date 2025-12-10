@@ -186,6 +186,9 @@
       ],
       "@activepieces/piece-flow-parser": [
         "packages/pieces/community/flow-parser/src/index.ts"
+      ],
+      "@activepieces/piece-apipie-ai": [
+        "packages/pieces/community/apipie-ai/src/index.ts"
       ]
     },
     "resolveJsonModule": true
