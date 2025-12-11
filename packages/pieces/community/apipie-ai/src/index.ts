@@ -1,6 +1,7 @@
 
     import { createPiece, PieceAuth } from "@activepieces/pieces-framework";
     import { listModels } from "./lib/actions/list-models";
+    import { chatCompletion } from "./lib/actions/chat-completion";
 
     export const apipieAuth = PieceAuth.SecretText({
           displayName: 'API Key',
@@ -14,7 +15,7 @@
       minimumSupportedRelease: '0.36.1',
       logoUrl: "https://cdn.activepieces.com/pieces/apipie-ai.png",
       authors: [],
-      actions: [listModels],
+      actions: [listModels, chatCompletion],
       triggers: [],
     });
     
