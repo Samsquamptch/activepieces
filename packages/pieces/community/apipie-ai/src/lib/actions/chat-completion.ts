@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { apiPieModels } from '../common';
+import { ApiPieModel, ApiPieModels } from '../common';
 import { AuthenticationType, httpClient, HttpMethod, HttpRequest } from '@activepieces/pieces-common';
 
 export const chatCompletion = createAction({
@@ -16,24 +16,24 @@ export const chatCompletion = createAction({
       required: true,
       refreshers: [],
       options: async ({ auth }) => {
-        const request: HttpRequest = {
-          url: 'https://openrouter.ai/api/v1/models',
-          method: HttpMethod.GET,
-          authentication: {
-            type: AuthenticationType.BEARER_TOKEN,
-            token: auth as string,
-          },
-        };
-        try {
-          const data = await httpClient.sendRequest<apiPieModels>(
-            request
-          );
-          const options = data.body.data.map((model) => {
-            return {
-              label: model.id,
-              value: model.id,
-            };
-          });
+          const request: HttpRequest = {
+            url: 'https://apipie.ai/v1/models?type=llm',
+            method: HttpMethod.GET,
+            authentication: {
+              type: AuthenticationType.BEARER_TOKEN,
+              token: auth as string,
+            },
+          };
+          try {
+            const data = await httpClient.sendRequest<ApiPieModels>(
+              request
+            );
+            const options = data.body.data.map((llm: ApiPieModel) => {
+              return {
+                label: llm.id,
+                value: llm.model,
+              };
+            });
           // const uniqueModels = new Map();
           // data.body.data.map((llm: { id: string; model: string }) => {
           //   if (!uniqueModels.has(llm.id)) {
