@@ -28,31 +28,21 @@ export const chatCompletion = createAction({
             const data = await httpClient.sendRequest<ApiPieModels>(
               request
             );
-            const options = data.body.data.map((llm: ApiPieModel) => {
-              return {
-                label: llm.id,
-                value: llm.model,
-              };
-            });
-          // const uniqueModels = new Map();
-          // data.body.data.map((llm: { id: string; model: string }) => {
-          //   if (!uniqueModels.has(llm.id)) {
-          //     uniqueModels.set(llm.id, llm.model);
-          //   }
-          // });
-          // const options = Array.from(uniqueModels.entries()).map(([value, label]) => ({
-          //   label,
-          //   value,
-          // }));
-          // const options = Array.from(uniqueModels.entries())
-          //   .map(([
-          //     value,
-          //     label,
-          //   ]) => ({
-          //     label,
-          //     value,
-          //   }))
-          //   .sort((a, b) => a.label.localeCompare(b.label));
+          const uniqueModels = new Map();
+          data.body.data.map((llm: { id: string; model: string }) => {
+            if (!uniqueModels.has(llm.id)) {
+              uniqueModels.set(llm.id, llm.model);
+            }
+          });
+          const options = Array.from(uniqueModels.entries())
+            .map(([
+              value,
+              label,
+            ]) => ({
+              label,
+              value,
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
           return {
             options: options,
             disabled: false,
