@@ -23,3 +23,11 @@ export interface ApiPieModel {
 export interface ApiPieModels {
   data: ApiPieModel[];
 }
+
+export interface promptResponse {
+  choices: {
+    text: string;
+  }[];
+  model: string;
+  id: string;
+}
