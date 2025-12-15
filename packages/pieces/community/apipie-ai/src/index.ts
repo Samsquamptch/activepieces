@@ -3,6 +3,7 @@
     import { listModels } from "./lib/actions/list-models";
     import { chatCompletion } from "./lib/actions/chat-completion";
     import { generateImage } from "./lib/actions/generate-image";
+    import { modifyImage } from "./lib/actions/modify-image";
 
     export const apipieAuth = PieceAuth.SecretText({
           displayName: 'API Key',
@@ -16,7 +17,7 @@
       minimumSupportedRelease: '0.36.1',
       logoUrl: "https://cdn.activepieces.com/pieces/apipie-ai.png",
       authors: [],
-      actions: [listModels, chatCompletion, generateImage],
+      actions: [listModels, chatCompletion, generateImage, modifyImage],
       triggers: [],
     });
     
