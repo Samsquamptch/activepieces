@@ -10,6 +10,7 @@ import {
 import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';
 import { omitUndefined } from '../common/omitUndefined';
+import { AppConnectionType } from '@activepieces/shared';
 
 export const chatCompletion = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
@@ -22,14 +23,22 @@ export const chatCompletion = createAction({
       displayName: 'Model',
       description: 'The ID of the LLM model to use for completions.',
       required: true,
+      auth: apipieAuth,
       refreshers: [],
       options: async ({ auth }) => {
+        if (!auth) {
+          return {
+            disabled: true,
+            options: [],
+            placeholder: 'Please connect your account first',
+          };
+        }
         const request: HttpRequest = {
           url: 'https://apipie.ai/v1/models?type=llm',
           method: HttpMethod.GET,
           authentication: {
             type: AuthenticationType.BEARER_TOKEN,
-            token: auth as string,
+            token: auth.secret_text,
           },
         };
         try {
@@ -116,24 +125,25 @@ export const chatCompletion = createAction({
     reasoningEffort: Property.StaticDropdown({
       displayName: 'Reasoning Effort',
       required: false,
-      description: 'OpenAI-style reasoning effort setting, controlling how much effort the model uses to reason.',
+      description:
+        'OpenAI-style reasoning effort setting, controlling how much effort the model uses to reason.',
       options: {
         options: [
-        {
-          label: 'Low',
-          value: 'low'
-        },
-        {
-          label: 'medium', 
-          value: 'medium'
-        },
-        {
-          label: 'high', 
-          value: 'high'
-        }
-      ],
-    },
-  }),
+          {
+            label: 'Low',
+            value: 'low',
+          },
+          {
+            label: 'medium',
+            value: 'medium',
+          },
+          {
+            label: 'high',
+            value: 'high',
+          },
+        ],
+      },
+    }),
   },
   async run(context) {
     await propsValidation.validateZod(context.propsValue, {
@@ -146,6 +156,10 @@ export const chatCompletion = createAction({
       repetitionPenalty: z.number().min(1).max(2).optional(),
     });
 
+    if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {
+          throw new Error('API key is required');
+        }
+
     const messages = [
       omitUndefined({
         role: 'system',
@@ -155,7 +169,7 @@ export const chatCompletion = createAction({
         role: 'user',
         content: context.propsValue.userMessage,
       },
-    ].filter(msg => msg.content !== undefined);
+    ].filter((msg) => msg.content !== undefined);
 
     const optionalParams = omitUndefined({
       max_tokens: context.propsValue.maxTokens,
@@ -175,14 +189,14 @@ export const chatCompletion = createAction({
     };
 
     const res = await httpClient.sendRequest<promptResponse>({
-          method: HttpMethod.POST,
-          url: 'https://apipie.ai/v1/chat/completions',
-          body,
-          headers: {
-            Authorization: context.auth,
-            Accept: "application/json"
-          },
-        });
+      method: HttpMethod.POST,
+      url: 'https://apipie.ai/v1/chat/completions',
+      body,
+      headers: {
+        Authorization: context.auth.secret_text,
+        Accept: 'application/json',
+      },
+    });
 
     return res.body.choices;
   },
