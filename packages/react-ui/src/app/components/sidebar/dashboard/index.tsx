@@ -57,7 +57,7 @@ export function ProjectDashboardSidebar() {
     refetch: refetchProjects,
   } = projectHooks.useProjectsInfinite(20);
   const { embedState } = useEmbedding();
-  const { state, setOpen } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
@@ -97,6 +97,13 @@ export function ProjectDashboardSidebar() {
       return false;
     }
     return currentUser?.platformRole === PlatformRole.ADMIN;
+  }, [platform.plan.teamProjectsLimit]);
+
+  const shouldShowSearchButton = useMemo(() => {
+    if (platform.plan.teamProjectsLimit === TeamProjectsLimit.NONE) {
+      return false;
+    }
+    return true;
   }, [platform.plan.teamProjectsLimit]);
 
   const shouldDisableNewProjectButton = useMemo(() => {
@@ -173,16 +180,8 @@ export function ProjectDashboardSidebar() {
 
   return (
     !embedState.hideSideNav && (
-      <Sidebar
-        variant="inset"
-        collapsible="icon"
-        onClick={() => setOpen(true)}
-        className={cn(
-          state === 'collapsed' ? 'cursor-nesw-resize' : '',
-          'group',
-          'p-1',
-        )}
-      >
+      <Sidebar variant="inset" collapsible="icon" className="group p-1">
+        {/* onClick removed - handled in base Sidebar component to prevent auto-expansion on navigation */}
         <AppSidebarHeader />
 
         {state === 'collapsed' && <div className="mt-1" />}
@@ -273,31 +272,33 @@ export function ProjectDashboardSidebar() {
                       )}
                     </>
                   )}
-                  <Popover open={searchOpen} onOpenChange={setSearchOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 hover:bg-accent"
+                  {shouldShowSearchButton && (
+                    <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 hover:bg-accent"
+                        >
+                          <Search />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-[280px] p-3"
+                        align="start"
+                        side="right"
+                        sideOffset={8}
                       >
-                        <Search />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-[280px] p-3"
-                      align="start"
-                      side="right"
-                      sideOffset={8}
-                    >
-                      <Input
-                        placeholder={t('Search projects...')}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="h-9"
-                        autoFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                        <Input
+                          placeholder={t('Search projects...')}
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="h-9"
+                          autoFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
                 </div>
               </div>
             )}
