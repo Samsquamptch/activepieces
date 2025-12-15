@@ -184,8 +184,6 @@ export const chatCompletion = createAction({
           },
         });
 
-    // const responseText = res.body.choices[0].text;
-    // const trimmedResponse = responseText.trim();
     return res.body.choices;
   },
 });

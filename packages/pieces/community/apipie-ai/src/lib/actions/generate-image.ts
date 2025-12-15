@@ -1,7 +1,9 @@
-import { AuthenticationType, httpClient, HttpMethod, HttpRequest } from '@activepieces/pieces-common';
+import { AuthenticationType, httpClient, HttpMethod, HttpRequest, propsValidation } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { IMAGE_RESPONSE_FORMATS, IMAGE_SIZES, IMAGE_QUALITIES, ASPECT_RATIO } from '../common/constants';
-import { ApiPieModels } from '../common';
+import { ApiPieModels, promptResponse } from '../common';
+import z from 'zod';
+import { omitUndefined } from '../common/omitUndefined';
 
 export const generateImage = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
@@ -58,14 +60,14 @@ export const generateImage = createAction({
                   options: async ({ auth, model }) => {
     if (!model) {
       return {
-        disabled: false,
+        disabled: true,
         options: [],
       };
     }
     try {
       const response = await httpClient.sendRequest({
         method: HttpMethod.GET,
-        url: `models/detailed?model=${model}`,
+        url: `https://apipie.ai/v1/models/detailed?model=${model}`,
         headers: {
           'Authorization': `Bearer ${auth}`,
         },
@@ -157,7 +159,41 @@ export const generateImage = createAction({
     },
   }),
   },
-  async run() {
-    // Action logic here
-  },
+  async run(context) {
+  await propsValidation.validateZod(context.propsValue, {
+    numberOfImages: z.number().int().min(1).max(1).optional(),
+    steps: z.number().int().min(1).optional(),
+    strength: z.number().min(0).max(1).optional(),
+  });
+
+  const optionalParams = omitUndefined({
+    n: context.propsValue.numberOfImages,
+    size: context.propsValue.size,
+    quality: context.propsValue.quality,
+    response_format: context.propsValue.responseFormat,
+    style: context.propsValue.styles,
+    steps: context.propsValue.steps,
+    loras: context.propsValue.loras,
+    strength: context.propsValue.strength,
+    aspect_ratio: context.propsValue.aspectRatio,
+  });
+
+  const body = {
+    model: context.propsValue.model,
+    prompt: context.propsValue.prompt,
+    ...optionalParams,
+  };
+
+  const res = await httpClient.sendRequest<promptResponse>({
+    method: HttpMethod.POST,
+    url: 'https://apipie.ai/v1/images/generations',
+    body,
+    headers: {
+      Authorization: context.auth as string,
+      Accept: 'application/json',
+    },
+  });
+
+  return res.body;
+}
 });
