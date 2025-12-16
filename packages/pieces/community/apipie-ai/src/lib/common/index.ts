@@ -31,3 +31,20 @@ export interface promptResponse {
   model: string;
   id: string;
 }
+
+export interface BaseResponse {
+  id: string;
+  model: string;
+}
+
+export interface CompletionResponse extends BaseResponse {
+  choices: {
+    text: string;
+  }[];
+}
+
+export interface EmbeddingResponse extends BaseResponse {
+  data: {
+    embedding: number[];
+  }[];
+}

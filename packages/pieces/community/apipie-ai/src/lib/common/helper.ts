@@ -41,11 +41,40 @@ export async function retrievedModels(url: string, authCode: string) {
       options: options,
       disabled: false,
     };
-  } catch (e) {
+  } catch (error) {
     return {
       options: [],
       disabled: true,
-      placeholder: `Couldn't Load Models`,
+      placeholder: `Couldn't Load Models:\n${error}`,
+    };
+  }
+}
+
+export async function retriveVectorCollections(authCode: string) {
+  const request: HttpRequest = {
+    url: `https://apipie.ai/vectors/listcollections`,
+    method: HttpMethod.GET,
+    authentication: {
+      type: AuthenticationType.BEARER_TOKEN,
+      token: authCode,
+    },
+  };
+  try {
+    const data = await httpClient.sendRequest<string[]>(request);
+    return {
+      disabled: false,
+      options: (data.body ?? [])
+        .sort((a: string, b: string) => a.localeCompare(b))
+        .map((collection: string) => ({
+          label: collection,
+          value: collection,
+        })),
+    };
+  } catch (error) {
+    return {
+      options: [],
+      disabled: true,
+      placeholder: `Couldn't Load Collections:\n${error}`,
     };
   }
 }
@@ -64,19 +93,19 @@ export async function retriveStyles(url: string, authCode: string) {
       response.body?.data?.[0]?.supported_input_parameters?.style?.enum || [];
     const options = styles
       .sort((a: string, b: string) => a.localeCompare(b))
-      .map((s: string) => ({
-        label: s,
-        value: s,
+      .map((style: string) => ({
+        label: style,
+        value: style,
       }));
     return {
       disabled: false,
       options,
     };
-  } catch (e) {
+  } catch (error) {
     return {
       options: [],
       disabled: true,
-      placeholder: `Couldn't Load Models`,
+      placeholder: `Couldn't Load Styles:\n${error}`,
     };
   }
 }

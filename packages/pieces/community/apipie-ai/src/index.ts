@@ -6,6 +6,7 @@ import { modifyImage } from './lib/actions/modify-image';
 import { createEmbeddings } from './lib/actions/create-embeddings';
 import { createVectorCollection } from './lib/actions/create-vector-collection';
 import { listVectorCollections } from './lib/actions/list-vector-collections';
+import { upsertVectorCollection } from './lib/actions/upsert-vector-collection';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -27,6 +28,7 @@ export const apipieAi = createPiece({
     createEmbeddings,
     createVectorCollection,
     listVectorCollections,
+    upsertVectorCollection,
   ],
   triggers: [],
 });
