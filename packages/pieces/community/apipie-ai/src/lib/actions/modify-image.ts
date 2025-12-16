@@ -1,4 +1,4 @@
-import { AuthenticationType, httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
+import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { promptResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';

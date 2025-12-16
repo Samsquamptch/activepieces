@@ -1,11 +1,9 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { ApiPieModels, promptResponse } from '../common';
+import { promptResponse } from '../common';
 import {
-  AuthenticationType,
   httpClient,
   HttpMethod,
-  HttpRequest,
 } from '@activepieces/pieces-common';
 import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';

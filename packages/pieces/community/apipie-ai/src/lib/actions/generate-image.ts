@@ -1,5 +1,4 @@
 import {
-  AuthenticationType,
   httpClient,
   HttpMethod,
   propsValidation,
