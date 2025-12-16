@@ -59,7 +59,6 @@ export const upsertVectorCollection = createAction({
     }),
   },
   async run(context) {
-    // Action logic here
     await propsValidation.validateZod(context.propsValue, {
       vectorID: z.string().transform((value) => value.replaceAll(' ', '-')),
       embedding: z.number().array(),
@@ -79,7 +78,7 @@ export const upsertVectorCollection = createAction({
 
     const res = await httpClient.sendRequest<string>({
       method: HttpMethod.PUT,
-      url: 'hhttps://apipie.ai/vectors/upsert',
+      url: 'https://apipie.ai/vectors/upsert',
       body,
       headers: {
         Authorization: context.auth.secret_text,
