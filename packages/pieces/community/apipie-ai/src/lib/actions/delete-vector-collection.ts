@@ -6,10 +6,11 @@ import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 
 export const deleteVectorCollection = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
-  name: 'Delete Vector Collection',
+  name: 'deleteVectorCollection',
+  auth: apipieAuth,
   displayName: 'Delete Vector Collection',
   description:
-    'Deletes the entire vector collection. Use `delete-vector-record` to delete specific vectors by id.',
+    'Deletes the entire vector collection. Use "delete-vector-record" to delete specific vectors by id.',
   props: {
     collection: Property.Dropdown({
       displayName: 'Model',

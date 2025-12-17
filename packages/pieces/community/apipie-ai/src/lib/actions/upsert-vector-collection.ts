@@ -8,6 +8,7 @@ import { AppConnectionType } from '@activepieces/shared';
 export const upsertVectorCollection = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'upsertVectorCollection',
+  auth: apipieAuth,
   displayName: 'Upsert Vector Collection',
   description:
     'Upserts a vector into the specified collection with metadata and data.',

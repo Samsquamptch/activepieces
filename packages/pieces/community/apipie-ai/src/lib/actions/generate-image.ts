@@ -19,6 +19,7 @@ import { AppConnectionType } from '@activepieces/shared';
 export const generateImage = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'generateImage',
+  auth: apipieAuth,
   displayName: 'generate image',
   description: 'generates an image based on the provided prompt and parameters',
   props: {

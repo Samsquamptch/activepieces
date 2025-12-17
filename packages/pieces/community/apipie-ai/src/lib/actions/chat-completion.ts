@@ -14,7 +14,7 @@ export const chatCompletion = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'chatCompletion',
   auth: apipieAuth,
-  displayName: 'chat completion',
+  displayName: 'Chat Completion',
   description: 'Send a chat completion request to a selected LLM model.',
   props: {
     model: Property.Dropdown({

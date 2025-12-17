@@ -9,7 +9,8 @@ import { AppConnectionType } from '@activepieces/shared';
 export const createEmbeddings = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'createEmbeddings',
-  displayName: 'create embeddings',
+  auth: apipieAuth,
+  displayName: 'Create Embeddings',
   description: 'Generate embeddings for the given input text using the specified model.',
   props: {
       model: Property.Dropdown({

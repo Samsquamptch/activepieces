@@ -7,11 +7,13 @@ import {
 } from '@activepieces/pieces-common';
 import z from 'zod';
 import { AppConnectionType } from '@activepieces/shared';
+import { apipieAuth } from '../..';
 
 export const createVectorCollection = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'createVectorCollection',
-  displayName: 'create vector collection',
+  auth: apipieAuth,
+  displayName: 'Create Vector Collection',
   description:
     'Creates a new vector collection with the specified name and dimension.',
   props: {

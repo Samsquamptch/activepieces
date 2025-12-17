@@ -10,6 +10,7 @@ import { apipieAuth } from '../..'
 export const modifyImage = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'modifyImage',
+  auth: apipieAuth,
   displayName: 'modify image',
   description: 'modifies an existing image using an image to image model and provided parameters',
 props: {
