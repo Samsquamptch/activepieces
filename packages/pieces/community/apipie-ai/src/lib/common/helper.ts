@@ -79,9 +79,12 @@ export async function retriveVectorCollections(authCode: string) {
   }
 }
 
-export async function retrieveVectorIDs(authCode: string) {
+export async function retrieveVectorIDs(collection: string, authCode: string) {
   const request: HttpRequest = {
     url: 'https://apipie.ai/vectors/list',
+    body: {
+      collection_name: collection
+    },
     method: HttpMethod.GET,
     authentication: {
       type: AuthenticationType.BEARER_TOKEN,

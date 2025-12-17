@@ -57,7 +57,7 @@ export const deleteVectorRecords = createAction({
             placeholder: 'Please select a collection first',
           };
         }
-        const modelResponse = await retrieveVectorIDs(auth.secret_text);
+        const modelResponse = await retrieveVectorIDs(String(collection), auth.secret_text);
         return {
           options: modelResponse.options,
           disabled: modelResponse.disabled,
