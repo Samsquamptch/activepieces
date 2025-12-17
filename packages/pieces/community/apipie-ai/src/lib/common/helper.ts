@@ -79,6 +79,35 @@ export async function retriveVectorCollections(authCode: string) {
   }
 }
 
+export async function retrieveVectorIDs(authCode: string) {
+  const request: HttpRequest = {
+    url: 'https://apipie.ai/vectors/list',
+    method: HttpMethod.GET,
+    authentication: {
+      type: AuthenticationType.BEARER_TOKEN,
+      token: authCode,
+    },
+  };
+  try {
+    const data = await httpClient.sendRequest<{ vector_ids: string[] }>(request);
+    return {
+      disabled: false,
+      options: (data.body.vector_ids ?? [])
+        .sort((a: string, b: string) => a.localeCompare(b))
+        .map((vectorID: string) => ({
+          label: vectorID,
+          value: vectorID,
+        })),
+    };
+  } catch (error) {
+    return {
+      options: [],
+      disabled: true,
+      placeholder: `Couldn't Load Vector IDs:\n${error}`,
+    };
+  }
+}
+
 export async function retriveStyles(url: string, authCode: string) {
   try {
     const response = await httpClient.sendRequest({
