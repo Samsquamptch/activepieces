@@ -48,3 +48,15 @@ export interface EmbeddingResponse extends BaseResponse {
     embedding: number[];
   }[];
 }
+
+type VectorRecord = {
+  id: string;
+  embedding: number[];
+  metatag?: string;
+  data: string;
+};
+
+export type GetVectorResponse = {
+  namespace: string;
+  vectors: Record<string, VectorRecord>;
+};
