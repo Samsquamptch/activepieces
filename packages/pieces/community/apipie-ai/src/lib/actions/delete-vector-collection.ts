@@ -13,8 +13,8 @@ export const deleteVectorCollection = createAction({
     'Deletes the entire vector collection. Use "delete-vector-record" to delete specific vectors by id.',
   props: {
     collection: Property.Dropdown({
-      displayName: 'Model',
-      description: 'The ID of the embedding model to use for completions.',
+      displayName: 'Collection Name',
+      description: 'The collection to be deleted.',
       required: true,
       auth: apipieAuth,
       refreshers: ['auth'],
