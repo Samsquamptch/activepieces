@@ -7,6 +7,11 @@ import { createEmbeddings } from './lib/actions/create-embeddings';
 import { createVectorCollection } from './lib/actions/create-vector-collection';
 import { listVectorCollections } from './lib/actions/list-vector-collections';
 import { upsertVectorCollection } from './lib/actions/upsert-vector-collection';
+import { deleteVectorCollection } from './lib/actions/delete-vector-collection';
+import { deleteVectorRecords } from './lib/actions/delete-vector-records';
+import { getVectorRecord } from './lib/actions/get-vector-record';
+import { listVectorIds } from './lib/actions/list-vector-ids';
+import { uploadFile } from './lib/actions/upload-file';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -29,6 +34,12 @@ export const apipieAi = createPiece({
     createVectorCollection,
     listVectorCollections,
     upsertVectorCollection,
+    createVectorCollection,
+    deleteVectorCollection,
+    deleteVectorRecords,
+    getVectorRecord,
+    listVectorIds,
+    uploadFile
   ],
   triggers: [],
 });
