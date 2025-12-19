@@ -24,6 +24,16 @@ export interface ApiPieModels {
   data: ApiPieModel[];
 }
 
+export interface voiceModels {
+  data: {
+    provider: string;
+    model: string;
+    voice_id: string;
+    name: string;
+    description: string;
+  } []
+}
+
 export interface promptResponse {
   choices: {
     text: string;
