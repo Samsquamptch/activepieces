@@ -14,6 +14,12 @@ export function omitUndefined<T extends Record<string, unknown>>(
   ) as Partial<T>;
 }
 
+export function joinOrUndefined(arr?: unknown[]): string | undefined {
+  return Array.isArray(arr) && arr.length
+    ? arr.join(',')
+    : undefined;
+}
+
 export function disabledState(placeholder: string) {
   return {
     disabled: true,

@@ -51,3 +51,25 @@ export const VECTOR_PROVIDER = [
   { label: 'Pinecone', value: 'pinecone' },
   { label: 'Qdrant', value: 'qdrant' },
 ];
+
+export const DATE_POSTED = [
+  { label: 'All', value: 'all' },
+  { label: 'Today', value: 'today' },
+  { label: '3 Days', value: '3days' },
+  { label: 'Week', value: 'week' },
+  { label: 'Month', value: 'month' },
+]
+
+export const EMPLOYMENT_TYPE = [
+  { label: 'Fulltime', value: 'FULLTIME' },
+  { label: 'Contractor', value: 'CONTRACTOR' },
+  { label: 'Parttime', value: 'PARTTIME' },
+  { label: 'Intern', value: 'INTERN' },
+]
+
+export const JOB_REQUIREMENTS = [
+  { label: 'Under 3 Years Experience', value: 'under_3_years_experience' },
+  { label: 'More Than 3 Years Experience', value: 'more_than_3_years_experience' },
+  { label: 'No Experience', value: 'no_experience' },
+  { label: 'No Degree', value: 'no_degree' },
+]
