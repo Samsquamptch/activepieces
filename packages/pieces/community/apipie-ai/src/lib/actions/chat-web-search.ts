@@ -123,9 +123,6 @@ export const chatWebSearch = createAction({
       throw new Error('API key is required');
     }
 
-    const whiteList = joinOrUndefined(context.propsValue.searchWhitelist);
-    const blackList = joinOrUndefined(context.propsValue.searchBlacklist);
-
     const messages = [
       omitUndefined({
         role: 'system',
@@ -143,8 +140,8 @@ export const chatWebSearch = createAction({
 
     const optionalParams = omitUndefined({
       search_provider: context.propsValue.searchProvider,
-      search_whitelist: whiteList,
-      search_blacklist: blackList,
+      search_whitelist: joinOrUndefined(context.propsValue.searchWhitelist),
+      search_blacklist: joinOrUndefined(context.propsValue.searchBlacklist),
       search_lang: context.propsValue.searchLang,
       search_geo: context.propsValue.searchGeo,
     });
