@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { joinOrUndefined, omitUndefined, retrievedModels } from '../common/helper';
 import { EFFORT_OPTIONS } from '../common/constants';
 import { AppConnectionType } from '@activepieces/shared';
 import {
@@ -123,12 +123,8 @@ export const chatWebSearch = createAction({
       throw new Error('API key is required');
     }
 
-    const arrayToString = z
-      .array(z.string())
-      .optional()
-      .transform((arr) => arr?.join(','));
-    const whiteList = arrayToString.parse(context.propsValue.searchWhitelist);
-    const blackList = arrayToString.parse(context.propsValue.searchBlacklist);
+    const whiteList = joinOrUndefined(context.propsValue.searchWhitelist);
+    const blackList = joinOrUndefined(context.propsValue.searchBlacklist);
 
     const messages = [
       omitUndefined({
