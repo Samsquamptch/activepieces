@@ -5,6 +5,7 @@ import {
   HttpRequest,
 } from '@activepieces/pieces-common';
 import { ApiPieModels, voiceModels } from '.';
+import { HOME_TYPE_OPTIONS, RENT_TYPE_OPTIONS, SPACE_TYPE_OPTIONS } from './constants';
 
 export function omitUndefined<T extends Record<string, unknown>>(
   obj: T
@@ -285,4 +286,53 @@ export async function retrieveVoices(data: string, authCode: string) {
       placeholder: `Couldn't Load Voices:\n${error}`,
     };
   }
+}
+
+export function setHomeType(homeStatus: string) {
+          if (!homeStatus) {
+            return {
+              disabled: true,
+              options: [],
+              placeholder:
+                'Please set the "Home Status" filter before using this option',
+            };
+          }
+          if (homeStatus === 'FOR_SALE') {
+            return {
+              disabled: false,
+              options: HOME_TYPE_OPTIONS,
+            };
+          } else if (homeStatus === 'FOR_RENT') {
+            return {
+              disabled: false,
+              options: RENT_TYPE_OPTIONS,
+            };
+          } else {
+            return {
+              disabled: true,
+              options: [],
+            };
+          }
+}
+
+export function setSpaceType(homeStatus: string) {
+  if (!homeStatus) {
+            return {
+              disabled: true,
+              options: [],
+              placeholder:
+                'Please set the "Home Status" filter before using this option',
+            };
+          }
+          if (homeStatus === 'FOR_RENT') {
+            return {
+              disabled: false,
+              options: SPACE_TYPE_OPTIONS,
+            };
+          } else {
+            return {
+              disabled: true,
+              options: [],
+            };
+          }
 }

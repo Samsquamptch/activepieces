@@ -3,31 +3,41 @@ import {
   HttpMethod,
   propsValidation,
 } from '@activepieces/pieces-common';
-import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import z from 'zod';
-import { disabledState, joinOrUndefined, omitUndefined, setHomeType, setSpaceType } from '../common/helper';
-import { PropertySearchResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';
+import z from 'zod';
 import {
-  HOME_STATUS,
-  HOME_TYPE_OPTIONS,
-  REAL_ESTATE_SORT,
-  RENT_TYPE_OPTIONS,
-  SPACE_TYPE_OPTIONS,
-} from '../common/constants';
+  disabledState,
+  joinOrUndefined,
+  omitUndefined,
+  setHomeType,
+  setSpaceType,
+} from '../common/helper';
+import { PropertySearchResponse } from '../common';
+import { apipieAuth } from '../..';
+import { HOME_STATUS, REAL_ESTATE_SORT } from '../common/constants';
 
-export const realEstateSearchLocation = createAction({
+export const realEstateSearchCoordinates = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
-  name: 'realEstateSearchLocation',
+  name: 'realEstateSearchCoordinates',
   auth: apipieAuth,
-  displayName: 'Real Estate Search by Location',
+  displayName: 'Real Estate Search by Coordinates',
   description:
-    'Search for real estate properties by location using Real Estate API through RapidAPI',
+    'Search for real estate properties by coordinates using Real Estate API through RapidAPI',
   props: {
-    location: Property.ShortText({
-      displayName: 'Location',
-      description: 'Location details (county, neighborhood, or zip code)',
+    latitude: Property.Number({
+      displayName: 'Latitude',
+      description: 'Latitude coordinate',
+      required: true,
+    }),
+    longitude: Property.Number({
+      displayName: 'Longitude',
+      description: 'Longitude coordinate',
+      required: true,
+    }),
+    diameter: Property.Number({
+      displayName: 'Distance',
+      description: 'Diameter in miles for search area.',
       required: true,
     }),
     page: Property.Number({
@@ -71,6 +81,7 @@ export const realEstateSearchLocation = createAction({
       displayName: 'Sort Order',
       description: 'Return results in a specific order',
       required: false,
+      defaultValue: 'DEFAULT',
       options: {
         options: REAL_ESTATE_SORT,
       },
@@ -182,6 +193,9 @@ export const realEstateSearchLocation = createAction({
   },
   async run(context) {
     await propsValidation.validateZod(context.propsValue, {
+      latitude: z.number(),
+      longitude: z.number(),
+      diameter: z.number(),
       page: z.number().int().min(1).max(100).optional(),
       minPrice: z.number().min(0).optional(),
       maxPrice: z.number().min(0).optional(),
@@ -203,7 +217,9 @@ export const realEstateSearchLocation = createAction({
     }
 
     const body = omitUndefined({
-      location: context.propsValue.location,
+      lat: context.propsValue.latitude,
+      long: context.propsValue.longitude,
+      diameter: context.propsValue.diameter,
       page: context.propsValue.page,
       home_status: context.propsValue.homeStatus,
       home_type: joinOrUndefined(context.propsValue.homeType),
@@ -235,7 +251,7 @@ export const realEstateSearchLocation = createAction({
 
     const res = await httpClient.sendRequest<PropertySearchResponse>({
       method: HttpMethod.POST,
-      url: 'https://apipie.ai/v1/data/real-estate/search',
+      url: 'https://apipie.ai/v1/data/real-estate/coordinates',
       body,
       headers: {
         Authorization: context.auth.secret_text,
