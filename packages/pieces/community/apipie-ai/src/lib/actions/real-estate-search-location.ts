@@ -11,10 +11,7 @@ import { PropertySearchResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';
 import {
   HOME_STATUS,
-  HOME_TYPE_OPTIONS,
   REAL_ESTATE_SORT,
-  RENT_TYPE_OPTIONS,
-  SPACE_TYPE_OPTIONS,
 } from '../common/constants';
 
 export const realEstateSearchLocation = createAction({
