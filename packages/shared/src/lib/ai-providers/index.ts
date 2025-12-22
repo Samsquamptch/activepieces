@@ -27,12 +27,18 @@ export const OpenRouterProviderConfig = Type.Object({
 })
 export type OpenRouterProviderConfig = Static<typeof OpenRouterProviderConfig>
 
+export const ApiPieProviderConfig = Type.Object({
+    apiKey: Type.String(),
+})
+export type ApiPieProviderConfig = Static<typeof ApiPieProviderConfig>
+
 export const AIProviderConfig = Type.Union([
     AnthropicProviderConfig,
     AzureProviderConfig,
     GoogleProviderConfig,
     OpenAIProviderConfig,
     OpenRouterProviderConfig,
+    ApiPieProviderConfig,
 ])
 export type AIProviderConfig = Static<typeof AIProviderConfig>
 
@@ -44,6 +50,7 @@ export enum
     AZURE = 'azure',
     GOOGLE = 'google',
     ACTIVEPIECES = 'activepieces',
+    APIPIE = 'apipie',
 }
 
 const ProviderConfigUnion = DiscriminatedUnion('provider', [
@@ -70,6 +77,10 @@ const ProviderConfigUnion = DiscriminatedUnion('provider', [
     Type.Object({
         provider: Type.Literal(AIProviderName.ACTIVEPIECES),
         config: OpenRouterProviderConfig,
+    }),
+    Type.Object({
+        provider: Type.Literal(AIProviderName.APIPIE),
+        config: ApiPieProviderConfig,
     }),
 ])
 

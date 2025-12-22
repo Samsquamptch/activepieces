@@ -1,6 +1,7 @@
 import { AIProviderConfig, AIProviderName } from '@activepieces/shared'
 import { AIProviderStrategy } from './ai-provider'
 import { anthropicProvider } from './anthropic-provider'
+import { apiPieProvider } from './apipie-provider'
 import { azureProvider } from './azure-provider'
 import { googleProvider } from './google-provider'
 import { openaiProvider } from './openai-provider'
@@ -16,6 +17,7 @@ export const aiProviders: Record<AIProviderName, AIProviderStrategy<AIProviderCo
         ...openRouterProvider,
         name: 'Activepieces',
     },
+    [AIProviderName.APIPIE]: apiPieProvider,
 }
 
 export { AIProviderStrategy } from './ai-provider'
