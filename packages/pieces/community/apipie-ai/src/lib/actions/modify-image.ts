@@ -1,6 +1,6 @@
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { promptResponse } from '../common';
+import { ImageResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';
 import { omitUndefined, retrievedModels } from '../common/helper';
 import z from 'zod';
@@ -245,7 +245,7 @@ props: {
       ...optionalParams,
     };
 
-    const res = await httpClient.sendRequest<promptResponse>({
+    const res = await httpClient.sendRequest<ImageResponse>({
       method: HttpMethod.POST,
       url: 'https://apipie.ai/v1/images/generations',
       body,

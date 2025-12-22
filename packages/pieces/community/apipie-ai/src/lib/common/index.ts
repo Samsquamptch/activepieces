@@ -32,6 +32,13 @@ export interface voiceModels {
   } []
 }
 
+export interface ImageResponse extends BaseResponse {
+  data: {
+    text: string;
+  }[];
+}
+
+
 export interface BaseResponse {
   id: string;
   model: string;

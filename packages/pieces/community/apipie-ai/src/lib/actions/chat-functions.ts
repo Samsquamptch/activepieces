@@ -7,7 +7,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import z from 'zod';
-import { promptResponse } from '../common';
+import { CompletionResponse } from '../common';
 
 export const chatFunctions = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
@@ -157,7 +157,7 @@ export const chatFunctions = createAction({
       ...optionalParams,
     };
 
-    const res = await httpClient.sendRequest<promptResponse>({
+    const res = await httpClient.sendRequest<CompletionResponse>({
       method: HttpMethod.POST,
       url: 'https://apipie.ai/v1/chat/completions',
       body,

@@ -12,6 +12,15 @@ import { deleteVectorRecords } from './lib/actions/delete-vector-records';
 import { getVectorRecord } from './lib/actions/get-vector-record';
 import { listVectorIds } from './lib/actions/list-vector-ids';
 import { uploadFile } from './lib/actions/upload-file';
+import { textToSpeech } from './lib/actions/text-to-speech';
+import { transcribeAudio } from './lib/actions/transcribe-audio';
+import { realEstateSearchCoordinates } from './lib/actions/real-estate-search-coordinates';
+import { realEstateSearchLocation } from './lib/actions/real-estate-search-location';
+import { realEstateSearchPolygon } from './lib/actions/real-estate-search-polygon';
+import { jobSearch } from './lib/actions/job-search';
+import { propertyDetails } from './lib/actions/property-details';
+import { chatFunctions } from './lib/actions/chat-functions';
+import { chatWebSearch } from './lib/actions/chat-web-search';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -28,6 +37,8 @@ export const apipieAi = createPiece({
   actions: [
     listModels,
     chatCompletion,
+    chatFunctions,
+    chatWebSearch,
     generateImage,
     modifyImage,
     createEmbeddings,
@@ -39,7 +50,14 @@ export const apipieAi = createPiece({
     deleteVectorRecords,
     getVectorRecord,
     listVectorIds,
-    uploadFile
+    uploadFile,
+    textToSpeech,
+    transcribeAudio,
+    realEstateSearchCoordinates,
+    realEstateSearchLocation,
+    realEstateSearchPolygon,
+    jobSearch,
+    propertyDetails
   ],
   triggers: [],
 });

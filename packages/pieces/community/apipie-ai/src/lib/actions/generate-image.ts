@@ -10,7 +10,7 @@ import {
   IMAGE_QUALITIES,
   ASPECT_RATIO,
 } from '../common/constants';
-import { promptResponse } from '../common';
+import { ImageResponse } from '../common';
 import z from 'zod';
 import { omitUndefined, retrievedModels } from '../common/helper';
 import { apipieAuth } from '../..';
@@ -247,7 +247,7 @@ export const generateImage = createAction({
       ...optionalParams,
     };
 
-    const res = await httpClient.sendRequest<promptResponse>({
+    const res = await httpClient.sendRequest<ImageResponse>({
       method: HttpMethod.POST,
       url: 'https://apipie.ai/v1/images/generations',
       body,
