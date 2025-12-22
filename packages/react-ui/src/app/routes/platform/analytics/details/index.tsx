@@ -51,8 +51,13 @@ const createColumns = (
     ),
     cell: ({ row }) => (
       <div
-        className="flex items-center gap-1 text-secondary hover:underline cursor-pointer"
-        onClick={() => window.open(`/projects/${row.original.projectId}/flows/${row.original.flowId}`, '_blank')}
+        className="flex items-center gap-1 text-foreground hover:underline cursor-pointer"
+        onClick={() =>
+          window.open(
+            `/projects/${row.original.projectId}/flows/${row.original.flowId}`,
+            '_blank',
+          )
+        }
       >
         <Workflow className="h-3.5 w-3.5" />
         {row.original.flowName}
@@ -66,7 +71,7 @@ const createColumns = (
     ),
     cell: ({ row }) => (
       <div
-        className="flex items-center gap-1 text-secondary hover:underline cursor-pointer"
+        className="flex items-center gap-1 text-foreground hover:underline cursor-pointer"
         onClick={() =>
           window.open(`/projects/${row.original.projectId}`, '_blank')
         }

@@ -73,6 +73,7 @@ const systemPropValidators: {
     [WorkerSystemProp.PRE_WARM_CACHE]: booleanValidator,
     // AppSystemProp
     [AppSystemProp.API_KEY]: stringValidator,
+    [AppSystemProp.TEMPLATES_API_KEY]: stringValidator,
     [AppSystemProp.API_RATE_LIMIT_AUTHN_ENABLED]: booleanValidator,
     [AppSystemProp.API_RATE_LIMIT_AUTHN_MAX]: numberValidator,
     [AppSystemProp.API_RATE_LIMIT_AUTHN_WINDOW]: stringValidator,
@@ -137,7 +138,6 @@ const systemPropValidators: {
     [AppSystemProp.FIREBASE_HASH_PARAMETERS]: stringValidator,
     [AppSystemProp.STRIPE_SECRET_KEY]: stringValidator,
     [AppSystemProp.STRIPE_WEBHOOK_SECRET]: stringValidator,
-    [AppSystemProp.CLOUD_PLATFORM_ID]: stringValidator,
     [AppSystemProp.INTERNAL_URL]: stringValidator,
     [AppSystemProp.PM2_ENABLED]: booleanValidator,
     [AppSystemProp.EDITION]: enumValidator(Object.values(ApEdition)),
