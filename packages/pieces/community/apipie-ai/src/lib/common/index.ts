@@ -1,27 +1,25 @@
-export interface ApiPieModel {
-  id: string;
-  route: string;
-  model: string;
-  provider: string;
-  description: string;
-  type: string;
-  subtype: string;
-  enabled: number;
-  available: number;
-  max_tokens: number;
-  max_response_tokens: number;
-  latency: string;
-  query_count: string;
-  img_price: null;
-  img_json: null;
-  avg_cost: string;
-  price_type: string;
-  input_cost: string;
-  output_cost: string;
-}
-
 export interface ApiPieModels {
-  data: ApiPieModel[];
+  data: {
+    id: string;
+    route: string;
+    model: string;
+    provider: string;
+    description: string;
+    type: string;
+    subtype: string;
+    enabled: number;
+    available: number;
+    max_tokens: number;
+    max_response_tokens: number;
+    latency: string;
+    query_count: string;
+    img_price: null;
+    img_json: null;
+    avg_cost: string;
+    price_type: string;
+    input_cost: string;
+    output_cost: string;
+  }[];
 }
 
 export interface voiceModels {
@@ -32,14 +30,6 @@ export interface voiceModels {
     name: string;
     description: string;
   } []
-}
-
-export interface promptResponse {
-  choices: {
-    text: string;
-  }[];
-  model: string;
-  id: string;
 }
 
 export interface BaseResponse {
@@ -73,7 +63,22 @@ export type GetVectorResponse = {
 
 export interface JobSearchResponse {
   dataResults: {
-    jobs: Job[];
+    jobs: {
+      employer_name: string;
+      employer_logo: string;
+      job_publisher: string;
+      job_id: string;
+      job_employment_type: string;
+      job_title: string;
+      job_apply_link: string;
+      job_description: string;
+      job_is_remote: boolean;
+      job_posted_at_timestamp: number;
+      job_city: string;
+      job_state: string;
+      job_country: string;
+      rank: number;
+    }[];
   };
   general: {
     query: string;
@@ -84,74 +89,65 @@ export interface JobSearchResponse {
   };
 }
 
-export interface Job {
-  employer_name: string;
-  employer_logo: string;
-  job_publisher: string;
-  job_id: string;
-  job_employment_type: string;
-  job_title: string;
-  job_apply_link: string;
-  job_description: string;
-  job_is_remote: boolean;
-  job_posted_at_timestamp: number;
-  job_city: string;
-  job_state: string;
-  job_country: string;
-  rank: number;
-}
-
-
 export interface PropertySearchResponse {
   dataResults: {
-    properties: PropertyResult[];
+    properties: {
+      zpid: string;
+      homeStatus: string;
+      detailUrl: string;
+      address: string;
+      streetAddress: string;
+      city: string;
+      state: string;
+      country: string;
+      zipcode: string;
+      latitude: number;
+      longitude: number;
+      homeType: string;
+      price: number;
+      currency: string;
+      zestimate: number;
+      rentZestimate: number;
+      taxAssessedValue: number;
+      lotAreaValue: number;
+      lotAreaUnit: string;
+      bathrooms: number;
+      bedrooms: number;
+      livingArea: number;
+      daysOnZillow: number;
+      isFeatured: boolean;
+      isPreforeclosureAuction: boolean;
+      timeOnZillow: number;
+      isNonOwnerOccupied: boolean;
+      isPremierBuilder: boolean;
+      isZillowOwned: boolean;
+      unit: string;
+      isShowcaseListing: boolean;
+      listingSubType: {
+        is_FSBA: boolean;
+        is_openHouse: boolean;
+      };
+      imgSrc: string;
+      hasImage: boolean;
+      brokerName: string;
+      openHouse: string;
+      priceChange: number;
+      datePriceChanged: number;
+      priceReduction: string;
+      newConstructionType: string;
+      is_newHome: boolean;
+      rank: number;
+    }[];
   };
 }
 
-export interface PropertyResult {
-  zpid: string;
-  homeStatus: string;
-  detailUrl: string;
-  address: string;
-  streetAddress: string;
-  city: string;
-  state: string;
-  country: string;
-  zipcode: string;
-  latitude: number;
-  longitude: number;
-  homeType: string;
-  price: number;
-  currency: string;
-  zestimate: number;
-  rentZestimate: number;
-  taxAssessedValue: number;
-  lotAreaValue: number;
-  lotAreaUnit: string;
-  bathrooms: number;
-  bedrooms: number;
-  livingArea: number;
-  daysOnZillow: number;
-  isFeatured: boolean;
-  isPreforeclosureAuction: boolean;
-  timeOnZillow: number;
-  isNonOwnerOccupied: boolean;
-  isPremierBuilder: boolean;
-  isZillowOwned: boolean;
-  unit: string;
-  isShowcaseListing: boolean;
-  listingSubType: {
-    is_FSBA: boolean;
-    is_openHouse: boolean;
+export interface PropertyDetailsResponse {
+  dataResults: {
+    property: Record<string, unknown>;
   };
-  imgSrc: string;
-  hasImage: boolean;
-  brokerName: string;
-  openHouse: string;
-  priceChange: number;
-  datePriceChanged: number;
-  priceReduction: string;
-  newConstructionType: string;
-  is_newHome: boolean;
-  rank: number;
+  general: {
+    address: string;
+    request_id: string;
+    parameters: Record<string, unknown>;
+  };
 }
