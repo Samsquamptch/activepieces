@@ -21,6 +21,7 @@ import { jobSearch } from './lib/actions/job-search';
 import { propertyDetails } from './lib/actions/property-details';
 import { chatFunctions } from './lib/actions/chat-functions';
 import { chatWebSearch } from './lib/actions/chat-web-search';
+import { processDocumentRagTune } from './lib/actions/process-document-rag-tune';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -57,7 +58,8 @@ export const apipieAi = createPiece({
     realEstateSearchLocation,
     realEstateSearchPolygon,
     jobSearch,
-    propertyDetails
+    propertyDetails,
+    processDocumentRagTune,
   ],
   triggers: [],
 });
