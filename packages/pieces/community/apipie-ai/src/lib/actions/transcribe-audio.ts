@@ -4,6 +4,7 @@ import { disabledState, omitUndefined, retrievedModels } from '../common/helper'
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import FormData from 'form-data';
 import z from 'zod';
+import { TranscribeAudioResponse } from '../common';
 
 export const transcribeAudio = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
@@ -84,13 +85,13 @@ export const transcribeAudio = createAction({
       form.append(key, String(value));
     });
 
-    const res = await httpClient.sendRequest<{ text: string }>({
+    const res = await httpClient.sendRequest<TranscribeAudioResponse>({
           method: HttpMethod.POST,
           url: 'https://apipie.ai/v1/audio/transcriptions',
           body: form,
           headers: {
             Authorization: context.auth.secret_text,
-            Accept: 'application/json',
+            ...form.getHeaders(),
           },
         });
 

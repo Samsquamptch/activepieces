@@ -174,3 +174,16 @@ export interface VectorIDs {
     readUnits: number;
   };
 }
+
+export interface TranscribeAudioResponse {
+  text: string;
+  usage: {
+    prompt_tokens: number;
+    response_tokens: number;
+    total_tokens: number;
+    prompt_characters: number;
+    response_characters: number;
+    cost: string;
+    latency_ms: number;
+  };
+}

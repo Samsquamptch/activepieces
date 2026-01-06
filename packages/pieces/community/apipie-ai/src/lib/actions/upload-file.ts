@@ -32,11 +32,11 @@ export const uploadFile = createAction({
 
     const res = await httpClient.sendRequest<{ url: string }>({
       method: HttpMethod.POST,
-      url: 'https://example.com/upload',
+      url: 'https://apipie.ai/urlshare',
       body: form,
       headers: {
         Authorization: context.auth.secret_text,
-        Accept: 'application/json',
+        ...form.getHeaders(),
       },
     });
 
