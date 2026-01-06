@@ -48,7 +48,7 @@ export const deleteVectorCollection = createAction({
     };
 
     const res = await httpClient.sendRequest<string>({
-      method: HttpMethod.PUT,
+      method: HttpMethod.POST,
       url: 'https://apipie.ai/vectors/delete',
       body,
       headers: {

@@ -149,7 +149,7 @@ export const chatWebSearch = createAction({
     const body = {
       model: context.propsValue.model,
       messages,
-      searchContext,
+      web_search_options: searchContext,
       ...optionalParams,
     };
 

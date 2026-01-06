@@ -9,13 +9,13 @@ export const upsertVectorCollection = createAction({
   // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'upsertVectorCollection',
   auth: apipieAuth,
-  displayName: 'Upsert Vector Collection',
+  displayName: 'Update Vector Collection',
   description:
-    'Upserts a vector into the specified collection with metadata and data.',
+    'Update or upsert a vector into a specified collection with metadata and data.',
   props: {
     collection: Property.Dropdown({
-      displayName: 'Model',
-      description: 'The ID of the embedding model to use for completions.',
+      displayName: 'Collection',
+      description: 'The collection you wish to ',
       required: true,
       auth: apipieAuth,
       refreshers: ['auth'],

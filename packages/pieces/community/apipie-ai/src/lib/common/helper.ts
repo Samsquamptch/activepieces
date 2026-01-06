@@ -4,21 +4,23 @@ import {
   HttpMethod,
   HttpRequest,
 } from '@activepieces/pieces-common';
-import { ApiPieModels, voiceModels } from '.';
-import { HOME_TYPE_OPTIONS, RENT_TYPE_OPTIONS, SPACE_TYPE_OPTIONS } from './constants';
+import { ApiPieModels, VectorCollection, VectorIDs, voiceModels } from '.';
+import {
+  HOME_TYPE_OPTIONS,
+  RENT_TYPE_OPTIONS,
+  SPACE_TYPE_OPTIONS,
+} from './constants';
 
 export function omitUndefined<T extends Record<string, unknown>>(
   obj: T
 ): Partial<T> {
   return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value !== undefined)
+    Object.entries(obj).filter(([, value]) => value != null)
   ) as Partial<T>;
 }
 
 export function joinOrUndefined(arr?: unknown[]): string | undefined {
-  return Array.isArray(arr) && arr.length
-    ? arr.join(',')
-    : undefined;
+  return Array.isArray(arr) && arr.length ? arr.join(',') : undefined;
 }
 
 export function disabledState(placeholder: string) {
@@ -165,22 +167,27 @@ async function ttsModels(request: HttpRequest) {
 export async function retriveVectorCollections(authCode: string) {
   const request: HttpRequest = {
     url: `https://apipie.ai/vectors/listcollections`,
-    method: HttpMethod.GET,
+    method: HttpMethod.POST,
     authentication: {
       type: AuthenticationType.BEARER_TOKEN,
       token: authCode,
     },
   };
   try {
-    const data = await httpClient.sendRequest<string[]>(request);
+    const data = await httpClient.sendRequest<VectorCollection[]>(request);
     return {
       disabled: false,
       options: (data.body ?? [])
-        .sort((a: string, b: string) => a.localeCompare(b))
-        .map((collection: string) => ({
-          label: collection,
-          value: collection,
-        })),
+        .map((vector: { collection: string }) => ({
+          label: vector.collection,
+          value: vector.collection,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+      // .sort((a: string, b: string) => a.localeCompare(b))
+      // .map((collection: string) => ({
+      //   label: collection,
+      //   value: collection,
+      // })),
     };
   } catch (error) {
     return {
@@ -197,19 +204,18 @@ export async function retrieveVectorIDs(collection: string, authCode: string) {
     body: {
       collection_name: collection,
     },
-    method: HttpMethod.GET,
+    method: HttpMethod.POST,
     authentication: {
       type: AuthenticationType.BEARER_TOKEN,
       token: authCode,
     },
   };
   try {
-    const data = await httpClient.sendRequest<{ vector_ids: string[] }>(
-      request
-    );
+    const data = await httpClient.sendRequest<VectorIDs>(request);
     return {
       disabled: false,
-      options: (data.body.vector_ids ?? [])
+      options: (data.body.vectors ?? [])
+        .map((v) => v.id)
         .sort((a: string, b: string) => a.localeCompare(b))
         .map((vectorID: string) => ({
           label: vectorID,
@@ -258,8 +264,11 @@ export async function retriveStyles(url: string, authCode: string) {
 
 export async function retrieveVoices(data: string, authCode: string) {
   const [, provider, route] = data.split('|');
+  console.log(
+    `https://apipie.ai/v1/models?voices&provider=${provider}&model=${route}`
+  );
   const request: HttpRequest = {
-    url: `https://apipie.ai/models?voices&provider=${provider}&model=${route}`,
+    url: `https://apipie.ai/v1/models?voices&provider=${provider}&model=${route}`,
     method: HttpMethod.GET,
     authentication: {
       type: AuthenticationType.BEARER_TOKEN,
@@ -267,16 +276,25 @@ export async function retrieveVoices(data: string, authCode: string) {
     },
   };
   try {
-    const data = await httpClient.sendRequest<voiceModels>(request);
+    const response = await httpClient.sendRequest<voiceModels>(request);
 
-    const options = data.body.data
-      .map((voice: { name: string; voice_id: string }) => ({
-        label: voice.name,
-        value: voice.voice_id,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+    if (!response.body || !Array.isArray(response.body.data)) {
+      return {
+        disabled: true,
+        options: [],
+        placeholder: 'Voices API returned no data',
+      };
+    }
+
     return {
-      options: options,
+      options: (
+        response.body.data ?? []
+      )
+        .map((voice: { name: string; voice_id: string }) => ({
+          label: voice.name,
+          value: voice.voice_id,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
       disabled: false,
     };
   } catch (error) {
@@ -289,50 +307,50 @@ export async function retrieveVoices(data: string, authCode: string) {
 }
 
 export function setHomeType(homeStatus: string) {
-          if (!homeStatus) {
-            return {
-              disabled: true,
-              options: [],
-              placeholder:
-                'Please set the "Home Status" filter before using this option',
-            };
-          }
-          if (homeStatus === 'FOR_SALE') {
-            return {
-              disabled: false,
-              options: HOME_TYPE_OPTIONS,
-            };
-          } else if (homeStatus === 'FOR_RENT') {
-            return {
-              disabled: false,
-              options: RENT_TYPE_OPTIONS,
-            };
-          } else {
-            return {
-              disabled: true,
-              options: [],
-            };
-          }
+  if (!homeStatus) {
+    return {
+      disabled: true,
+      options: [],
+      placeholder:
+        'Please set the "Home Status" filter before using this option',
+    };
+  }
+  if (homeStatus === 'FOR_SALE') {
+    return {
+      disabled: false,
+      options: HOME_TYPE_OPTIONS,
+    };
+  } else if (homeStatus === 'FOR_RENT') {
+    return {
+      disabled: false,
+      options: RENT_TYPE_OPTIONS,
+    };
+  } else {
+    return {
+      disabled: true,
+      options: [],
+    };
+  }
 }
 
 export function setSpaceType(homeStatus: string) {
   if (!homeStatus) {
-            return {
-              disabled: true,
-              options: [],
-              placeholder:
-                'Please set the "Home Status" filter before using this option',
-            };
-          }
-          if (homeStatus === 'FOR_RENT') {
-            return {
-              disabled: false,
-              options: SPACE_TYPE_OPTIONS,
-            };
-          } else {
-            return {
-              disabled: true,
-              options: [],
-            };
-          }
+    return {
+      disabled: true,
+      options: [],
+      placeholder:
+        'Please set the "Home Status" filter before using this option',
+    };
+  }
+  if (homeStatus === 'FOR_RENT') {
+    return {
+      disabled: false,
+      options: SPACE_TYPE_OPTIONS,
+    };
+  } else {
+    return {
+      disabled: true,
+      options: [],
+    };
+  }
 }

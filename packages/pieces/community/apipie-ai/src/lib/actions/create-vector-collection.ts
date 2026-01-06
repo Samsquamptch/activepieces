@@ -28,19 +28,11 @@ export const createVectorCollection = createAction({
         'Number of dimensions for the embedding vector. Maximum value is 384-1536 - check the models route for max_tokens per model. Only supported by OpenAI',
       required: true,
     }),
-    provider: Property.StaticDropdown({
-      displayName: 'Vector Provider',
-      description: 'The provider used to store the Vector: Pincone or Qdrant.',
-      required: true,
-      options: {
-        options: VECTOR_PROVIDER,
-      },
-    }),
   },
   async run(context) {
     await propsValidation.validateZod(context.propsValue, {
       name: z.string().transform((value) => value.replaceAll(' ', '-')),
-      dimensions: z.number().int().min(1).max(1536),
+      dimensions: z.number().int().min(1).max(4096),
     });
 
     if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {
@@ -50,7 +42,7 @@ export const createVectorCollection = createAction({
     const body = {
       collection_name: context.propsValue.name,
       dimension: context.propsValue.dimensions,
-      vector_provider: context.propsValue.provider,
+      vector_provider: "qdrant",
     };
 
     const res = await httpClient.sendRequest<string>({

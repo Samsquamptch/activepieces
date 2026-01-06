@@ -36,9 +36,9 @@ polygon: Property.LongText({
       displayName: 'Home Type',
       description:
         'Find properties with specified home type (works for "For Sale" option in Home Status).',
-      required: true,
+      required: false,
       auth: apipieAuth,
-      refreshers: [],
+      refreshers: ['homeStatus'],
       options: async ({ auth, homeStatus }) => {
         if (!auth) return disabledState('Please connect your account first');
         return setHomeType(homeStatus as string);
@@ -48,9 +48,9 @@ polygon: Property.LongText({
       displayName: 'Space Type',
       description:
         'Find properties with specified rental type (works for "For Rent" option in Home Status).',
-      required: true,
+      required: false,
       auth: apipieAuth,
-      refreshers: [],
+      refreshers: ['homeStatus'],
       options: async ({ auth, homeStatus }) => {
         if (!auth) return disabledState('Please connect your account first');
         return setSpaceType(homeStatus as string);
@@ -192,7 +192,7 @@ polygon: Property.LongText({
     }
 
     const body = omitUndefined({
-      location: context.propsValue.polygon,
+      polygon: context.propsValue.polygon,
       page: context.propsValue.page,
       home_status: context.propsValue.homeStatus,
       home_type: joinOrUndefined(context.propsValue.homeType),

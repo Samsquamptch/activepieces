@@ -109,25 +109,23 @@ export const chatFunctions = createAction({
     }),
   },
   async run(context) {
-    const functionSchema = z.object({
-      type: z.literal('function'),
-      name: z.string(),
-      description: z.string(),
-      strict: z.boolean(),
-      parameters: z.object({
-        type: z.literal('object'),
-        properties: z.record(z.string(), z.unknown()),
-        required: z.array(z.string()),
-        additionalProperties: z.boolean(),
-      }),
-    });
-
-    const parsedFunctions = JSON.parse(context.propsValue.functions);
-    await propsValidation.validateZod(
-      { functions: parsedFunctions },
+    const jsonStringSchema = z.string().refine(
+      (val) => {
+        try {
+          JSON.parse(val);
+          return true;
+        } catch {
+          return false;
+        }
+      },
       {
-        functions: z.array(functionSchema),
+        message: 'Invalid JSON',
       }
+    );
+
+    await propsValidation.validateZod(
+      { functions: context.propsValue.functions },
+      { functions: jsonStringSchema }
     );
 
     if (!context.auth) {

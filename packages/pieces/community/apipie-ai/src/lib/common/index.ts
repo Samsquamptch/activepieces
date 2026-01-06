@@ -158,3 +158,19 @@ export interface PropertyDetailsResponse {
     parameters: Record<string, unknown>;
   };
 }
+
+
+export interface VectorCollection {
+  collection: string;
+  provider: string;
+  index: string;
+};
+
+export interface VectorIDs {
+  vectors: { 
+    id: string }[];
+  namespace: string;
+  usage: {
+    readUnits: number;
+  };
+}

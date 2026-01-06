@@ -82,7 +82,7 @@ export const getVectorRecord = createAction({
     const vectorCollection = context.propsValue.collection;
     const vectorID = context.propsValue.vectorIDs;
 
-    const url = `hhttps://apipie.ai/vectors/fetch?collection_name=${vectorCollection}&${vectorID}`;
+    const url = `https://apipie.ai/vectors/fetch?collection_name=${vectorCollection}&${vectorID}`;
 
     const res = await httpClient.sendRequest<GetVectorResponse>({
       method: HttpMethod.GET,

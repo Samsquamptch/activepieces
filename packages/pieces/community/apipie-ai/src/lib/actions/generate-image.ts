@@ -1,6 +1,8 @@
 import {
+  AuthenticationType,
   httpClient,
   HttpMethod,
+  HttpRequest,
   propsValidation,
 } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
@@ -10,9 +12,9 @@ import {
   IMAGE_QUALITIES,
   ASPECT_RATIO,
 } from '../common/constants';
-import { ImageResponse } from '../common';
+import { ApiPieModels, ImageResponse } from '../common';
 import z from 'zod';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { omitUndefined, retrievedModels, retriveStyles } from '../common/helper';
 import { apipieAuth } from '../..';
 import { AppConnectionType } from '@activepieces/shared';
 
@@ -38,7 +40,7 @@ export const generateImage = createAction({
           };
         }
         const modelResponse = await retrievedModels(
-          'type=text-to-image',
+          'subtype=text-to-image',
           auth.secret_text
         );
         return {
@@ -103,7 +105,7 @@ export const generateImage = createAction({
             options: [],
           };
         }
-        const modelResponse = await retrievedModels(
+        const modelResponse = await retriveStyles(
           `https://apipie.ai/v1/models/detailed?model=${model}`,
           auth.secret_text
         );

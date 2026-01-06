@@ -7,7 +7,11 @@ import {
   retrieveVoices,
 } from '../common/helper';
 import { AUDIO_RESPONSE_FORMATS } from '../common/constants';
-import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
+import {
+  httpClient,
+  HttpMethod,
+  propsValidation,
+} from '@activepieces/pieces-common';
 import z from 'zod';
 
 export const textToSpeech = createAction({
@@ -47,17 +51,7 @@ export const textToSpeech = createAction({
       options: async ({ auth, model }) => {
         if (!auth) return disabledState('Please connect your account first');
         if (!model) return disabledState('Please select a model first');
-        const modelResponse = await retrieveVoices(
-          model as string,
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
+        return retrieveVoices(model as string, auth.secret_text);
       },
     }),
     input: Property.LongText({
@@ -68,7 +62,8 @@ export const textToSpeech = createAction({
     }),
     fileName: Property.ShortText({
       displayName: 'File name',
-      description: 'The name of the returned audio file. Do not add the format (e.g. ".mp3") as this is determined by the Format field',
+      description:
+        'The name of the returned audio file. Do not add the format (e.g. ".mp3") as this is determined by the Format field',
       required: true,
     }),
     responseFormat: Property.StaticDropdown({
@@ -123,17 +118,14 @@ export const textToSpeech = createAction({
       throw new Error('API key is required');
     }
 
-    const [
-        modelId,
-        providerId,
-      ] = context.propsValue.model.split("|");
+    const [modelId, providerId] = context.propsValue.model.split('|');
 
     const voiceSettings = omitUndefined({
       stability: context.propsValue.stability,
       similarity_boost: context.propsValue.similarityBoost,
       style: context.propsValue.style,
-      use_speaker_boost: context.propsValue.speakerBoost
-    })
+      use_speaker_boost: context.propsValue.speakerBoost,
+    });
 
     const body = omitUndefined({
       provider: providerId,
@@ -144,24 +136,25 @@ export const textToSpeech = createAction({
         Object.keys(voiceSettings).length > 0 ? voiceSettings : undefined,
       responseFormat: context.propsValue.responseFormat,
       speed: context.propsValue.speed,
-      stream: false
-    })
+      stream: false,
+    });
 
-    const res = await httpClient.sendRequest<Buffer>({
-          method: HttpMethod.POST,
-          url: 'https://apipie.ai/v1/audio/speech',
-          body,
-          headers: {
-            Authorization: context.auth.secret_text,
-            Accept: 'audio/',
-          },
-        });
+    const res = await httpClient.sendRequest({
+      method: HttpMethod.POST,
+      url: 'https://apipie.ai/v1/audio/speech',
+      body,
+      headers: {
+        Authorization: `Bearer ${context.auth.secret_text}`,
+        Accept: 'audio/mpeg',
+      },
+      responseType: 'arraybuffer',
+    });
 
     const fileReference = await context.files.write({
       fileName: `${context.propsValue.fileName}.${context.propsValue.responseFormat}`,
-      data: res.body
-    })
+      data: res.body,
+    });
 
-    return fileReference
+    return fileReference;
   },
 });

@@ -1,4 +1,4 @@
-import { apipieAuth } from '@activepieces/piece-apipie-ai';
+import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { retriveVectorCollections } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';

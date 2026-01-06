@@ -2,7 +2,7 @@ import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-co
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { ImageResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { omitUndefined, retrievedModels, retriveStyles } from '../common/helper';
 import z from 'zod';
 import { ASPECT_RATIO, IMAGE_QUALITIES, IMAGE_RESPONSE_FORMATS, IMAGE_SIZES } from '../common/constants';
 import { apipieAuth } from '../..'
@@ -29,7 +29,7 @@ props: {
           };
         }
         const modelResponse = await retrievedModels(
-                  'type=image-to-image',
+                  'subtype=image-to-image',
                   auth.secret_text
                 );
                 return {
@@ -104,7 +104,7 @@ props: {
             options: [],
           };
         }
-        const modelResponse = await retrievedModels(
+        const modelResponse = await retriveStyles(
           `https://apipie.ai/v1/models/detailed?model=${model}`,
           auth.secret_text
         );

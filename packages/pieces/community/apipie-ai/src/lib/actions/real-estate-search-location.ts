@@ -44,9 +44,9 @@ export const realEstateSearchLocation = createAction({
       displayName: 'Home Type',
       description:
         'Find properties with specified home type (works for "For Sale" option in Home Status).',
-      required: true,
+      required: false,
       auth: apipieAuth,
-      refreshers: [],
+      refreshers: ['homeStatus'],
       options: async ({ auth, homeStatus }) => {
         if (!auth) return disabledState('Please connect your account first');
         return setHomeType(homeStatus as string);
@@ -56,9 +56,9 @@ export const realEstateSearchLocation = createAction({
       displayName: 'Space Type',
       description:
         'Find properties with specified rental type (works for "For Rent" option in Home Status).',
-      required: true,
+      required: false,
       auth: apipieAuth,
-      refreshers: [],
+      refreshers: ['homeStatus'],
       options: async ({ auth, homeStatus }) => {
         if (!auth) return disabledState('Please connect your account first');
         return setSpaceType(homeStatus as string);

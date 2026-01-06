@@ -54,13 +54,13 @@ export const createEmbeddings = createAction({
     }),
     dimensions: Property.Number({
       displayName: 'Dimensions',
-      description: 'Number of dimensions for the embedding vector. Maximum value is 384-1536 - check the models route for max_tokens per model. Only supported by OpenAI',
+      description: 'Number of dimensions for the embedding vector. Maximum value is 384-4096 - check models for specific details on allowed dimensions.',
       required: false,
     })
     },
     async run(context) {
       await propsValidation.validateZod(context.propsValue, {
-        dimensions: z.number().int().min(1).max(1536).optional(),
+        dimensions: z.number().int().min(1).max(4096).optional(),
       });
 
       if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {
@@ -74,7 +74,7 @@ export const createEmbeddings = createAction({
   
       const body = {
         model: context.propsValue.model,
-        prompt: context.propsValue.input,
+        input: context.propsValue.input,
         ...optionalParams,
       };
   

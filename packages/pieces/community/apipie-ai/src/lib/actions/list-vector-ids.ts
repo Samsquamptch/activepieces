@@ -1,6 +1,7 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { retriveVectorCollections } from '../common/helper';
+import { VectorIDs } from '../common';
 import {
   httpClient,
   HttpMethod,
@@ -50,16 +51,16 @@ export const listVectorIds = createAction({
       body: {
         collection_name: context.propsValue.collection,
       },
-      method: HttpMethod.GET,
+      method: HttpMethod.POST,
       headers: {
         Authorization: context.auth.secret_text,
         Accept: 'application/json',
       },
     };
-    const response = await httpClient.sendRequest<{ vector_ids: string[] }>(
+    const response = await httpClient.sendRequest<VectorIDs>(
       request
     );
 
-    return response.body.vector_ids;
+    return response.body.vectors;
   },
 });
