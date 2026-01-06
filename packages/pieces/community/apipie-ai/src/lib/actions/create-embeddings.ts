@@ -7,7 +7,6 @@ import { EmbeddingResponse } from '../common';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const createEmbeddings = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'createEmbeddings',
   auth: apipieAuth,
   displayName: 'Create Embeddings',

@@ -1,5 +1,4 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { VECTOR_PROVIDER } from '../common/constants';
 import {
   httpClient,
   HttpMethod,
@@ -10,7 +9,6 @@ import { AppConnectionType } from '@activepieces/shared';
 import { apipieAuth } from '../..';
 
 export const createVectorCollection = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'createVectorCollection',
   auth: apipieAuth,
   displayName: 'Create Vector Collection',

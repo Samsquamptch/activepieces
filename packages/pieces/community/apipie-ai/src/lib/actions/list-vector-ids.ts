@@ -10,7 +10,6 @@ import {
 import { AppConnectionType } from '@activepieces/shared';
 
 export const listVectorIds = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'listVectorIds',
   auth: apipieAuth,
   displayName: 'List Vector IDs',

@@ -15,7 +15,6 @@ import {
 } from '../common/constants';
 
 export const realEstateSearchLocation = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'realEstateSearchLocation',
   auth: apipieAuth,
   displayName: 'Real Estate Search by Location',

@@ -8,7 +8,6 @@ import { HOME_STATUS, REAL_ESTATE_SORT } from '../common/constants';
 import { PropertySearchResponse } from '../common';
 
 export const realEstateSearchPolygon = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'realEstateSearchPolygon',
   auth: apipieAuth,
   displayName: 'Real Estate Search Polygon',

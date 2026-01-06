@@ -1,13 +1,20 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { disabledState, omitUndefined, retrievedModels } from '../common/helper';
-import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
+import {
+  disabledState,
+  omitUndefined,
+  retrievedModels,
+} from '../common/helper';
+import {
+  httpClient,
+  HttpMethod,
+  propsValidation,
+} from '@activepieces/pieces-common';
 import FormData from 'form-data';
 import z from 'zod';
 import { TranscribeAudioResponse } from '../common';
 
 export const transcribeAudio = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'transcribeAudio',
   auth: apipieAuth,
   displayName: 'Transcribe Audio',
@@ -67,34 +74,34 @@ export const transcribeAudio = createAction({
     }
 
     const optionalParams = omitUndefined({
-          prompt: context.propsValue.prompt,
-          temperature: context.propsValue.temperature,
-          language: context.propsValue.language,
-        });
-    
+      prompt: context.propsValue.prompt,
+      temperature: context.propsValue.temperature,
+      language: context.propsValue.language,
+    });
+
     const form = new FormData();
     const file = context.propsValue.file;
 
     form.append('file', file.data, {
       filename: file.filename,
     });
-    form.append("model", context.propsValue.model)
-    form.append("response_format", "json")
+    form.append('model', context.propsValue.model);
+    form.append('response_format', 'json');
 
     Object.entries(optionalParams).forEach(([key, value]) => {
       form.append(key, String(value));
     });
 
     const res = await httpClient.sendRequest<TranscribeAudioResponse>({
-          method: HttpMethod.POST,
-          url: 'https://apipie.ai/v1/audio/transcriptions',
-          body: form,
-          headers: {
-            Authorization: context.auth.secret_text,
-            ...form.getHeaders(),
-          },
-        });
+      method: HttpMethod.POST,
+      url: 'https://apipie.ai/v1/audio/transcriptions',
+      body: form,
+      headers: {
+        Authorization: context.auth.secret_text,
+        ...form.getHeaders(),
+      },
+    });
 
-    return res.body
+    return res.body;
   },
 });

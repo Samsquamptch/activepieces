@@ -1,12 +1,15 @@
 import { apipieAuth } from '../../index';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { retriveVectorCollections } from '../common/helper';
-import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
+import {
+  httpClient,
+  HttpMethod,
+  propsValidation,
+} from '@activepieces/pieces-common';
 import z from 'zod';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const upsertVectorCollection = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'upsertVectorCollection',
   auth: apipieAuth,
   displayName: 'Update Vector Collection',

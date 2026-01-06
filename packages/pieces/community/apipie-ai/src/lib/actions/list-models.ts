@@ -4,11 +4,10 @@ import { apipieAuth } from '../..';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const listModels = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'listModels',
   auth: apipieAuth,
-  displayName: 'list models',
-  description: 'list models based on selected type',
+  displayName: 'List Models',
+  description: 'List models based on selected type',
   props: {
     modelType: Property.StaticDropdown({
       displayName: 'Type',

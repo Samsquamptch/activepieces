@@ -6,7 +6,6 @@ import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { GetVectorResponse } from '../common';
 
 export const getVectorRecord = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'getVectorRecord',
   auth: apipieAuth,
   displayName: 'Get Vector Record',

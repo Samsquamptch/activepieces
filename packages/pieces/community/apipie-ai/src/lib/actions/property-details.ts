@@ -6,7 +6,6 @@ import z from 'zod';
 import { PropertyDetailsResponse } from '../common';
 
 export const propertyDetails = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'propertyDetails',
   auth: apipieAuth,
   displayName: 'Property Details',

@@ -12,7 +12,6 @@ import z from 'zod';
 import { CompletionResponse } from '../common';
 
 export const chatWebSearch = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'chatWebSearch',
   auth: apipieAuth,
   displayName: 'Chat (Web Search)',

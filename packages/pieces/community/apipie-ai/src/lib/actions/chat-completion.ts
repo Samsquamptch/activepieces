@@ -1,17 +1,13 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { CompletionResponse } from '../common';
-import {
-  httpClient,
-  HttpMethod,
-} from '@activepieces/pieces-common';
+import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';
 import { omitUndefined, retrievedModels } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const chatCompletion = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'chatCompletion',
   auth: apipieAuth,
   displayName: 'Chat Completion',
@@ -31,45 +27,17 @@ export const chatCompletion = createAction({
             placeholder: 'Please connect your account first',
           };
         }
-        const modelResponse = await retrievedModels('type=llm', auth.secret_text);
+        const modelResponse = await retrievedModels(
+          'type=llm',
+          auth.secret_text
+        );
         return {
           options: modelResponse.options,
           disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && { placeholder: modelResponse.placeholder }),
+          ...(modelResponse.placeholder && {
+            placeholder: modelResponse.placeholder,
+          }),
         };
-        // const request: HttpRequest = {
-        //   url: 'https://apipie.ai/v1/models?type=llm',
-        //   method: HttpMethod.GET,
-        //   authentication: {
-        //     type: AuthenticationType.BEARER_TOKEN,
-        //     token: auth.secret_text,
-        //   },
-        // };
-        // try {
-        //   const data = await httpClient.sendRequest<ApiPieModels>(request);
-        //   const uniqueModels = new Map();
-        //   data.body.data.map((llm: { id: string; model: string }) => {
-        //     if (!uniqueModels.has(llm.id)) {
-        //       uniqueModels.set(llm.id, llm.model);
-        //     }
-        //   });
-        //   const options = Array.from(uniqueModels.entries())
-        //     .map(([value, label]) => ({
-        //       label,
-        //       value,
-        //     }))
-        //     .sort((a, b) => a.label.localeCompare(b.label));
-        //   return {
-        //     options: options,
-        //     disabled: false,
-        //   };
-        // } catch (e) {
-        //   return {
-        //     options: [],
-        //     disabled: true,
-        //     placeholder: `Couldn't Load Models:\n${e}`,
-        //   };
-        // }
       },
     }),
     userMessage: Property.LongText({
@@ -161,8 +129,8 @@ export const chatCompletion = createAction({
     });
 
     if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {
-          throw new Error('API key is required');
-        }
+      throw new Error('API key is required');
+    }
 
     const messages = [
       omitUndefined({

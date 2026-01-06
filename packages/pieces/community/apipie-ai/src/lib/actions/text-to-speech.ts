@@ -15,7 +15,6 @@ import {
 import z from 'zod';
 
 export const textToSpeech = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'textToSpeech',
   auth: apipieAuth,
   displayName: 'Text To Speech',

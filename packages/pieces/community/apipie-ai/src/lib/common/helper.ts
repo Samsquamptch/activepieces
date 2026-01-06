@@ -41,19 +41,6 @@ export async function retrievedModels(url: string, authCode: string) {
     },
   };
   try {
-    // const data = await httpClient.sendRequest<ApiPieModels>(request);
-    // const uniqueModels = new Map();
-    // data.body.data.map((retrievedModel: { id: string; model: string }) => {
-    //   if (!uniqueModels.has(retrievedModel.id)) {
-    //     uniqueModels.set(retrievedModel.id, retrievedModel.model);
-    //   }
-    // });
-    // const options = Array.from(uniqueModels.entries())
-    //   .map(([value, label]) => ({
-    //     label,
-    //     value,
-    //   }))
-    //   .sort((a, b) => a.label.localeCompare(b.label));
     let options;
 
     if (url === 'subtype=text-to-speech') {
@@ -117,53 +104,6 @@ async function ttsModels(request: HttpRequest) {
     .sort((a, b) => a.label.localeCompare(b.label));
 }
 
-// export async function retrieveTTSModels(url: string, authCode: string) {
-//   const request: HttpRequest = {
-//     url: `https://apipie.ai/v1/models?${url}`,
-//     method: HttpMethod.GET,
-//     authentication: {
-//       type: AuthenticationType.BEARER_TOKEN,
-//       token: authCode,
-//     },
-//   };
-//   try {
-//     const data = await httpClient.sendRequest<ApiPieModels>(request);
-//     const uniqueModels = new Map();
-//     data.body.data.map(
-//       (retrievedModel: {
-//         id: string;
-//         model: string;
-//         provider: string;
-//         route: string;
-//       }) => {
-//         if (!uniqueModels.has(retrievedModel.id)) {
-//           uniqueModels.set(retrievedModel.id, {
-//             model: retrievedModel.model,
-//             provider: retrievedModel.provider,
-//             route: retrievedModel.route,
-//           });
-//         }
-//       }
-//     );
-//     const options = Array.from(uniqueModels.entries())
-//       .map(([id, info]) => ({
-//         label: info.model,
-//         value: `${id}|${info.provider}|${info.route}`,
-//       }))
-//       .sort((a, b) => a.label.localeCompare(b.label));
-//     return {
-//       options: options,
-//       disabled: false,
-//     };
-//   } catch (error) {
-//     return {
-//       options: [],
-//       disabled: true,
-//       placeholder: `Couldn't Load TTS Models:\n${error}`,
-//     };
-//   }
-// }
-
 export async function retriveVectorCollections(authCode: string) {
   const request: HttpRequest = {
     url: `https://apipie.ai/vectors/listcollections`,
@@ -183,11 +123,6 @@ export async function retriveVectorCollections(authCode: string) {
           value: vector.collection,
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-      // .sort((a: string, b: string) => a.localeCompare(b))
-      // .map((collection: string) => ({
-      //   label: collection,
-      //   value: collection,
-      // })),
     };
   } catch (error) {
     return {
@@ -231,11 +166,11 @@ export async function retrieveVectorIDs(collection: string, authCode: string) {
   }
 }
 
-export async function retriveStyles(url: string, authCode: string) {
+export async function retriveStyles(model: string, authCode: string) {
   try {
     const response = await httpClient.sendRequest({
       method: HttpMethod.GET,
-      url,
+      url: `https://apipie.ai/v1/models/detailed?model=${model}`,
       authentication: {
         type: AuthenticationType.BEARER_TOKEN,
         token: authCode,
@@ -287,9 +222,7 @@ export async function retrieveVoices(data: string, authCode: string) {
     }
 
     return {
-      options: (
-        response.body.data ?? []
-      )
+      options: (response.body.data ?? [])
         .map((voice: { name: string; voice_id: string }) => ({
           label: voice.name,
           value: voice.voice_id,

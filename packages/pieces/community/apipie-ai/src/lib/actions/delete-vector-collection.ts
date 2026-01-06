@@ -5,7 +5,6 @@ import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 
 export const deleteVectorCollection = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'deleteVectorCollection',
   auth: apipieAuth,
   displayName: 'Delete Vector Collection',

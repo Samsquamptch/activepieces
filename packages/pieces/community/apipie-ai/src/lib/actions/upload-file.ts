@@ -5,7 +5,6 @@ import { AppConnectionType } from '@activepieces/shared';
 import FormData from 'form-data';
 
 export const uploadFile = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'uploadFile',
   auth: apipieAuth,
   displayName: 'Upload File',
@@ -40,6 +39,6 @@ export const uploadFile = createAction({
       },
     });
 
-    return res.body
+    return res.body;
   },
 });

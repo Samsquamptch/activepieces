@@ -29,7 +29,7 @@ export interface voiceModels {
     voice_id: string;
     name: string;
     description: string;
-  } []
+  }[];
 }
 
 export interface ImageResponse extends BaseResponse {
@@ -37,7 +37,6 @@ export interface ImageResponse extends BaseResponse {
     text: string;
   }[];
 }
-
 
 export interface BaseResponse {
   id: string;
@@ -159,16 +158,16 @@ export interface PropertyDetailsResponse {
   };
 }
 
-
 export interface VectorCollection {
   collection: string;
   provider: string;
   index: string;
-};
+}
 
 export interface VectorIDs {
-  vectors: { 
-    id: string }[];
+  vectors: {
+    id: string;
+  }[];
   namespace: string;
   usage: {
     readUnits: number;

@@ -7,7 +7,6 @@ import { AppConnectionType } from '@activepieces/shared';
 import { JobSearchResponse } from '../common';
 
 export const jobSearch = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'jobSearch',
   displayName: 'Job Search',
   description: 'Search for jobs using JSearch API through RapidAPI.',

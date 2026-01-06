@@ -8,11 +8,10 @@ import { ASPECT_RATIO, IMAGE_QUALITIES, IMAGE_RESPONSE_FORMATS, IMAGE_SIZES } fr
 import { apipieAuth } from '../..'
 
 export const modifyImage = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'modifyImage',
   auth: apipieAuth,
-  displayName: 'modify image',
-  description: 'modifies an existing image using an image to image model and provided parameters',
+  displayName: 'Modify Image',
+  description: 'Modifies an existing image using an image to image model and provided parameters',
 props: {
     model: Property.Dropdown({
       displayName: 'Model',
@@ -39,39 +38,6 @@ props: {
                     placeholder: modelResponse.placeholder,
                   }),
                 };
-        // const request: HttpRequest = {
-        //   url: 'https://apipie.ai/v1/models?subtype=image-to-image',
-        //   method: HttpMethod.GET,
-        //   authentication: {
-        //     type: AuthenticationType.BEARER_TOKEN,
-        //     token: auth.secret_text,
-        //   },
-        // };
-        // try {
-        //   const data = await httpClient.sendRequest<ApiPieModels>(request);
-        //   const uniqueModels = new Map();
-        //   data.body.data.map((llm: { id: string; model: string }) => {
-        //     if (!uniqueModels.has(llm.id)) {
-        //       uniqueModels.set(llm.id, llm.model);
-        //     }
-        //   });
-        //   const options = Array.from(uniqueModels.entries())
-        //     .map(([value, label]) => ({
-        //       label,
-        //       value,
-        //     }))
-        //     .sort((a, b) => a.label.localeCompare(b.label));
-        //   return {
-        //     options: options,
-        //     disabled: false,
-        //   };
-        // } catch (e) {
-        //   return {
-        //     options: [],
-        //     disabled: true,
-        //     placeholder: `Couldn't Load Models:\n${e}`,
-        //   };
-        // }
       },
     }),
     prompt: Property.LongText({
@@ -105,7 +71,7 @@ props: {
           };
         }
         const modelResponse = await retriveStyles(
-          `https://apipie.ai/v1/models/detailed?model=${model}`,
+          model as string,
           auth.secret_text
         );
         return {
@@ -115,40 +81,6 @@ props: {
             placeholder: modelResponse.placeholder,
           }),
         };
-        // try {
-        //   const response = await httpClient.sendRequest({
-        //     method: HttpMethod.GET,
-        //     url: `https://apipie.ai/v1/models/detailed?model=${model}`,
-        //     authentication: {
-        //       type: AuthenticationType.BEARER_TOKEN,
-        //       token: auth.secret_text,
-        //     },
-        //   });
-        //   const styles =
-        //     response.body?.data?.[0]?.supported_input_parameters?.style?.enum ||
-        //     [];
-        //   const options = styles
-        //     .sort((a: string, b: string) => a.localeCompare(b))
-        //     .map((s: string) => ({
-        //       label: s,
-        //       value: s,
-        //     }));
-        //   return {
-        //     disabled: false,
-        //     options,
-        //   };
-        // } catch (e) {
-        //   console.error('Error fetching model styles', e);
-        //   return {
-        //     disabled: true,
-        //     options: [
-        //       {
-        //         label: 'Failed to load styles',
-        //         value: 'error',
-        //       },
-        //     ],
-        //   };
-        // }
       },
     }),
     numberOfImages: Property.Number({

@@ -10,7 +10,6 @@ import z from 'zod';
 import { CompletionResponse } from '../common';
 
 export const chatFunctions = createAction({
-  // auth: check https://www.activepieces.com/docs/developers/piece-reference/authentication,
   name: 'chatFunctions',
   auth: apipieAuth,
   displayName: 'Chat Functions',
