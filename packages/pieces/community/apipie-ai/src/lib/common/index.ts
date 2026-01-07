@@ -186,3 +186,12 @@ export interface TranscribeAudioResponse {
     latency_ms: number;
   };
 }
+
+export interface AnonymizeTextResponse {
+  anon_text: string;
+  mappings: {
+    actual_value: string;
+    mapped_value: string;
+    type: string;
+  }[]
+}
