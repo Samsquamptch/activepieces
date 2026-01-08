@@ -58,11 +58,12 @@ export const processDocumentRagTune = createAction({
       collection_name: context.propsValue.collection,
       url: context.propsValue.url,
       metatag: context.propsValue.metaTag,
+      vector_provider: "qdrant"
     };
 
     const res = await httpClient.sendRequest<string>({
       method: HttpMethod.POST,
-      url: ' https://dev.apipie.ai/ragtune',
+      url: 'https://dev.apipie.ai/ragtune',
       body,
       headers: {
         Authorization: context.auth.secret_text,
