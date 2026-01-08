@@ -4,7 +4,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { ImageResponse } from '../common';
+import { ImageResponse } from '../common/interfaces';
 import z from 'zod';
 import {
   disabledState,

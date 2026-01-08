@@ -2,7 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { chatCommon, omitUndefined } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
-import { CompletionResponse } from '../common';
+import { CompletionResponse } from '../common/interfaces';
 
 export const chatRagTune = createAction({
   name: 'chatRagTune',

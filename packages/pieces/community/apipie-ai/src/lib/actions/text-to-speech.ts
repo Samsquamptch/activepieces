@@ -12,7 +12,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import z from 'zod';
-import { ApiPieModels, voiceModels } from '../common';
+import { ApiPieModels, voiceModels } from '../common/interfaces';
 
 export const textToSpeech = createAction({
   name: 'textToSpeech',

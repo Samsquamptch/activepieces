@@ -7,7 +7,7 @@ import {
 } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
-import { GetVectorResponse } from '../common';
+import { GetVectorResponse } from '../common/interfaces';
 
 export const getVectorRecord = createAction({
   name: 'getVectorRecord',

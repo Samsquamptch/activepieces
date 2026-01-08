@@ -11,7 +11,7 @@ import {
   omitUndefined,
   propertyCommon,
 } from '../common/helper';
-import { PropertySearchResponse } from '../common';
+import { PropertySearchResponse } from '../common/interfaces';
 import { apipieAuth } from '../..';
 
 export const realEstateSearchCoordinates = createAction({

@@ -11,7 +11,7 @@ import {
   omitUndefined,
   propertyCommon,
 } from '../common/helper';
-import { PropertySearchResponse } from '../common';
+import { PropertySearchResponse } from '../common/interfaces';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const realEstateSearchLocation = createAction({

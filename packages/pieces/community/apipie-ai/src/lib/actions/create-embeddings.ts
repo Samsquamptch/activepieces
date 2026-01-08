@@ -3,7 +3,7 @@ import { disabledState, omitUndefined, retrievedModels } from '../common/helper'
 import { apipieAuth } from '../..';
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import z from 'zod';
-import { EmbeddingResponse } from '../common';
+import { EmbeddingResponse } from '../common/interfaces';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const createEmbeddings = createAction({

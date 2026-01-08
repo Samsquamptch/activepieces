@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { CompletionResponse } from '../common';
+import { CompletionResponse } from '../common/interfaces';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';

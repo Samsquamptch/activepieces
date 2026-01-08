@@ -4,7 +4,7 @@ import z from 'zod';
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import { joinOrUndefined, omitUndefined } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
-import { JobSearchResponse } from '../common';
+import { JobSearchResponse } from '../common/interfaces';
 
 export const jobSearch = createAction({
   name: 'jobSearch',

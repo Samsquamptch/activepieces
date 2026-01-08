@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { AnonymizeTextResponse } from '../common';
+import { AnonymizeTextResponse } from '../common/interfaces';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { AppConnectionType } from '@activepieces/shared';
 

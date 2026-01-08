@@ -12,7 +12,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import z from 'zod';
-import { PropertySearchResponse } from '../common';
+import { PropertySearchResponse } from '../common/interfaces';
 
 export const realEstateSearchPolygon = createAction({
   name: 'realEstateSearchPolygon',

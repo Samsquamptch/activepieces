@@ -4,7 +4,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { ImageResponse } from '../common';
+import { ImageResponse } from '../common/interfaces';
 import { AppConnectionType } from '@activepieces/shared';
 import {
   disabledState,

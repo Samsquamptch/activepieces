@@ -3,7 +3,7 @@ import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import FormData from 'form-data';
 import { omitUndefined } from '../common/helper';
-import { ParseDocumentResponse } from '../common';
+import { ParseDocumentResponse } from '../common/interfaces';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 
 export const parseDocument = createAction({

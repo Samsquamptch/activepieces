@@ -14,7 +14,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import z from 'zod';
-import { CompletionResponse } from '../common';
+import { CompletionResponse } from '../common/interfaces';
 
 export const chatWebSearch = createAction({
   name: 'chatWebSearch',

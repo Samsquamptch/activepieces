@@ -3,7 +3,7 @@ import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-co
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { AppConnectionType } from '@activepieces/shared';
 import z from 'zod';
-import { PropertyDetailsResponse } from '../common';
+import { PropertyDetailsResponse } from '../common/interfaces';
 
 export const propertyDetails = createAction({
   name: 'propertyDetails',

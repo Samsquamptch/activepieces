@@ -12,7 +12,7 @@ import {
 } from '@activepieces/pieces-common';
 import FormData from 'form-data';
 import z from 'zod';
-import { TranscribeAudioResponse } from '../common';
+import { TranscribeAudioResponse } from '../common/interfaces';
 import { AppConnectionType } from '@activepieces/shared';
 
 export const transcribeAudio = createAction({
