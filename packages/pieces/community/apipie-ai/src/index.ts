@@ -24,6 +24,7 @@ import { chatWebSearch } from './lib/actions/chat-web-search';
 import { processDocumentRagTune } from './lib/actions/process-document-rag-tune';
 import { anonymizeSensitiveText } from './lib/actions/anonymize-sensitive-text';
 import { parseDocument } from './lib/actions/parse-document';
+import { chatRagTune } from './lib/actions/chat-rag-tune';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -63,7 +64,8 @@ export const apipieAi = createPiece({
     propertyDetails,
     processDocumentRagTune,
     anonymizeSensitiveText,
-    parseDocument
+    parseDocument,
+    chatRagTune
   ],
   triggers: [],
 });
