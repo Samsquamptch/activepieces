@@ -4,7 +4,7 @@ import {
   disabledState,
   retrieveVectorIDs,
   vectorCommon,
-} from '../common/helper';
+} from '../common/common';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { GetVectorResponse } from '../common/interfaces';

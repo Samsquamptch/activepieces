@@ -2,7 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { DATE_POSTED, EMPLOYMENT_TYPE, JOB_REQUIREMENTS } from '../common/constants';
 import z from 'zod';
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
-import { joinOrUndefined, omitUndefined } from '../common/helper';
+import { joinOrUndefined, omitUndefined } from '../common/common';
 import { AppConnectionType } from '@activepieces/shared';
 import { JobSearchResponse } from '../common/interfaces';
 

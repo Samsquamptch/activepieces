@@ -11,7 +11,7 @@ import {
   imageCommon,
   omitUndefined,
   retrievedModels,
-} from '../common/helper';
+} from '../common/common';
 import { apipieAuth } from '../..';
 import { AppConnectionType } from '@activepieces/shared';
 

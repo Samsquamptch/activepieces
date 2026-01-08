@@ -1,5 +1,5 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { chatCommon, omitUndefined } from '../common/helper';
+import { chatCommon, omitUndefined } from '../common/common';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { CompletionResponse } from '../common/interfaces';

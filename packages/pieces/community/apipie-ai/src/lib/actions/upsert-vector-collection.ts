@@ -1,6 +1,6 @@
 import { apipieAuth } from '../../index';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { vectorCommon } from '../common/helper';
+import { vectorCommon } from '../common/common';
 import {
   httpClient,
   HttpMethod,

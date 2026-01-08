@@ -11,7 +11,7 @@ import {
   imageCommon,
   omitUndefined,
   retrievedModels,
-} from '../common/helper';
+} from '../common/common';
 import z from 'zod';
 import { apipieAuth } from '../..';
 

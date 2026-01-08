@@ -1,5 +1,5 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { disabledState, omitUndefined, retrievedModels } from '../common/helper';
+import { disabledState, omitUndefined, retrievedModels } from '../common/common';
 import { apipieAuth } from '../..';
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import z from 'zod';

@@ -4,7 +4,7 @@ import {
   disabledState,
   omitUndefined,
   retrievedModels,
-} from '../common/helper';
+} from '../common/common';
 import {
   httpClient,
   HttpMethod,

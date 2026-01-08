@@ -4,9 +4,9 @@ import { CompletionResponse } from '../common/interfaces';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { omitUndefined, retrievedModels } from '../common/common';
 import { AppConnectionType } from '@activepieces/shared';
-import { chatCommon } from '../common/helper';
+import { chatCommon } from '../common/common';
 
 export const chatCompletion = createAction({
   name: 'chatCompletion',

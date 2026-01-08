@@ -1,6 +1,6 @@
 import { apipieAuth } from '../../index';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { chatCommon, disabledState, omitUndefined, retrievedModels } from '../common/helper';
+import { chatCommon, disabledState, omitUndefined, retrievedModels } from '../common/common';
 import {
   httpClient,
   HttpMethod,

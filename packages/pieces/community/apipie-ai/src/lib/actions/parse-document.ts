@@ -2,7 +2,7 @@ import { AppConnectionType } from '@activepieces/shared';
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
 import FormData from 'form-data';
-import { omitUndefined } from '../common/helper';
+import { omitUndefined } from '../common/common';
 import { ParseDocumentResponse } from '../common/interfaces';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 

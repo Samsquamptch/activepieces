@@ -10,7 +10,7 @@ import {
   joinOrUndefined,
   omitUndefined,
   propertyCommon,
-} from '../common/helper';
+} from '../common/common';
 import { PropertySearchResponse } from '../common/interfaces';
 import { apipieAuth } from '../..';
 

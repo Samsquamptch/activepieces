@@ -1,7 +1,7 @@
 import { AppConnectionType } from '@activepieces/shared';
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { omitUndefined } from '../common/helper';
+import { omitUndefined } from '../common/common';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 
 export const deleteRagTuneCollection = createAction({

@@ -5,7 +5,7 @@ import {
   joinOrUndefined,
   omitUndefined,
   retrievedModels,
-} from '../common/helper';
+} from '../common/common';
 import { EFFORT_OPTIONS } from '../common/constants';
 import { AppConnectionType } from '@activepieces/shared';
 import {

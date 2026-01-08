@@ -5,7 +5,7 @@ import {
   joinOrUndefined,
   omitUndefined,
   propertyCommon,
-} from '../common/helper';
+} from '../common/common';
 import {
   httpClient,
   HttpMethod,
