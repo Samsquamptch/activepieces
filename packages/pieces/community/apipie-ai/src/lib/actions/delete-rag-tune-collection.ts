@@ -42,7 +42,7 @@ export const deleteRagTuneCollection = createAction({
 
     const res = await httpClient.sendRequest<string>({
           method: HttpMethod.POST,
-          url: 'https://apipie.ai/ragtune/delete',
+          url: 'https://dev.apipie.ai/ragtune/delete',
           body,
           headers: {
             Authorization: context.auth.secret_text,

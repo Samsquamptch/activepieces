@@ -21,7 +21,7 @@ export const listRagTuneCollections = createAction({
 
     const res = await httpClient.sendRequest<string[]>({
       method: HttpMethod.POST,
-      url: 'https://apipie.ai/ragtune/listcollections',
+      url: 'https://dev.apipie.ai/ragtune/listcollections',
       body,
       headers: {
         Authorization: context.auth.secret_text,
