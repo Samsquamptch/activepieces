@@ -25,6 +25,8 @@ import { processDocumentRagTune } from './lib/actions/process-document-rag-tune'
 import { anonymizeSensitiveText } from './lib/actions/anonymize-sensitive-text';
 import { parseDocument } from './lib/actions/parse-document';
 import { chatRagTune } from './lib/actions/chat-rag-tune';
+import { listRagTuneCollections } from './lib/actions/list-rag-tune-collections';
+import { deleteRagTuneCollection } from './lib/actions/delete-rag-tune-collection';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -65,7 +67,9 @@ export const apipieAi = createPiece({
     processDocumentRagTune,
     anonymizeSensitiveText,
     parseDocument,
-    chatRagTune
+    chatRagTune,
+    listRagTuneCollections,
+    deleteRagTuneCollection
   ],
   triggers: [],
 });
