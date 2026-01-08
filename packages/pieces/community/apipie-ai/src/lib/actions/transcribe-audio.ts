@@ -13,6 +13,7 @@ import {
 import FormData from 'form-data';
 import z from 'zod';
 import { TranscribeAudioResponse } from '../common';
+import { AppConnectionType } from '@activepieces/shared';
 
 export const transcribeAudio = createAction({
   name: 'transcribeAudio',
@@ -29,17 +30,7 @@ export const transcribeAudio = createAction({
       refreshers: [],
       options: async ({ auth }) => {
         if (!auth) return disabledState('Please connect your account first');
-        const modelResponse = await retrievedModels(
-          'subtype=speech-to-text',
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
+        return retrievedModels('subtype=speech-to-text', auth.secret_text);
       },
     }),
     file: Property.File({
@@ -69,7 +60,7 @@ export const transcribeAudio = createAction({
       temperature: z.number().min(0).max(1).optional(),
     });
 
-    if (!context.auth) {
+    if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {
       throw new Error('API key is required');
     }
 

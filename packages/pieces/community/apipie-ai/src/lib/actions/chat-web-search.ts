@@ -1,6 +1,11 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { joinOrUndefined, omitUndefined, retrievedModels } from '../common/helper';
+import {
+  chatCommon,
+  joinOrUndefined,
+  omitUndefined,
+  retrievedModels,
+} from '../common/helper';
 import { EFFORT_OPTIONS } from '../common/constants';
 import { AppConnectionType } from '@activepieces/shared';
 import {
@@ -17,45 +22,48 @@ export const chatWebSearch = createAction({
   displayName: 'Chat (Web Search)',
   description: 'Send a chat to a selected LLM model using web search results.',
   props: {
-    model: Property.Dropdown({
-      displayName: 'Model',
-      description: 'The ID of the LLM model to use for completions.',
-      required: true,
-      auth: apipieAuth,
-      refreshers: [],
-      options: async ({ auth }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        const modelResponse = await retrievedModels(
-          'type=llm',
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
-      },
-    }),
-    userMessage: Property.LongText({
-      displayName: 'User Message',
-      required: true,
-      description:
-        "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
-    }),
-    systemInstructions: Property.LongText({
-      displayName: 'System Instructions',
-      required: false,
-      description:
-        "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
-    }),
+    // model: Property.Dropdown({
+    //   displayName: 'Model',
+    //   description: 'The ID of the LLM model to use for completions.',
+    //   required: true,
+    //   auth: apipieAuth,
+    //   refreshers: [],
+    //   options: async ({ auth }) => {
+    //     if (!auth) {
+    //       return {
+    //         disabled: true,
+    //         options: [],
+    //         placeholder: 'Please connect your account first',
+    //       };
+    //     }
+    //     const modelResponse = await retrievedModels(
+    //       'type=llm',
+    //       auth.secret_text
+    //     );
+    //     return {
+    //       options: modelResponse.options,
+    //       disabled: modelResponse.disabled,
+    //       ...(modelResponse.placeholder && {
+    //         placeholder: modelResponse.placeholder,
+    //       }),
+    //     };
+    //   },
+    // }),
+    // userMessage: Property.LongText({
+    //   displayName: 'User Message',
+    //   required: true,
+    //   description:
+    //     "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
+    // }),
+    // systemInstructions: Property.LongText({
+    //   displayName: 'System Instructions',
+    //   required: false,
+    //   description:
+    //     "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
+    // }),
+    model: chatCommon.model,
+    userMessage: chatCommon.userMessage,
+    systemInstructions: chatCommon.systemInstructions,
     searchContext: Property.StaticDropdown({
       displayName: 'Search Context Size',
       description:

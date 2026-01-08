@@ -4,7 +4,6 @@ import {
   disabledState,
   omitUndefined,
   retrievedModels,
-  retrieveVoices,
 } from '../common/helper';
 import { AUDIO_RESPONSE_FORMATS } from '../common/constants';
 import {
@@ -13,6 +12,7 @@ import {
   propsValidation,
 } from '@activepieces/pieces-common';
 import z from 'zod';
+import { ApiPieModels, voiceModels } from '../common';
 
 export const textToSpeech = createAction({
   name: 'textToSpeech',
@@ -28,17 +28,49 @@ export const textToSpeech = createAction({
       refreshers: ['auth'],
       options: async ({ auth }) => {
         if (!auth) return disabledState('Please connect your account first');
-        const modelResponse = await retrievedModels(
-          'subtype=text-to-speech',
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
+        // return retrievedModels(
+        //   'subtype=text-to-speech',
+        //   auth.secret_text
+        // );
+        try {
+          const data = await httpClient.sendRequest<ApiPieModels>({
+            url: `https://apipie.ai/v1/models?subtype=text-to-speech`,
+            method: HttpMethod.GET,
+            headers: {
+              Authorization: auth.secret_text,
+              Accept: 'application/json',
+            },
+          });
+          const uniqueModels = new Map();
+          data.body.data.map(
+            (retrievedModel: {
+              id: string;
+              model: string;
+              provider: string;
+              route: string;
+            }) => {
+              if (!uniqueModels.has(retrievedModel.id)) {
+                uniqueModels.set(retrievedModel.id, {
+                  model: retrievedModel.model,
+                  provider: retrievedModel.provider,
+                  route: retrievedModel.route,
+                });
+              }
+            }
+          );
+          const options = Array.from(uniqueModels.entries())
+            .map(([id, info]) => ({
+              label: info.model,
+              value: `${id}|${info.provider}|${info.route}`,
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+          return {
+            options: options,
+            disabled: false,
+          };
+        } catch (error) {
+          return disabledState(`Couldn't Load Models:\n${error}`)
+        }
       },
     }),
     voice: Property.Dropdown({
@@ -50,7 +82,32 @@ export const textToSpeech = createAction({
       options: async ({ auth, model }) => {
         if (!auth) return disabledState('Please connect your account first');
         if (!model) return disabledState('Please select a model first');
-        return retrieveVoices(model as string, auth.secret_text);
+        const [, provider, route] = (model as string).split('|');
+        try {
+          const response = await httpClient.sendRequest<voiceModels>({
+            method: HttpMethod.GET,
+            url: `https://apipie.ai/v1/models?voices&provider=${provider}&model=${route}`,
+            headers: {
+              Authorization: auth.secret_text,
+              Accept: 'application/json',
+            },
+          });
+
+          if (!response.body || !Array.isArray(response.body.data))
+            return disabledState('Voices API returned no data');
+
+          return {
+            options: response.body.data
+              .map((voice: { name: string; voice_id: string }) => ({
+                label: voice.name,
+                value: voice.voice_id,
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label)),
+            disabled: false,
+          };
+        } catch (error) {
+          return disabledState(`Couldn't Load Voices:\n${error}`);
+        }
       },
     }),
     input: Property.LongText({

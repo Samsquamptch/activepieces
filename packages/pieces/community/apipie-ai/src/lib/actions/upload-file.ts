@@ -9,11 +9,11 @@ export const uploadFile = createAction({
   auth: apipieAuth,
   displayName: 'Upload File',
   description:
-    'Uploads a file to the server and returns a URL where the uploaded file can be accessed temporarily.',
+    'Uploads a file to the server and returns a URL where the uploaded file can be accessed temporarily. Max file size 5MB.',
   props: {
     file: Property.File({
       displayName: 'File',
-      description: 'Upload a file',
+      description: 'File to be uploaded. Supported formats: .png, .jpg, .jpeg, .svg, .gif, .bmp, .tif, .tiff, .webp',
       required: true,
     }),
   },

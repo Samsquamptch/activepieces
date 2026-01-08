@@ -23,7 +23,7 @@ export const createVectorCollection = createAction({
     dimensions: Property.Number({
       displayName: 'Dimensions',
       description:
-        'Number of dimensions for the embedding vector. Maximum value is 384-1536 - check the models route for max_tokens per model. Only supported by OpenAI',
+        'Number of dimensions for the embedding vector. Maximum value is 384-4096 - check the models route for max_tokens per model. Only supported by OpenAI',
       required: true,
     }),
   },

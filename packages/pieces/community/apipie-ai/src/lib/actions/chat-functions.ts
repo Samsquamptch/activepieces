@@ -1,6 +1,6 @@
 import { apipieAuth } from '../../index';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { chatCommon, disabledState, omitUndefined, retrievedModels } from '../common/helper';
 import {
   httpClient,
   HttpMethod,
@@ -22,32 +22,17 @@ export const chatFunctions = createAction({
       auth: apipieAuth,
       refreshers: [],
       options: async ({ auth }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        const modelResponse = await retrievedModels(
-          'subtype=tools',
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
+        if (!auth) return disabledState('Please connect your account first')
+        return retrievedModels('subtype=tools', auth.secret_text);
       },
     }),
-    userMessage: Property.LongText({
-      displayName: 'User Message',
-      required: true,
-      description:
-        "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
-    }),
+    userMessage: chatCommon.userMessage,
+    // userMessage: Property.LongText({
+    //   displayName: 'User Message',
+    //   required: true,
+    //   description:
+    //     "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
+    // }),
     functions: Property.LongText({
       displayName: 'Functions',
       required: true,
@@ -81,12 +66,13 @@ export const chatFunctions = createAction({
           }
         ]`,
     }),
-    systemInstructions: Property.LongText({
-      displayName: 'System Instructions',
-      required: false,
-      description:
-        "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
-    }),
+    systemInstructions: chatCommon.systemInstructions,
+    // systemInstructions: Property.LongText({
+    //   displayName: 'System Instructions',
+    //   required: false,
+    //   description:
+    //     "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
+    // }),
     toolChoice: Property.StaticDropdown({
       displayName: 'Tool Choice',
       required: false,

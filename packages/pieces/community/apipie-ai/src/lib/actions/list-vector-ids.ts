@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
-import { createAction, Property } from '@activepieces/pieces-framework';
-import { retriveVectorCollections } from '../common/helper';
+import { createAction } from '@activepieces/pieces-framework';
+import { vectorCommon } from '../common/helper';
 import { VectorIDs } from '../common';
 import {
   httpClient,
@@ -15,30 +15,31 @@ export const listVectorIds = createAction({
   displayName: 'List Vector IDs',
   description: 'Retrieves a list of vector IDs for the specified collection.',
   props: {
-    collection: Property.Dropdown({
-      displayName: 'Collection Name',
-      description: 'The collection to be deleted.',
-      required: true,
-      auth: apipieAuth,
-      refreshers: ['auth'],
-      options: async ({ auth }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        const modelResponse = await retriveVectorCollections(auth.secret_text);
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
-      },
-    }),
+    // collection: Property.Dropdown({
+    //   displayName: 'Collection Name',
+    //   description: 'The collection to be deleted.',
+    //   required: true,
+    //   auth: apipieAuth,
+    //   refreshers: ['auth'],
+    //   options: async ({ auth }) => {
+    //     if (!auth) {
+    //       return {
+    //         disabled: true,
+    //         options: [],
+    //         placeholder: 'Please connect your account first',
+    //       };
+    //     }
+    //     const modelResponse = await retriveVectorCollections(auth.secret_text);
+    //     return {
+    //       options: modelResponse.options,
+    //       disabled: modelResponse.disabled,
+    //       ...(modelResponse.placeholder && {
+    //         placeholder: modelResponse.placeholder,
+    //       }),
+    //     };
+    //   },
+    // }),
+    collection: vectorCommon.collection,
   },
   async run(context) {
     if (!context.auth || context.auth.type !== AppConnectionType.SECRET_TEXT) {

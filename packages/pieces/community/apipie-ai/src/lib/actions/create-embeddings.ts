@@ -1,5 +1,5 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { omitUndefined, retrievedModels } from '../common/helper';
+import { disabledState, omitUndefined, retrievedModels } from '../common/helper';
 import { apipieAuth } from '../..';
 import { httpClient, HttpMethod, propsValidation } from '@activepieces/pieces-common';
 import z from 'zod';
@@ -19,19 +19,8 @@ export const createEmbeddings = createAction({
         auth: apipieAuth,
         refreshers: ['auth'],
         options: async ({ auth }) => {
-          if (!auth) {
-            return {
-              disabled: true,
-              options: [],
-              placeholder: 'Please connect your account first',
-            };
-          }
-          const modelResponse = await retrievedModels('type=embedding', auth.secret_text);
-          return {
-            options: modelResponse.options,
-            disabled: modelResponse.disabled,
-            ...(modelResponse.placeholder && { placeholder: modelResponse.placeholder }),
-          };
+          if (!auth) return disabledState('Please connect your account first')
+          return retrievedModels('type=embedding', auth.secret_text);
         },
       }),
     input: Property.LongText({

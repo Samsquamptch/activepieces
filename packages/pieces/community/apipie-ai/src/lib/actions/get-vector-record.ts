@@ -1,6 +1,10 @@
 import { apipieAuth } from '../../index';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { retrieveVectorIDs, retriveVectorCollections } from '../common/helper';
+import {
+  disabledState,
+  retrieveVectorIDs,
+  vectorCommon,
+} from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 import { GetVectorResponse } from '../common';
@@ -12,64 +16,43 @@ export const getVectorRecord = createAction({
   description:
     'Fetch the content of a specific record in a selected vector collection by ID.',
   props: {
-    collection: Property.Dropdown({
-      displayName: 'Collection Name',
-      description: 'The collection to be deleted.',
-      required: true,
-      auth: apipieAuth,
-      refreshers: ['auth'],
-      options: async ({ auth }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        const collectionResponse = await retriveVectorCollections(
-          auth.secret_text
-        );
-        return {
-          options: collectionResponse.options,
-          disabled: collectionResponse.disabled,
-          ...(collectionResponse.placeholder && {
-            placeholder: collectionResponse.placeholder,
-          }),
-        };
-      },
-    }),
+    // collection: Property.Dropdown({
+    //   displayName: 'Collection Name',
+    //   description: 'The collection to be deleted.',
+    //   required: true,
+    //   auth: apipieAuth,
+    //   refreshers: ['auth'],
+    //   options: async ({ auth }) => {
+    //     if (!auth) {
+    //       return {
+    //         disabled: true,
+    //         options: [],
+    //         placeholder: 'Please connect your account first',
+    //       };
+    //     }
+    //     const collectionResponse = await retriveVectorCollections(
+    //       auth.secret_text
+    //     );
+    //     return {
+    //       options: collectionResponse.options,
+    //       disabled: collectionResponse.disabled,
+    //       ...(collectionResponse.placeholder && {
+    //         placeholder: collectionResponse.placeholder,
+    //       }),
+    //     };
+    //   },
+    // }),
+    collection: vectorCommon.collection,
     vectorIDs: Property.Dropdown({
       displayName: 'Vector IDs',
-      description: 'The IDs to be deleted.',
+      description: 'The ID of the vector you wish to view.',
       required: true,
       auth: apipieAuth,
       refreshers: ['auth', 'collection'],
       options: async ({ auth, collection }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        if (!collection) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please select a collection first',
-          };
-        }
-        const modelResponse = await retrieveVectorIDs(
-          String(collection),
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
+        if (!auth) return disabledState('Please connect your account first');
+        if (!collection) return disabledState('Please select a collection first');
+        return retrieveVectorIDs(String(collection), auth.secret_text);
       },
     }),
   },

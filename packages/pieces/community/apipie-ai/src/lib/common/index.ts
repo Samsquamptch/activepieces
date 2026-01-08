@@ -195,3 +195,8 @@ export interface AnonymizeTextResponse {
     type: string;
   }[]
 }
+
+export interface ParseDocumentResponse {
+  metadata: Record<string, unknown>;
+  content: string;
+}

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { propsValidation } from '@activepieces/pieces-common';
 import { omitUndefined, retrievedModels } from '../common/helper';
 import { AppConnectionType } from '@activepieces/shared';
+import { chatCommon } from '../common/helper';
 
 export const chatCompletion = createAction({
   name: 'chatCompletion',
@@ -13,45 +14,48 @@ export const chatCompletion = createAction({
   displayName: 'Chat Completion',
   description: 'Send a chat completion request to a selected LLM model.',
   props: {
-    model: Property.Dropdown({
-      displayName: 'Model',
-      description: 'The ID of the LLM model to use for completions.',
-      required: true,
-      auth: apipieAuth,
-      refreshers: [],
-      options: async ({ auth }) => {
-        if (!auth) {
-          return {
-            disabled: true,
-            options: [],
-            placeholder: 'Please connect your account first',
-          };
-        }
-        const modelResponse = await retrievedModels(
-          'type=llm',
-          auth.secret_text
-        );
-        return {
-          options: modelResponse.options,
-          disabled: modelResponse.disabled,
-          ...(modelResponse.placeholder && {
-            placeholder: modelResponse.placeholder,
-          }),
-        };
-      },
-    }),
-    userMessage: Property.LongText({
-      displayName: 'User Message',
-      required: true,
-      description:
-        "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
-    }),
-    systemInstructions: Property.LongText({
-      displayName: 'System Instructions',
-      required: false,
-      description:
-        "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
-    }),
+    // model: Property.Dropdown({
+    //   displayName: 'Model',
+    //   description: 'The ID of the LLM model to use for completions.',
+    //   required: true,
+    //   auth: apipieAuth,
+    //   refreshers: [],
+    //   options: async ({ auth }) => {
+    //     if (!auth) {
+    //       return {
+    //         disabled: true,
+    //         options: [],
+    //         placeholder: 'Please connect your account first',
+    //       };
+    //     }
+    //     const modelResponse = await retrievedModels(
+    //       'type=llm',
+    //       auth.secret_text
+    //     );
+    //     return {
+    //       options: modelResponse.options,
+    //       disabled: modelResponse.disabled,
+    //       ...(modelResponse.placeholder && {
+    //         placeholder: modelResponse.placeholder,
+    //       }),
+    //     };
+    //   },
+    // }),
+    // userMessage: Property.LongText({
+    //   displayName: 'User Message',
+    //   required: true,
+    //   description:
+    //     "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
+    // }),
+    // systemInstructions: Property.LongText({
+    //   displayName: 'System Instructions',
+    //   required: false,
+    //   description:
+    //     "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
+    // }),
+    model: chatCommon.model,
+    userMessage: chatCommon.userMessage,
+    systemInstructions: chatCommon.systemInstructions,
     maxTokens: Property.Number({
       displayName: 'Max Tokens',
       required: false,
