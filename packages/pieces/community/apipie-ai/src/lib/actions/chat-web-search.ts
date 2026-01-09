@@ -165,8 +165,6 @@ export const chatWebSearch = createAction({
       ...optionalParams,
     };
 
-    console.log(body)
-
     const res = await httpClient.sendRequest<CompletionResponse>({
       method: HttpMethod.POST,
       url: 'https://apipie.ai/v1/chat/completions',

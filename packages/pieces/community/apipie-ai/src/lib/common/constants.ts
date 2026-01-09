@@ -5,10 +5,10 @@ export const EFFORT_OPTIONS = [
 ]
 
 export const RESPONSE_LENGTH = [
-  { label: 'Max (full)', value: 'max' }, 
-  { label: 'Large (100k)', value: 'large' },
-  { label: 'Medium (50k)', value: 'medium' },
-  { label: 'Short (25k)', value: 'short' },
+  { label: 'Max', value: 'max' }, 
+  { label: 'Large', value: 'large' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Short', value: 'short' },
 ];
 
 export const AUDIO_RESPONSE_FORMATS = [

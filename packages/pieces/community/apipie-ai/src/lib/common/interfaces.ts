@@ -193,7 +193,7 @@ export interface AnonymizeTextResponse {
     actual_value: string;
     mapped_value: string;
     type: string;
-  }[]
+  }[];
 }
 
 export interface ParseDocumentResponse {
@@ -217,6 +217,23 @@ export interface SearchResultsResponse {
     total_records: number;
     requested_records: number;
     returned_records: number;
+    cost: number;
+    latencyMs: number;
+  };
+}
+
+export interface ScrapeResponse {
+  scrape_content:
+    | {
+        [key: string]: unknown;
+      }
+    | string;
+  usage: {
+    scrape_id: string;
+    timestamp: number;
+    requested_records: number;
+    raw_length: number;
+    parsed_length: number;
     cost: number;
     latencyMs: number;
   };
