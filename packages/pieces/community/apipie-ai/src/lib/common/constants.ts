@@ -52,6 +52,11 @@ export const VECTOR_PROVIDER = [
   { label: 'Qdrant', value: 'qdrant' },
 ];
 
+export const SEARCH_PROVIDER = [
+  { label: 'Valyu', value: 'valyu' },
+  { label: 'Google', value: 'google', },
+];
+
 export const DATE_POSTED = [
   { label: 'All', value: 'all' },
   { label: 'Today', value: 'today' },

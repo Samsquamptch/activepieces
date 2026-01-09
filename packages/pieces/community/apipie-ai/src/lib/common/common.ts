@@ -14,6 +14,7 @@ import {
   IMAGE_SIZES,
   REAL_ESTATE_SORT,
   RENT_TYPE_OPTIONS,
+  SEARCH_PROVIDER,
   SPACE_TYPE_OPTIONS,
 } from './constants';
 import { Property } from '@activepieces/pieces-framework';
@@ -291,6 +292,43 @@ export const imageCommon = {
     },
   }),
 };
+
+export const searchCommon = {
+  searchProvider: Property.StaticDropdown({
+      displayName: 'Search Provider',
+      description:
+        'Search provider to use for inline internet augmentation. Can be "valyu" or "google". Default is "valyu".',
+      required: false,
+      options: {
+        options: SEARCH_PROVIDER,
+        disabled: false,
+      },
+    }),
+    searchWhitelist: Property.Array({
+      displayName: 'URL Whitelist',
+      description:
+        'List of root FQDNs to allow for AI search (e.g. bbc.com, apnews.com). One per line.',
+      required: false,
+    }),
+    searchBlacklist: Property.Array({
+      displayName: 'URL Blacklist',
+      description:
+        'List of root FQDNs to block for AI search (e.g. cnn.com, foxnews.com). One per line.',
+      required: false,
+    }),
+    searchGeo: Property.ShortText({
+      displayName: 'Country Code',
+      description:
+        "Enter your country code for localized results (e.g. 'gb'). Defaults to 'us'.",
+      required: false,
+    }),
+    searchLang: Property.ShortText({
+      displayName: 'Language',
+      description:
+        "The language of search results (e.g. 'en'). Defaults to 'en'.",
+      required: false,
+    }),
+}
 
 export const vectorCommon = {
   collection: Property.Dropdown({

@@ -4,7 +4,7 @@ import {
   chatCommon,
   joinOrUndefined,
   omitUndefined,
-  retrievedModels,
+  searchCommon,
 } from '../common/common';
 import { EFFORT_OPTIONS } from '../common/constants';
 import { AppConnectionType } from '@activepieces/shared';
@@ -74,49 +74,54 @@ export const chatWebSearch = createAction({
         disabled: false,
       },
     }),
-    searchProvider: Property.StaticDropdown({
-      displayName: 'Search Provider',
-      description:
-        'Search provider to use for inline internet augmentation. Can be "valyu" or "google". Default is "valyu".',
-      required: false,
-      options: {
-        options: [
-          {
-            label: 'Valyu',
-            value: 'valyu',
-          },
-          {
-            label: 'Google',
-            value: 'google',
-          },
-        ],
-        disabled: false,
-      },
-    }),
-    searchWhitelist: Property.Array({
-      displayName: 'URL Whitelist',
-      description:
-        'List of root FQDNs to allow for AI search (e.g. bbc.com, apnews.com). One per line.',
-      required: false,
-    }),
-    searchBlacklist: Property.Array({
-      displayName: 'URL Blacklist',
-      description:
-        'List of root FQDNs to block for AI search (e.g. cnn.com, foxnews.com). One per line.',
-      required: false,
-    }),
-    searchGeo: Property.ShortText({
-      displayName: 'Country Code',
-      description:
-        "Enter your country code for localized results (e.g. 'gb'). Defaults to 'us'.",
-      required: false,
-    }),
-    searchLang: Property.ShortText({
-      displayName: 'Language',
-      description:
-        "The language of search results (e.g. 'en'). Defaults to 'en'.",
-      required: false,
-    }),
+    searchProvider: searchCommon.searchProvider,
+    searchWhitelist: searchCommon.searchWhitelist,
+    searchBlacklist: searchCommon.searchBlacklist,
+    searchGeo: searchCommon.searchGeo,
+    searchLang: searchCommon.searchLang,
+    // searchProvider: Property.StaticDropdown({
+    //   displayName: 'Search Provider',
+    //   description:
+    //     'Search provider to use for inline internet augmentation. Can be "valyu" or "google". Default is "valyu".',
+    //   required: false,
+    //   options: {
+    //     options: [
+    //       {
+    //         label: 'Valyu',
+    //         value: 'valyu',
+    //       },
+    //       {
+    //         label: 'Google',
+    //         value: 'google',
+    //       },
+    //     ],
+    //     disabled: false,
+    //   },
+    // }),
+    // searchWhitelist: Property.Array({
+    //   displayName: 'URL Whitelist',
+    //   description:
+    //     'List of root FQDNs to allow for AI search (e.g. bbc.com, apnews.com). One per line.',
+    //   required: false,
+    // }),
+    // searchBlacklist: Property.Array({
+    //   displayName: 'URL Blacklist',
+    //   description:
+    //     'List of root FQDNs to block for AI search (e.g. cnn.com, foxnews.com). One per line.',
+    //   required: false,
+    // }),
+    // searchGeo: Property.ShortText({
+    //   displayName: 'Country Code',
+    //   description:
+    //     "Enter your country code for localized results (e.g. 'gb'). Defaults to 'us'.",
+    //   required: false,
+    // }),
+    // searchLang: Property.ShortText({
+    //   displayName: 'Language',
+    //   description:
+    //     "The language of search results (e.g. 'en'). Defaults to 'en'.",
+    //   required: false,
+    // }),
   },
   async run(context) {
     await propsValidation.validateZod(context.propsValue, {
