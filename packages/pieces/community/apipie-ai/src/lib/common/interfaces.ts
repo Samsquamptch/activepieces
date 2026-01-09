@@ -200,3 +200,24 @@ export interface ParseDocumentResponse {
   metadata: Record<string, unknown>;
   content: string;
 }
+
+export interface SearchResultsResponse {
+  results: {
+    url: string;
+    title: string;
+    description: string;
+    rank: number;
+    global_rank: number;
+  }[];
+  usage: {
+    search_id: string;
+    timestamp: number;
+    search_provider: string;
+    keywords: string;
+    total_records: number;
+    requested_records: number;
+    returned_records: number;
+    cost: number;
+    latencyMs: number;
+  };
+}
