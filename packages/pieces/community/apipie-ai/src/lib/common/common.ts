@@ -189,9 +189,9 @@ export const imageCommon = {
           disabled: false,
           options: values
             .sort((a: string, b: string) => a.localeCompare(b))
-            .map((value: string) => ({
-              label: value,
-              value,
+            .map((style: string) => ({
+              label: style,
+              value: style,
             })),
         };
       } catch (error) {

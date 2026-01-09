@@ -1,6 +1,6 @@
 import { apipieAuth } from '../..';
 import { createAction, Property } from '@activepieces/pieces-framework';
-import { vectorCommon } from '../common/common';
+// import { vectorCommon } from '../common/common';
 import { AppConnectionType } from '@activepieces/shared';
 import { httpClient, HttpMethod } from '@activepieces/pieces-common';
 
@@ -36,12 +36,17 @@ export const processDocumentRagTune = createAction({
     //     };
     //   },
     // }),
-    collection: vectorCommon.collection,
-    url: Property.ShortText({
-      displayName: 'User Message',
+    // collection: vectorCommon.collection,
+    collection: Property.ShortText({
+      displayName: 'RAG Tune Collection',
+      description: 'The ragtune collection.',
       required: true,
+    }),
+    url: Property.ShortText({
+      displayName: 'Document URL',
       description:
         'URL of the document to process. Supported file types: PDF, DOC, DOCX, TXT, CSV, XLS, XLSX',
+        required: true,
     }),
     metaTag: Property.ShortText({
       displayName: 'Meta Tag',
