@@ -82,12 +82,12 @@ export const chatWebSearch = createAction({
       options: {
         options: [
           {
-            value: 'Valyu',
-            label: 'valyu',
+            label: 'Valyu',
+            value: 'valyu',
           },
           {
-            value: 'Google',
-            label: 'google',
+            label: 'Google',
+            value: 'google',
           },
         ],
         disabled: false,
@@ -159,6 +159,8 @@ export const chatWebSearch = createAction({
       web_search_options: searchContext,
       ...optionalParams,
     };
+
+    console.log(body)
 
     const res = await httpClient.sendRequest<CompletionResponse>({
       method: HttpMethod.POST,

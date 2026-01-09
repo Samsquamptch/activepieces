@@ -81,12 +81,12 @@ export const chatFunctions = createAction({
       options: {
         options: [
           {
-            value: 'Auto',
-            label: 'auto',
+            label: 'Auto',
+            value: 'auto',
           },
           {
-            value: 'Required',
-            label: 'required',
+            label: 'Required',
+            value: 'required',
           },
         ],
         disabled: false,
@@ -136,9 +136,11 @@ export const chatFunctions = createAction({
       model: context.propsValue.model,
       messages,
       tools: context.propsValue.functions,
-      tools_model: context.propsValue.model,
+      // tools_model: context.propsValue.model,
       ...optionalParams,
     };
+
+    console.log(body);
 
     const res = await httpClient.sendRequest<CompletionResponse>({
       method: HttpMethod.POST,
