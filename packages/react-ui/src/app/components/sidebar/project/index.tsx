@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { getProjectName } from '@/hooks/project-hooks';
+import { getProjectName } from '@/hooks/project-collection';
 import { cn } from '@/lib/utils';
 import {
   PROJECT_COLOR_PALETTE,
@@ -49,9 +49,8 @@ const ProjectSideBarItem = ({
     ) : (
       <User className="size-5 flex items-center justify-center cursor-pointer" />
     );
-
   return (
-    <SidebarMenuItem onClick={(e) => e.stopPropagation()}>
+    <SidebarMenuItem>
       {state === 'collapsed' ? (
         <TooltipProvider delayDuration={0}>
           <Tooltip>
@@ -60,11 +59,9 @@ const ProjectSideBarItem = ({
                 variant="ghost"
                 size="icon"
                 onClick={() => handleProjectSelect(project.id)}
-                className={cn(
-                  isCurrentProject &&
-                    'bg-sidebar-active hover:!bg-sidebar-active',
-                  'relative flex items-center justify-center',
-                )}
+                className={cn('relative flex items-center justify-center', {
+                  '!bg-sidebar-accent': isCurrentProject,
+                })}
               >
                 {projectAvatar}
               </Button>
@@ -77,16 +74,15 @@ const ProjectSideBarItem = ({
       ) : (
         <SidebarMenuButton
           asChild
-          className={cn(
-            'px-2 py-5 cursor-pointer group/project',
-            isCurrentProject && 'bg-sidebar-active hover:!bg-sidebar-active',
-          )}
+          className={cn('px-2 py-5 cursor-pointer group/project', {
+            '!bg-sidebar-accent ': isCurrentProject,
+          })}
         >
-          <div className="w-full flex items-center justify-between gap-2">
-            <div
-              onClick={() => handleProjectSelect(project.id)}
-              className="flex-1 flex items-center gap-2 min-w-0"
-            >
+          <div
+            onClick={() => handleProjectSelect(project.id)}
+            className="w-full flex items-center justify-between gap-2"
+          >
+            <div className="flex-1 flex items-center gap-2 min-w-0">
               <ApProjectDisplay
                 title={getProjectName(project)}
                 icon={project.icon}
