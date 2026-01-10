@@ -27,6 +27,8 @@ import { parseDocument } from './lib/actions/parse-document';
 import { chatRagTune } from './lib/actions/chat-rag-tune';
 import { listRagTuneCollections } from './lib/actions/list-rag-tune-collections';
 import { deleteRagTuneCollection } from './lib/actions/delete-rag-tune-collection';
+import { webSearch } from './lib/actions/web-search';
+import { webScraper } from './lib/actions/web-scraper';
 
 export const apipieAuth = PieceAuth.SecretText({
   displayName: 'API Key',
@@ -69,7 +71,9 @@ export const apipieAi = createPiece({
     parseDocument,
     chatRagTune,
     listRagTuneCollections,
-    deleteRagTuneCollection
+    deleteRagTuneCollection,
+    webSearch,
+    webScraper
   ],
   triggers: [],
 });
