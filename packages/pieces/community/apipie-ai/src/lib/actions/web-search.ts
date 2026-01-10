@@ -77,7 +77,7 @@ export const webSearch = createAction({
     responseLength: Property.StaticDropdown({
       displayName: 'Response Length',
       description:
-        'Valyu only. Controls the length of content returned per result. Lengths for options shown in brackets - i.e. "Short (25k).',
+        'Valyu only. Controls the length of content returned per result.',
       options: {
         options: RESPONSE_LENGTH,
         disabled: false,
