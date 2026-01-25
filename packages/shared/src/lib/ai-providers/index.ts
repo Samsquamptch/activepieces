@@ -40,6 +40,9 @@ export type OpenAIProviderAuthConfig = Static<typeof OpenAIProviderAuthConfig>
 export const OpenRouterProviderAuthConfig = BaseAIProviderAuthConfig
 export type OpenRouterProviderAuthConfig = Static<typeof OpenRouterProviderAuthConfig>
 
+export const ApiPieProviderAuthConfig = BaseAIProviderAuthConfig
+export type ApiPieProviderAuthConfig = Static<typeof ApiPieProviderAuthConfig>
+
 export const AnthropicProviderConfig = Type.Object({})
 export type AnthropicProviderConfig = Static<typeof AnthropicProviderConfig>
 
@@ -82,6 +85,9 @@ export type OpenAIProviderConfig = Static<typeof OpenAIProviderConfig>
 export const OpenRouterProviderConfig = Type.Object({})
 export type OpenRouterProviderConfig = Static<typeof OpenRouterProviderConfig>
 
+export const ApiPieProviderConfig = Type.Object({})
+export type ApiPieProviderConfig = Static<typeof ApiPieProviderConfig>
+
 export const AIProviderAuthConfig = Type.Union([
     AnthropicProviderAuthConfig,
     AzureProviderAuthConfig,
@@ -91,6 +97,7 @@ export const AIProviderAuthConfig = Type.Union([
     CloudflareGatewayProviderAuthConfig,
     OpenAICompatibleProviderAuthConfig,
     ActivePiecesProviderAuthConfig,
+    ApiPieProviderAuthConfig,
 ])
 export type AIProviderAuthConfig = Static<typeof AIProviderAuthConfig>
 // Order matters, put schemas with required fields first, empty ones last. This is to avoid empty objects matching any object.
@@ -103,6 +110,7 @@ export const AIProviderConfig = Type.Union([
     OpenAIProviderConfig,
     OpenRouterProviderConfig,
     ActivePiecesProviderConfig,
+    ApiPieProviderConfig
 ])
 export type AIProviderConfig = Static<typeof AIProviderConfig>
 
@@ -114,6 +122,7 @@ export enum AIProviderName {
     GOOGLE = 'google',
     ACTIVEPIECES = 'activepieces',
     CLOUDFLARE_GATEWAY = 'cloudflare-gateway',
+    APIPIE = 'apipie',
     CUSTOM = 'custom',
 }
 
@@ -129,6 +138,12 @@ const ProviderConfigUnion = DiscriminatedUnion('provider', [
         provider: Type.Literal(AIProviderName.OPENROUTER),
         config: OpenRouterProviderConfig,
         auth: OpenRouterProviderAuthConfig,
+    }),
+    Type.Object({
+        displayName: Type.String({ minLength: 1 }),
+        provider: Type.Literal(AIProviderName.APIPIE),
+        config: ApiPieProviderConfig,
+        auth: ApiPieProviderAuthConfig,
     }),
     Type.Object({
         displayName: Type.String({ minLength: 1 }),
