@@ -13,12 +13,11 @@ import {
   AgentTool,
   TASK_COMPLETION_TOOL_NAME,
   AIProviderName,
-  AgentProviderModel,
-  ExecutionToolStatus,
 } from '@activepieces/shared';
 import { hasToolCall, stepCountIs, streamText } from 'ai';
 import { agentOutputBuilder } from './agent-output-builder';
 import { createAIModel } from '../../common/ai-sdk';
+import { aiProps } from '../../common/props';
 import { inspect } from 'util';
 import { agentUtils } from './utils';
 import { constructAgentTools } from './tools';
@@ -69,10 +68,8 @@ export const runAgent = createAction({
       description: 'Describe what you want the assistant to do.',
       required: true,
     }),
-    [AgentPieceProps.AI_PROVIDER_MODEL]: Property.Object({
-      displayName: 'AI Model',
-      required: true,
-    }),
+    [AgentPieceProps.AI_PROVIDER]: aiProps({ modelType: 'text' }).provider,
+    [AgentPieceProps.AI_MODEL]: aiProps({ modelType: 'text' }).model,
     [AgentPieceProps.AGENT_TOOLS]: Property.Array({
       displayName: 'Agent Tools',
       required: false,
@@ -105,129 +102,86 @@ export const runAgent = createAction({
     }),
   },
   async run(context) {
-    const { prompt, maxSteps, aiProviderModel } = context.propsValue;
-    const agentProviderModel = aiProviderModel as AgentProviderModel
+    const { prompt, maxSteps, model: modelId, provider } = context.propsValue;
 
     const model = await createAIModel({
-      modelId: agentProviderModel.model,
-      provider: agentProviderModel.provider as AIProviderName,
+      modelId,
+      provider: provider as AIProviderName,
       engineToken: context.server.token,
       apiUrl: context.server.apiUrl,
       projectId: context.project.id,
       flowId: context.flows.current.id,
       runId: context.run.id,
     });
+
     const outputBuilder = agentOutputBuilder(prompt);
     const hasStructuredOutput =
       !isNil(context.propsValue.structuredOutput) &&
       context.propsValue.structuredOutput.length > 0;
-    const structuredOutput = hasStructuredOutput ? context.propsValue.structuredOutput as AgentOutputField[] : undefined;
+    const structuredOutput = hasStructuredOutput ? context.propsValue.structuredOutput as AgentOutputField[] : undefined
     const agentTools = context.propsValue.agentTools as AgentTool[];
+
     const { mcpClients, tools } = await constructAgentTools({
       context,
       agentTools,
       model,
       outputBuilder,
       structuredOutput
+    })
+
+    const stream = streamText({
+      model: model,
+      system: agentUtils.getPrompts(prompt).system,
+      prompt: agentUtils.getPrompts(prompt).prompt,
+      tools,
+      stopWhen: [stepCountIs(maxSteps), hasToolCall(TASK_COMPLETION_TOOL_NAME)],
+      onFinish: async () => {
+        await Promise.all(mcpClients.map(async (client) => client.close()))
+      },
     });
 
-    const errors: { type: string; message: string; details?: unknown }[] = [];
-
-    try {
-      const stream = streamText({
-        model: model,
-        system: agentUtils.getPrompts(prompt).system,
-        prompt: agentUtils.getPrompts(prompt).prompt,
-        tools,
-        stopWhen: [stepCountIs(maxSteps), hasToolCall(TASK_COMPLETION_TOOL_NAME)],
-        onFinish: async () => {
-          await Promise.all(mcpClients.map(async (client) => client.close()));
-        },
-      });
-
-      for await (const chunk of stream.fullStream) {
-        try {
-          switch (chunk.type) {
-            case 'text-delta': {
-              outputBuilder.addMarkdown(chunk.text);
-              break;
-            }
-            case 'tool-call': {
-              if (agentUtils.isTaskCompletionToolCall(chunk.toolName)) {
-                continue;
-              }
-              outputBuilder.startToolCall({
-                toolName: chunk.toolName,
-                toolCallId: chunk.toolCallId,
-                input: chunk.input as Record<string, unknown>,
-                agentTools: agentTools,
-              });
-              break;
-            }
-            case 'tool-result': {
-              if (agentUtils.isTaskCompletionToolCall(chunk.toolName)) {
-                continue;
-              }
-              const toolOutput = chunk.output as Record<string, unknown>;
-              
-              if (toolOutput['status'] === ExecutionToolStatus.FAILED && toolOutput['errorMessage']) {
-                outputBuilder.addMarkdown(
-                  `\n\n**Error:** ${JSON.stringify(toolOutput['errorMessage'])}\n\n`
-                );
-              }
-              
-              outputBuilder.finishToolCall({
-                toolCallId: chunk.toolCallId,
-                output: toolOutput,
-              });
-              break;
-            }
-            case 'tool-error': {
-              errors.push({
-                type: 'tool-error',
-                message: `Tool ${chunk.toolName} failed`,
-                details: chunk.error,
-              });
-              outputBuilder.failToolCall({
-                toolCallId: chunk.toolCallId,
-              });
-              break;
-            }
-            case 'error': {
-              errors.push({
-                type: 'stream-error',
-                message: 'Error during streaming',
-                details: inspect(chunk.error),
-              });
-              break;
-            }
+    for await (const chuck of stream.fullStream) {
+      switch (chuck.type) {
+        case 'text-delta': {
+          outputBuilder.addMarkdown(chuck.text);
+          break;
+        }
+        case 'tool-call': {
+          if (agentUtils.isTaskCompletionToolCall(chuck.toolName)) {
+            continue;
           }
-          await context.output.update({ data: outputBuilder.build() });
-        } catch (innerError) {
-          errors.push({
-            type: 'chunk-processing-error',
-            message: 'Error processing chunk',
-            details: inspect(innerError),
+          outputBuilder.startToolCall({
+            toolName: chuck.toolName,
+            toolCallId: chuck.toolCallId,
+            input: chuck.input as Record<string, unknown>,
+            agentTools: agentTools,
           });
+          break;
+        }
+        case 'tool-result': {
+          if (agentUtils.isTaskCompletionToolCall(chuck.toolName)) {
+            continue;
+          }
+          outputBuilder.finishToolCall({
+            toolCallId: chuck.toolCallId,
+            output: chuck.output as Record<string, unknown>,
+          });
+          break;
+        }
+        case 'error': {
+          outputBuilder.fail({
+            message: 'Error running agent: ' + inspect(chuck.error),
+          });
+          break;
         }
       }
-
-      if (errors.length > 0) {
-        const errorSummary = errors.map(e => `${e.type}: ${e.message}`).join('\n');
-        outputBuilder.addMarkdown(`\n\n**Errors encountered:**\n${errorSummary}`);
-        outputBuilder.fail({ message: 'Agent completed with errors' });
-        await context.output.update({ data: outputBuilder.build() });
-      } else {
-        outputBuilder.setStatus(AgentTaskStatus.COMPLETED)
-      }
-
-    } catch (error) {
-      const errorMessage = `Agent failed unexpectedly: ${inspect(error)}`;
-      outputBuilder.fail({ message: errorMessage });
       await context.output.update({ data: outputBuilder.build() });
-      await Promise.all(mcpClients.map(async (client) => client.close()));
+    }
+    const { status } = outputBuilder.build();
+    if (status == AgentTaskStatus.IN_PROGRESS) {
+      outputBuilder.fail({});
     }
 
     return outputBuilder.build();
-  }
+  },
 });

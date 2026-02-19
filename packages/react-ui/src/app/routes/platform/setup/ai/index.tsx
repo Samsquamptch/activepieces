@@ -7,10 +7,10 @@ import { flagsHooks } from '@/hooks/flags-hooks';
 import { userHooks } from '@/hooks/user-hooks';
 import { PlatformRole, ApFlagId } from '@activepieces/shared';
 
-import { SUPPORTED_AI_PROVIDERS } from '../../../../../features/agents/ai-providers';
 import LockedFeatureGuard from '../../../../components/locked-feature-guard';
 
 import { AIProviderCard } from './universal-pieces/ai-provider-card';
+import { SUPPORTED_AI_PROVIDERS } from './universal-pieces/supported-ai-providers';
 
 export default function AIProvidersPage() {
   const { data: providers, refetch } = useQuery({

@@ -10,14 +10,14 @@ import { areSheetIdsValid, getAccessToken } from '../common/common';
 
 export const exportSheetAction = createAction({
   name: 'export_sheet',
-  displayName: 'Export Worksheet',
-  description: 'Download a worksheet as a CSV or TSV file.',
+  displayName: 'Export Sheet',
+  description: 'Export a Google Sheets tab to CSV or TSV format.',
   auth: googleSheetsAuth,
   props: {
     ...commonProps,
     format: Property.StaticDropdown({
       displayName: 'Export Format',
-      description: 'Select the file type to export the sheet as.',
+      description: 'The format to export the sheet to.',
       required: true,
       defaultValue: 'csv',
       options: {
@@ -56,7 +56,6 @@ export const exportSheetAction = createAction({
           token: await getAccessToken(auth),
         },
         responseType: 'arraybuffer',
-        followRedirects: true,
       });
 
       if (returnAsText) {

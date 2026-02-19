@@ -25,6 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { platformHooks } from '@/hooks/platform-hooks';
 import { authenticationSession } from '@/lib/authentication-session';
 import {
+  GitBranchType,
   GitPushOperationType,
   PushGitRepoRequest,
   PushFlowsGitRepoRequest,
@@ -54,7 +55,6 @@ type PushToGitDialogProps =
 const PushToGitDialog = (props: PushToGitDialogProps) => {
   const [open, setOpen] = React.useState(false);
 
-  const showPushToGit = gitSyncHooks.useShowPushToGit();
   const { platform } = platformHooks.useCurrentPlatform();
   const { gitSync } = gitSyncHooks.useGitSync(
     authenticationSession.getProjectId()!,
@@ -109,7 +109,7 @@ const PushToGitDialog = (props: PushToGitDialogProps) => {
     },
   });
 
-  if (!showPushToGit) {
+  if (!gitSync || gitSync.branchType !== GitBranchType.DEVELOPMENT) {
     return null;
   }
   return (

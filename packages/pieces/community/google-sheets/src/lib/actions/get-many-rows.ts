@@ -1,15 +1,19 @@
-import { createAction } from "@activepieces/pieces-framework";
+import { createAction, Property } from "@activepieces/pieces-framework";
 import { areSheetIdsValid, googleSheetsAuth, googleSheetsCommon, mapRowsToHeaderNames } from "../common/common";
-import { commonProps, isFirstRowHeaderProp } from "../common/props";
+import { commonProps } from "../common/props";
 
 export const getManyRowsAction = createAction({
     name: 'get-many-rows',
     auth: googleSheetsAuth,
-    displayName: 'Get All Rows',
-    description: 'Get all the rows from a specific sheet.',
+    displayName: 'Get Many Rows',
+    description: 'Get all values from the selected sheet.',
     props: {
         ...commonProps,
-        first_row_headers: isFirstRowHeaderProp()
+        first_row_headers: Property.Checkbox({
+            displayName: 'Does the first row contain headers?',
+            required: true,
+            defaultValue: false,
+        }),
     },
     async run(context) { 
         const {first_row_headers,sheetId,spreadsheetId} = context.propsValue;

@@ -17,7 +17,6 @@ import {
     FlowVersionState,
     isNil,
     LATEST_FLOW_SCHEMA_VERSION,
-    Note,
     PlatformId,
     ProjectId,
     sanitizeObjectForPostgresql,
@@ -101,7 +100,6 @@ export const flowVersionService = (log: FastifyBaseLogger) => ({
                         trigger: previousVersion.trigger,
                         displayName: previousVersion.displayName,
                         schemaVersion: previousVersion.schemaVersion,
-                        notes: previousVersion.notes,
                     },
                 }]
                 break
@@ -113,6 +111,7 @@ export const flowVersionService = (log: FastifyBaseLogger) => ({
                     stepName: userOperation.request.stepName,
                     payload: userOperation.request.payload,
                     type: userOperation.request.type,
+                    dataType: userOperation.request.dataType,
                 })
                 if (flowStructureUtil.isAction(modifiedStep.type)) {
                     operations = [{
@@ -150,14 +149,7 @@ export const flowVersionService = (log: FastifyBaseLogger) => ({
                 operation,
                 platformId,
                 log,
-                userId,
             )
-            if (operation.type === FlowOperationType.ADD_NOTE) {
-                const noteIndex = mutatedFlowVersion.notes.findIndex((note) => note.id === operation.request.id)
-                if (noteIndex !== -1) {
-                    mutatedFlowVersion.notes[noteIndex] = { ...mutatedFlowVersion.notes[noteIndex], ownerId: userId }
-                }
-            }
         }
 
         mutatedFlowVersion.updated = dayjs().toISOString()
@@ -300,7 +292,6 @@ export const flowVersionService = (log: FastifyBaseLogger) => ({
         flowId: FlowId,
         request: {
             displayName: string
-            notes: Note[]
         },
     ): Promise<FlowVersion> {
         const flowVersion: NewFlowVersion = {
@@ -319,7 +310,6 @@ export const flowVersionService = (log: FastifyBaseLogger) => ({
             agentIds: [],
             valid: false,
             state: FlowVersionState.DRAFT,
-            notes: request.notes,
         }
         return flowVersionRepo().save(flowVersion)
     },
@@ -360,14 +350,13 @@ async function applySingleOperation(
     operation: FlowOperationRequest,
     platformId: PlatformId,
     log: FastifyBaseLogger,
-    userId: UserId | null,
 ): Promise<FlowVersion> {
     await flowVersionSideEffects(log).preApplyOperation({
         projectId,
         flowVersion,
         operation,
     })
-    const preparedOperation = await flowVersionValidationUtil(log).prepareRequest({ platformId, request: operation, userId })
+    const preparedOperation = await flowVersionValidationUtil(log).prepareRequest({ platformId, request: operation })
     const updatedFlowVersion = flowOperations.apply(flowVersion, preparedOperation)
     return updatedFlowVersion
 }

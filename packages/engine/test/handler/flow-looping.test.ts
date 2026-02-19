@@ -20,7 +20,7 @@ describe('flow with looping', () => {
                 firstLoopAction: codeAction,
             }),
             executionState: FlowExecutorContext.empty(),
-            constants: generateMockEngineConstants({ stepNames: ['loop'] }),
+            constants: generateMockEngineConstants(),
         })
 
         const loopOut = result.steps.loop as LoopStepOutput
@@ -48,7 +48,7 @@ describe('flow with looping', () => {
         const result = await flowExecutor.execute({
             action: generateArray,
             executionState: FlowExecutorContext.empty(),
-            constants: generateMockEngineConstants({ stepNames: ['echo_step'] }),
+            constants: generateMockEngineConstants(),
         })
 
         const loopOut = result.steps.loop as LoopStepOutput

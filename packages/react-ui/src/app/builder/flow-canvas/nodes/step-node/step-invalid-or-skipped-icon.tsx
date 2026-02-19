@@ -19,7 +19,7 @@ const StepInvalidOrSkippedIcon = ({
 }) => {
   return (
     <div
-      className="absolute flex items-center -left-[22px] "
+      className="absolute flex items-center -left-[22px] bg-builder-background "
       style={{ height: `${flowCanvasConsts.AP_NODE_SIZE.STEP.height}px` }}
     >
       <Tooltip>

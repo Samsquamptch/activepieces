@@ -1,10 +1,9 @@
 import { GitPushOperationType } from '@activepieces/ee-shared'
 import { ProjectResourceType, securityAccess } from '@activepieces/server-shared'
-import { ApId, CreateTableRequest, CreateTableWebhookRequest, ExportTableResponse, ListTablesRequest, Permission, PrincipalType, SeekPage, SERVICE_KEY_SECURITY_OPENAPI, SharedTemplate, Table, UpdateTableRequest } from '@activepieces/shared'
+import { ApId, CreateTableRequest, CreateTableWebhookRequest, ExportTableResponse, ListTablesRequest, Permission, PrincipalType, SeekPage, SERVICE_KEY_SECURITY_OPENAPI, Table, UpdateTableRequest } from '@activepieces/shared'
 import { FastifyPluginAsyncTypebox, Type } from '@fastify/type-provider-typebox'
 import { StatusCodes } from 'http-status-codes'
 import { gitRepoService } from '../../ee/projects/project-release/git-sync/git-sync.service'
-import { userService } from '../../user/user-service'
 import { recordSideEffects } from '../record/record-side-effects'
 import { recordService } from '../record/record.service'
 import { TableEntity } from './table.entity'
@@ -37,16 +36,6 @@ export const tablesController: FastifyPluginAsyncTypebox = async (fastify) => {
             limit: request.query.limit ?? DEFAULT_PAGE_SIZE,
             name: request.query.name,
             externalIds: request.query.externalIds,
-        })
-    })
-
-    fastify.get('/:id/template', GetTableTemplateRequestOptions, async (request) => {
-        const userMetadata = request.principal.type === PrincipalType.USER ? await userService.getMetaInformation({ id: request.principal.id }) : null
-        return tableService.getTemplate({
-            tableId: request.params.id,
-            userMetadata,
-            projectId: request.projectId,
-            log: request.log,
         })
     })
 
@@ -120,7 +109,7 @@ export const tablesController: FastifyPluginAsyncTypebox = async (fastify) => {
 
 const CreateRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.BODY,
         }),
     },
@@ -134,7 +123,7 @@ const CreateRequest = {
 
 const GetTablesRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.READ_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.READ_TABLE, {
             type: ProjectResourceType.QUERY,
         }),
     },
@@ -151,7 +140,7 @@ const GetTablesRequest = {
 
 const DeleteRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -172,7 +161,7 @@ const DeleteRequest = {
 
 const GetTableByIdRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.READ_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.READ_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -192,7 +181,7 @@ const GetTableByIdRequest = {
 
 const ExportTableRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.READ_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.READ_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -212,7 +201,7 @@ const ExportTableRequest = {
 
 const CreateTableWebhook = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -230,7 +219,7 @@ const CreateTableWebhook = {
 
 const DeleteTableWebhook = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -248,7 +237,7 @@ const DeleteTableWebhook = {
 
 const UpdateRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -266,7 +255,7 @@ const UpdateRequest = {
 
 const ClearTableRequest = {
     config: {
-        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], Permission.WRITE_TABLE, {
+        security: securityAccess.project([PrincipalType.USER, PrincipalType.ENGINE], Permission.WRITE_TABLE, {
             type: ProjectResourceType.TABLE,
             tableName: TableEntity,
         }),
@@ -284,24 +273,3 @@ const ClearTableRequest = {
     },
 }
 
-const GetTableTemplateRequestOptions = {
-    config: {
-        security: securityAccess.project(
-            [PrincipalType.USER, PrincipalType.ENGINE, PrincipalType.SERVICE], 
-            Permission.READ_TABLE, {
-                type: ProjectResourceType.TABLE,
-                tableName: TableEntity,
-            }),
-    },
-    schema: {
-        tags: ['tables'],
-        security: [SERVICE_KEY_SECURITY_OPENAPI],
-        description: 'Export table as template',
-        params: Type.Object({
-            id: ApId,
-        }),
-        response: {
-            [StatusCodes.OK]: SharedTemplate,
-        },
-    },
-}

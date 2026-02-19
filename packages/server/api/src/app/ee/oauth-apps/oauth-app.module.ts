@@ -22,7 +22,7 @@ const oauthAppController: FastifyPluginAsyncTypebox = async (app) => {
         '/',
         {
             config: {
-                security: securityAccess.publicPlatform([PrincipalType.USER]),
+                security: securityAccess.platformAdminOnly([PrincipalType.USER]),
             },
             schema: {
                 querystring: ListOAuth2AppRequest,

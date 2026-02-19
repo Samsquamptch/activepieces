@@ -12,7 +12,7 @@ export async function pinchPaymentsClient(
 ) {
   const tokenResponse = await getPinchPaymentsToken(credentials);
   
-  let url = `${BASE_URL}/${credentials.environment}${endpoint}`;
+  let url = `${BASE_URL}${endpoint}`;
   if (queryParams) {
     const params = new URLSearchParams(queryParams);
     url = `${url}?${params.toString()}`;
@@ -24,7 +24,6 @@ export async function pinchPaymentsClient(
     headers: {
       'Authorization': `Bearer ${tokenResponse.access_token}`,
       'Content-Type': 'application/json',
-      'User-Agent': 'activepieces'
     },
     body,
   });
@@ -62,7 +61,7 @@ export async function createOrUpdatePayer(
   credentials: PinchPaymentsAuthCredentials,
   payer: PinchPayer
 ) {
-  return pinchPaymentsClient(credentials, HttpMethod.POST, '/payers', payer);
+  return pinchPaymentsClient(credentials, HttpMethod.POST, '/test/payers', payer);
 }
 
 export async function listPayers(
@@ -74,7 +73,7 @@ export async function listPayers(
   if (params?.pageSize) queryParams['pageSize'] = params.pageSize.toString();
   if (params?.filter) queryParams['filter'] = params.filter;
 
-  return pinchPaymentsClient(credentials, HttpMethod.GET, '/payers', undefined, queryParams);
+  return pinchPaymentsClient(credentials, HttpMethod.GET, '/test/payers', undefined, queryParams);
 }
 
 export interface ListPlansParams {
@@ -90,7 +89,7 @@ export async function listPlans(
   if (params?.page) queryParams['page'] = params.page.toString();
   if (params?.pageSize) queryParams['pageSize'] = params.pageSize.toString();
 
-  return pinchPaymentsClient(credentials, HttpMethod.GET, '/plans', undefined, queryParams);
+  return pinchPaymentsClient(credentials, HttpMethod.GET, '/test/plans', undefined, queryParams);
 }
 
 export interface CreateSubscriptionParams {
@@ -106,7 +105,7 @@ export async function createSubscription(
   credentials: PinchPaymentsAuthCredentials,
   subscription: CreateSubscriptionParams
 ) {
-  return pinchPaymentsClient(credentials, HttpMethod.POST, '/subscriptions', subscription);
+  return pinchPaymentsClient(credentials, HttpMethod.POST, '/test/subscriptions', subscription);
 }
 
 export interface CreateWebhookParams {
@@ -126,12 +125,12 @@ export async function createWebhook(
   credentials: PinchPaymentsAuthCredentials,
   webhook: CreateWebhookParams
 ): Promise<WebhookResponse> {
-  return pinchPaymentsClient(credentials, HttpMethod.POST, '/webhooks', webhook);
+  return pinchPaymentsClient(credentials, HttpMethod.POST, '/test/webhooks', webhook);
 }
 
 export async function deleteWebhook(
   credentials: PinchPaymentsAuthCredentials,
   webhookId: string
 ): Promise<void> {
-  return pinchPaymentsClient(credentials, HttpMethod.DELETE, `/webhooks/${webhookId}`);
+  return pinchPaymentsClient(credentials, HttpMethod.DELETE, `/test/webhooks/${webhookId}`);
 }

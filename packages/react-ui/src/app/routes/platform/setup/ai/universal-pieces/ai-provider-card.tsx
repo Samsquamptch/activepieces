@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AIProviderWithoutSensitiveData } from '@activepieces/shared';
 
-import { AiProviderInfo } from '../../../../../../features/agents/ai-providers';
-
+import { AiProviderInfo } from './supported-ai-providers';
 import { UpsertAIProviderDialog } from './upsert-provider-dialog';
 
 type AIProviderCardProps = {

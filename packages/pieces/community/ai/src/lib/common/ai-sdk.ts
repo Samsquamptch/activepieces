@@ -151,21 +151,3 @@ export async function createAIModel({
 export const anthropicSearchTool = anthropic.tools.webSearch_20250305;
 export const openaiSearchTool = openai.tools.webSearchPreview;
 export const googleSearchTool = google.tools.googleSearch;
-
-const handleDefaultAiGatewayProvider = ({accountId, gatewayId, headers, isImage, modelId}: {
-    accountId: string;
-    gatewayId: string;
-    headers: Record<string, string>;
-    isImage?: boolean;
-    modelId: string;
-})=>{
-    const provider = createOpenAICompatible({
-        name: 'cloudflare',
-        baseURL: `https://gateway.ai.cloudflare.com/v1/${accountId}/${gatewayId}/compat`,
-        headers,
-    })
-    if (isImage) {
-        return provider.imageModel(modelId)
-    }
-    return provider.chatModel(modelId)
-}

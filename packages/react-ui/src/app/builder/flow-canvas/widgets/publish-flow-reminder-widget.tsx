@@ -53,6 +53,7 @@ const PublishFlowReminderWidget = () => {
     flowVersion,
     isPublishing,
     run,
+    isValid,
     isSaving,
   });
   const { mutate: discardChange, isPending: isDiscardingChanges } = useMutation(
@@ -89,12 +90,10 @@ const PublishFlowReminderWidget = () => {
   if (!showShouldPublishButton) {
     return null;
   }
-  const showLoading = isPublishing || isDiscardingChanges || isSaving;
-  const loadingText = pickLoadingText({
-    isDiscardingChanges,
-    isPublishing,
-    isSaving,
-  });
+  const showLoading = isPublishing || isDiscardingChanges;
+  const loadingText = isDiscardingChanges
+    ? t('Discarding changes...')
+    : t('Publishing...');
   return (
     <LargeWidgetWrapper>
       <div className="flex items-center gap-2">
@@ -118,25 +117,18 @@ const PublishFlowReminderWidget = () => {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="tooltip-wrapper">
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="z-50"
-                  loading={isSaving}
-                  //for e2e tests
-                  name="Publish"
-                  onClick={() => publish()}
-                  disabled={!isValid}
-                >
-                  {t('Publish')}
-                </Button>
-              </div>
+              <Button
+                size="sm"
+                variant="default"
+                loading={isSaving}
+                //for e2e tests
+                name="Publish"
+                onClick={() => publish()}
+              >
+                {t('Publish')}
+              </Button>
             </TooltipTrigger>
             {isSaving && <TooltipContent>{t('Saving...')}</TooltipContent>}
-            {!isValid && (
-              <TooltipContent>{t('You have incomplete steps')}</TooltipContent>
-            )}
           </Tooltip>
         </div>
       )}
@@ -151,11 +143,13 @@ const useShouldShowPublishButton = ({
   flowVersion,
   isPublishing,
   run,
+  isValid,
   isSaving,
 }: {
   flowVersion: FlowVersion;
   isPublishing: boolean;
   run: FlowRun | null;
+  isValid: boolean;
   isSaving: boolean;
 }) => {
   const { checkAccess } = useAuthorization();
@@ -166,27 +160,7 @@ const useShouldShowPublishButton = ({
     ((permissionToEditFlow && isViewingPublishableVersion) ||
       isPublishing ||
       isSaving) &&
-    isNil(run)
+    isNil(run) &&
+    isValid
   );
 };
-
-function pickLoadingText({
-  isDiscardingChanges,
-  isPublishing,
-  isSaving,
-}: {
-  isDiscardingChanges: boolean;
-  isPublishing: boolean;
-  isSaving: boolean;
-}) {
-  if (isSaving) {
-    return t('Saving...');
-  }
-  if (isDiscardingChanges) {
-    return t('Discarding changes...');
-  }
-  if (isPublishing) {
-    return t('Publishing...');
-  }
-  return '';
-}

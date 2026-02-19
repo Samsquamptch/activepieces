@@ -64,7 +64,7 @@ export const McpAuthHeaders = Type.Object({
     headers: Type.Record(Type.String(), Type.String()),
 })
 
-export const McpAuthConfig = DiscriminatedUnion('type', [
+export const McpAuthConfig = Type.Union([
     McpAuthNone,
     McpAuthAccessToken,
     McpAuthApiKey,
@@ -72,11 +72,12 @@ export const McpAuthConfig = DiscriminatedUnion('type', [
 ])
 export type McpAuthConfig = Static<typeof McpAuthConfig>
 
+// Updated AgentPieceToolMetadata to use the new structure
 export const AgentPieceToolMetadata = Type.Object({
     pieceName: Type.String(),
     pieceVersion: Type.String(),
     actionName: Type.String(),
-    predefinedInput: Type.Optional(PredefinedInputsStructure),
+    predefinedInput: PredefinedInputsStructure,
 })
 export type AgentPieceToolMetadata = Static<typeof AgentPieceToolMetadata>
 

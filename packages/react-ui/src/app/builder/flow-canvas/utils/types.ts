@@ -4,7 +4,6 @@ import {
   FlowAction,
   StepLocationRelativeToParent,
   FlowTrigger,
-  Note,
 } from '@activepieces/shared';
 
 export enum ApNodeType {
@@ -15,7 +14,6 @@ export enum ApNodeType {
   GRAPH_START_WIDGET = 'GRAPH_START_WIDGET',
   /**Used for calculating the loop graph width */
   LOOP_RETURN_NODE = 'LOOP_RETURN_NODE',
-  NOTE = 'NOTE',
 }
 export type ApBoundingBox = {
   width: number;
@@ -37,16 +35,6 @@ export type ApStepNode = {
   selectable?: boolean;
   style?: React.CSSProperties;
   draggable?: boolean;
-};
-
-export type ApNoteNode = {
-  id: string;
-  type: ApNodeType.NOTE;
-  position: {
-    x: number;
-    y: number;
-  };
-  data: Pick<Note, 'content' | 'ownerId' | 'color' | 'size'>;
 };
 
 export type ApLoopReturnNode = {
@@ -105,8 +93,7 @@ export type ApNode =
   | ApStepNode
   | ApGraphEndNode
   | ApBigAddButtonNode
-  | ApLoopReturnNode
-  | ApNoteNode;
+  | ApLoopReturnNode;
 
 export enum ApEdgeType {
   STRAIGHT_LINE = 'ApStraightLineEdge',

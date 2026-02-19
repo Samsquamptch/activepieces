@@ -1,6 +1,7 @@
 import { inspect } from 'util'
 import {
     emitWithAck,
+    EngineGenericError,
     EngineOperation,
     EngineOperationType,
     EngineResponse,
@@ -9,12 +10,13 @@ import {
     EngineStderr,
     EngineStdout,
     ERROR_MESSAGES_TO_REDACT,
+    isNil,
 } from '@activepieces/shared'
 import { io, type Socket } from 'socket.io-client'
 import { execute } from './operations'
-import { progressService } from './services/progress.service'
 import { utils } from './utils'
 
+const WORKER_ID = process.env.WORKER_ID
 const WS_URL = 'ws://127.0.0.1:12345'
 
 let socket: Socket | undefined
@@ -22,30 +24,31 @@ let socket: Socket | undefined
 async function executeFromSocket(operation: EngineOperation, operationType: EngineOperationType): Promise<void> {
     const result = await execute(operationType, operation)
     const resultParsed = JSON.parse(JSON.stringify(result))
-    await progressService.shutdown()
     await workerSocket.sendToWorkerWithAck(EngineSocketEvent.ENGINE_RESPONSE, resultParsed)
 }
 
 export const workerSocket = {
-    init: (sandboxId: string): void => {
-   
+    init: (): void => {
+        if (isNil(WORKER_ID)) {
+            throw new EngineGenericError('WorkerIdNotSetError', 'WORKER_ID environment variable is not set')
+        }
+
         socket = io(WS_URL, {
             path: '/worker/ws',
             auth: {
-                sandboxId,
+                workerId: WORKER_ID,
             },
-            autoConnect: false,
+            autoConnect: true,
             reconnection: true,
         })
 
-        
         // Redirect console.log/error/warn to socket
         const originalLog = console.log
         console.log = function (...args): void {
             const engineStdout: EngineStdout = {
                 message: args.join(' ') + '\n',
             }
-            socket?.emit('command', { event: EngineSocketEvent.ENGINE_STDOUT, payload: engineStdout })
+            socket?.emit(EngineSocketEvent.ENGINE_STDOUT, engineStdout)
             originalLog.apply(console, args)
         }
 
@@ -54,7 +57,7 @@ export const workerSocket = {
             const engineStdout: EngineStdout = {
                 message: args.join(' ') + '\n',
             }
-            socket?.emit('command', { event: EngineSocketEvent.ENGINE_STDOUT, payload: engineStdout })
+            socket?.emit(EngineSocketEvent.ENGINE_STDOUT, engineStdout)
             originalWarn.apply(console, args)
         }
 
@@ -67,7 +70,7 @@ export const workerSocket = {
             const engineStderr: EngineStderr = {
                 message: sanitizedArgs.join(' ') + '\n',
             }
-            socket?.emit('command', { event: EngineSocketEvent.ENGINE_STDERR, payload: engineStderr })
+            socket?.emit(EngineSocketEvent.ENGINE_STDERR, engineStderr)
 
             originalError.apply(console, sanitizedArgs)
         }
@@ -88,14 +91,14 @@ export const workerSocket = {
             }
         })
 
-        socket.connect()
+
     },
 
     sendToWorkerWithAck: async (
         type: EngineSocketEvent,
         data: unknown,
     ): Promise<void> => {
-        await emitWithAck(socket, 'command', { event: type, payload: data }, {
+        await emitWithAck(socket, type, data, {
             timeoutMs: 4000,
             retries: 4,
             retryDelayMs: 1000,
@@ -106,7 +109,7 @@ export const workerSocket = {
         const engineStderr: EngineStderr = {
             message: inspect(error),
         }
-        await emitWithAck(socket, 'command', { event: EngineSocketEvent.ENGINE_STDERR, payload: engineStderr }, {
+        await emitWithAck(socket, EngineSocketEvent.ENGINE_STDERR, engineStderr, {
             timeoutMs: 3000,
             retries: 4,
             retryDelayMs: 1000,

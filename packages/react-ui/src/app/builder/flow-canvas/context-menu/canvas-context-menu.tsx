@@ -1,13 +1,44 @@
-import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
 import { ShortcutProps } from '@/components/ui/shortcut';
 
 import { CanvasContextMenuContent } from './canvas-context-menu-content';
 
 export type CanvasShortcutsProps = Record<
-  'Minimap' | 'Paste' | 'Delete' | 'Copy' | 'Skip' | 'ExitDrag',
+  'Minimap' | 'Paste' | 'Delete' | 'Copy' | 'Skip',
   ShortcutProps
 >;
-
+export const CanvasShortcuts: CanvasShortcutsProps = {
+  Minimap: {
+    withCtrl: true,
+    withShift: false,
+    shortcutKey: 'm',
+  },
+  Paste: {
+    withCtrl: true,
+    withShift: false,
+    shortcutKey: 'v',
+  },
+  Delete: {
+    withCtrl: false,
+    withShift: true,
+    shortcutKey: 'Delete',
+  },
+  Copy: {
+    withCtrl: true,
+    withShift: false,
+    shortcutKey: 'c',
+    shouldNotPreventDefault: true,
+  },
+  Skip: {
+    withCtrl: true,
+    withShift: false,
+    shortcutKey: 'e',
+  },
+};
 export enum ContextMenuType {
   CANVAS = 'CANVAS',
   STEP = 'STEP',
@@ -21,11 +52,13 @@ export const CanvasContextMenu = ({
   children,
 }: CanvasContextMenuProps) => {
   return (
-    <ContextMenu>
+    <ContextMenu modal={false}>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-      <CanvasContextMenuContent
-        contextMenuType={contextMenuType}
-      ></CanvasContextMenuContent>
+      <ContextMenuContent>
+        <CanvasContextMenuContent
+          contextMenuType={contextMenuType}
+        ></CanvasContextMenuContent>
+      </ContextMenuContent>
     </ContextMenu>
   );
 };

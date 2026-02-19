@@ -36,7 +36,6 @@ export const pieceHelper = {
             projectId: operation.projectId,
             engineToken: operation.engineToken,
             sampleData: operation.sampleData,
-            engineConstants: constants,
         })
         const { property, piece } = await pieceLoader.getPropOrThrow({ pieceName: operation.pieceName, pieceVersion: operation.pieceVersion, actionOrTriggerName: operation.actionOrTriggerName, propertyName: operation.propertyName, devPieces: EngineConstants.DEV_PIECES })
     
@@ -49,7 +48,6 @@ export const pieceHelper = {
                 projectId: constants.projectId,
                 engineToken: constants.engineToken,
                 contextVersion: piece.getContextInfo?.().version,
-                stepNames: constants.stepNames,
             }).resolve<
             StaticPropsValue<PiecePropertyMap>
             >({

@@ -10,9 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { useFlowToolDialogStore } from './stores/flows-tools';
-import { useMcpToolDialogStore } from './stores/mcp-tools';
-import { usePieceToolsDialogStore } from './stores/pieces-tools';
+import { useAgentToolsStore } from './store';
 
 type AddAgentToolDropdownProps = {
   disabled?: boolean;
@@ -27,9 +25,8 @@ export const AddToolDropdown = ({
 }: AddAgentToolDropdownProps) => {
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  const { setShowAddFlowDialog } = useFlowToolDialogStore();
-  const { openAddPieceToolDialog } = usePieceToolsDialogStore();
-  const { setShowAddMcpDialog } = useMcpToolDialogStore();
+  const { setShowAddFlowDialog, openPieceDialog, setShowAddMcpDialog } =
+    useAgentToolsStore();
 
   return (
     <DropdownMenu
@@ -43,7 +40,7 @@ export const AddToolDropdown = ({
 
       <DropdownMenuContent align={align}>
         <DropdownMenuItem
-          onSelect={() => openAddPieceToolDialog({ page: 'pieces-list' })}
+          onSelect={() => openPieceDialog({ defaultPage: 'pieces-list' })}
         >
           <Hammer className="size-3.5 me-2" />
           <span>{t('Piece tool')}</span>

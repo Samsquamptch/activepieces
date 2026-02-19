@@ -6,7 +6,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
 
 import { DashboardPageHeader } from '@/app/components/dashboard-page-header';
-import { ApSidebarToggle } from '@/components/custom/ap-sidebar-toggle';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -15,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
   TooltipContent,
@@ -38,7 +36,7 @@ export default function AnalyticsPage() {
   const selectedProjectId = searchParams.get('projectId') || undefined;
   const selectedTimePeriod =
     (searchParams.get('timePeriod') as AnalyticsTimePeriod) ||
-    AnalyticsTimePeriod.ALL_TIME;
+    AnalyticsTimePeriod.LAST_MONTH;
   const { data: projects } = projectCollectionUtils.useAll();
   const { data, isLoading } = platformAnalyticsHooks.useAnalyticsTimeBased(
     selectedTimePeriod,
@@ -61,7 +59,7 @@ export default function AnalyticsPage() {
 
   const handleTimePeriodChange = (timePeriod: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (timePeriod === AnalyticsTimePeriod.ALL_TIME) {
+    if (timePeriod === AnalyticsTimePeriod.LAST_MONTH) {
       newParams.delete('timePeriod');
     } else {
       newParams.set('timePeriod', timePeriod);
@@ -83,8 +81,6 @@ export default function AnalyticsPage() {
       <DashboardPageHeader
         title={
           <div className="flex items-center gap-3">
-            <ApSidebarToggle />
-            <Separator orientation="vertical" className="h-5 mr-2" />
             <span>{t('Analytics')}</span>
             <Tooltip>
               <TooltipTrigger asChild>

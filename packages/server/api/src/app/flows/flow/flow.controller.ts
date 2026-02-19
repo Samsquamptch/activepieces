@@ -48,10 +48,9 @@ export const flowController: FastifyPluginAsyncTypebox = async (app) => {
             projectId: request.projectId,
             request: request.body,
             ownerId: request.principal.type === PrincipalType.SERVICE ? undefined : request.principal.id,
-            templateId: request.body.templateId,
         })
 
-        applicationEvents(request.log).sendUserEvent(request, {
+        applicationEvents.sendUserEvent(request, {
             action: ApplicationEventName.FLOW_CREATED,
             data: {
                 flow: newFlow,
@@ -81,19 +80,11 @@ export const flowController: FastifyPluginAsyncTypebox = async (app) => {
         },
         preValidation: async (request) => {
             if (request.body?.type === FlowOperationType.IMPORT_FLOW) {
-                const migratedFlowTemplate = await migrateFlowVersionTemplate({
-                    displayName: request.body.request.displayName,
-                    trigger: request.body.request.trigger,
-                    schemaVersion: request.body.request.schemaVersion,
-                    notes: request.body.request.notes ?? [],
-                    valid: false,
-                })
+                const migratedFlowTemplate = await migrateFlowVersionTemplate(request.body.request.trigger, request.body.request.schemaVersion)
                 request.body.request = {
                     ...request.body.request,
-                    displayName: migratedFlowTemplate.displayName,
                     trigger: migratedFlowTemplate.trigger,
                     schemaVersion: migratedFlowTemplate.schemaVersion,
-                    notes: migratedFlowTemplate.notes,
                 }
             }
         },
@@ -122,7 +113,7 @@ export const flowController: FastifyPluginAsyncTypebox = async (app) => {
             projectId: request.projectId,
             operation: cleanOperation(request.body),
         })
-        applicationEvents(request.log).sendUserEvent(request, {
+        applicationEvents.sendUserEvent(request, {
             action: ApplicationEventName.FLOW_UPDATED,
             data: {
                 request: request.body,
@@ -189,7 +180,7 @@ export const flowController: FastifyPluginAsyncTypebox = async (app) => {
             id: request.params.id,
             projectId: request.projectId,
         })
-        applicationEvents(request.log).sendUserEvent(request, {
+        applicationEvents.sendUserEvent(request, {
             action: ApplicationEventName.FLOW_DELETED,
             data: {
                 flow,

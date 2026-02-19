@@ -1,8 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
-import { AIProviderName } from '../ai-providers'
 import { DiscriminatedUnion, Nullable } from '../common'
 export * from './tools'
-export * from './mcp'
 
 export enum AgentOutputFieldType {
     TEXT = 'text',
@@ -56,12 +54,8 @@ export enum AgentPieceProps {
     STRUCTURED_OUTPUT = 'structuredOutput',
     PROMPT = 'prompt',
     MAX_STEPS = 'maxSteps',
-    AI_PROVIDER_MODEL = 'aiProviderModel',
-}
-
-export type AgentProviderModel = {
-    provider: AIProviderName
-    model: string
+    AI_PROVIDER = 'provider',
+    AI_MODEL = 'model',
 }
 
 export const MarkdownContentBlock = Type.Object({

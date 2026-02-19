@@ -14,7 +14,6 @@ import {
     PieceTriggerSettings,
     PlatformId,
     RouterActionSettingsWithValidation,
-    UserId,
 } from '@activepieces/shared'
 import { Type } from '@sinclair/typebox'
 import { TypeCompiler } from '@sinclair/typebox/compiler'
@@ -34,7 +33,7 @@ type ValidationResult = {
 }
 
 export const flowVersionValidationUtil = (log: FastifyBaseLogger) => ({
-    async prepareRequest({ platformId, request, userId }: PrepareRequestParams): Promise<FlowOperationRequest> {
+    async prepareRequest({ platformId, request }: PrepareRequestParams): Promise<FlowOperationRequest> {
         const clonedRequest: FlowOperationRequest = JSON.parse(JSON.stringify(request))
 
         switch (clonedRequest.type) {
@@ -109,16 +108,6 @@ export const flowVersionValidationUtil = (log: FastifyBaseLogger) => ({
                     }
                 }
                 break
-            case FlowOperationType.IMPORT_FLOW:{
-                const notes = clonedRequest.request.notes
-                if (!isNil(notes)) {
-                    clonedRequest.request.notes = notes.map(note => ({
-                        ...note,
-                        ownerId: userId,
-                    }))
-                }
-                break
-            }
             default:
                 break
         }
@@ -205,7 +194,6 @@ function validateProps(
 type PrepareRequestParams = {
     platformId?: PlatformId
     request: FlowOperationRequest
-    userId: UserId | null
 }
 
 type ValidateActionParams = {
