@@ -8,6 +8,7 @@ import { googleProvider } from './google-provider'
 import { openAICompatibleProvider } from './openai-compatible-gateway-provider'
 import { openaiProvider } from './openai-provider'
 import { openRouterProvider } from './openrouter-provider'
+import { apiPieProvider } from './apipie-provider'
 
 export const aiProviders: Record<AIProviderName, AIProviderStrategy<AIProviderAuthConfig, AIProviderConfig>> = {
     [AIProviderName.OPENAI]: openaiProvider,
