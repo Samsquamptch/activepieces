@@ -68,6 +68,8 @@ export const CloudflareGatewayProviderConfig = Type.Object({
     accountId: Type.String(),
     gatewayId: Type.String(),
     models: Type.Array(ProviderModelConfig),
+    vertexProject: Type.Optional(Type.String()),
+    vertexRegion: Type.Optional(Type.String()),
 })
 export type CloudflareGatewayProviderConfig = Static<typeof CloudflareGatewayProviderConfig>
 
@@ -109,6 +111,7 @@ export const AIProviderConfig = Type.Union([
     GoogleProviderConfig,
     OpenAIProviderConfig,
     OpenRouterProviderConfig,
+    ApiPieProviderConfig,
     ActivePiecesProviderConfig,
     ApiPieProviderConfig
 ])
@@ -121,6 +124,7 @@ export enum AIProviderName {
     AZURE = 'azure',
     GOOGLE = 'google',
     ACTIVEPIECES = 'activepieces',
+    APIPIE = 'apipie',
     CLOUDFLARE_GATEWAY = 'cloudflare-gateway',
     APIPIE = 'apipie',
     CUSTOM = 'custom',
@@ -181,6 +185,10 @@ const ProviderConfigUnion = DiscriminatedUnion('provider', [
         config: ActivePiecesProviderConfig,
         auth: ActivePiecesProviderAuthConfig,
     }),
+    Type.Object({
+        provider: Type.Literal(AIProviderName.APIPIE),
+        config: ApiPieProviderConfig,
+    }),
 ])
 
 export const AIProvider = Type.Intersect([
@@ -238,3 +246,56 @@ export const AIErrorResponse = Type.Object({
 })
 
 export type AIErrorResponse = Static<typeof AIErrorResponse>
+/**
+ * Splits a Cloudflare Gateway model ID into provider and model, i.e. "google-vertex-ai/google/gemini-2.5-pro" -> { provider: "google-vertex-ai", model: "google/gemini-2.5-pro" }.
+ * @param modelId - The model ID to split.
+ * @returns An object containing the provider and model.
+ */
+export function splitCloudflareGatewayModelId(modelId: string): {
+    provider: 'google-vertex-ai'
+    publisher: string
+    model: string
+} | {
+    provider: string
+    model: string
+    publisher: undefined
+} | {
+    provider: undefined
+    model: string
+    publisher: undefined
+} {
+    const slashIndex = modelId.indexOf('/')
+    if (slashIndex === -1) {
+        //console.error(`Invalid model ID "${modelId}": expected format "provider/model"`)
+        return {
+            provider: undefined,
+            model: modelId,
+            publisher: undefined,
+        }
+    }
+    const provider = modelId.substring(0, slashIndex)
+    const rest = modelId.substring(slashIndex + 1)
+
+    if (provider === 'google-vertex-ai') {
+        const secondSlashIndex = rest.indexOf('/')
+        if (secondSlashIndex === -1) {
+            //console.error(`Invalid Google Vertex AI model ID "${modelId}": expected format "google-vertex-ai/publisher/model"`)
+            return {
+                provider: undefined,
+                model: modelId,
+                publisher: undefined,
+            }
+        }
+        return {
+            provider: 'google-vertex-ai',
+            publisher: rest.substring(0, secondSlashIndex),
+            model: rest.substring(secondSlashIndex + 1),
+        }
+    }
+
+    return {
+        provider,
+        model: rest,
+        publisher: undefined,
+    }
+}
