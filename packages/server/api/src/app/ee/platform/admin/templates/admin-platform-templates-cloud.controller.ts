@@ -3,7 +3,6 @@ import { ActivepiecesError, ApFlagId, CreateTemplateRequestBody, ErrorCode, Temp
 import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import { flagService } from '../../../../flags/flag.service'
-import { migrateFlowVersionTemplateList } from '../../../../flows/flow-version/migrations'
 import { templateService } from '../../../../template/template.service'
 
 export const adminPlatformTemplatesCloudController: FastifyPluginAsyncTypebox = async (
@@ -17,26 +16,7 @@ export const adminPlatformTemplatesCloudController: FastifyPluginAsyncTypebox = 
         })
     })
 
-    app.get('/:id', GetTemplateRequest, async (request) => {
-        const template = await templateService(app.log).getOneOrThrow({ id: request.params.id })
-        
-        if (template.type !== TemplateType.OFFICIAL) {
-            throw new ActivepiecesError({
-                code: ErrorCode.VALIDATION,
-                params: { message: 'Only official templates are supported to being retrieved' },
-            })
-        }
-        return template
-    })
-    
-
-    app.post('/', {
-        ...CreateTemplateRequest,
-        preValidation: async (request) => {
-            const migratedFlows = await migrateFlowVersionTemplateList(request.body.flows ?? [])
-            request.body.flows = migratedFlows
-        },
-    }, async (request) => {
+    app.post('/', CreateTemplateRequest, async (request) => {
         const { type } = request.body
         if (type !== TemplateType.OFFICIAL) {
             throw new ActivepiecesError({
@@ -52,13 +32,7 @@ export const adminPlatformTemplatesCloudController: FastifyPluginAsyncTypebox = 
         })
     })
 
-    app.post('/:id', {
-        ...UpdateTemplateRequest,
-        preValidation: async (request) => {
-            const migratedFlows = await migrateFlowVersionTemplateList(request.body.flows ?? [])
-            request.body.flows = migratedFlows
-        },
-    }, async (request) => {
+    app.post('/:id', UpdateTemplateRequest, async (request) => {
         const template = await templateService(app.log).getOneOrThrow({ id: request.params.id })
         
         if (template.type !== TemplateType.OFFICIAL) {
@@ -82,17 +56,6 @@ export const adminPlatformTemplatesCloudController: FastifyPluginAsyncTypebox = 
 
         return templateService(app.log).delete({ id: request.params.id })
     })
-}
-
-const GetTemplateRequest = {
-    config: {
-        security: securityAccess.public(),
-    },
-    schema: {
-        params: Type.Object({
-            id: Type.String(),
-        }),
-    },
 }
 
 const UpdateTemplatesCategoriesFlagRequest = {

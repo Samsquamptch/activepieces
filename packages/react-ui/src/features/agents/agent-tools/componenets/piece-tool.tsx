@@ -18,11 +18,7 @@ import { stepsHooks } from '@/features/pieces/lib/steps-hooks';
 import { PieceStepMetadataWithSuggestions } from '@/lib/types';
 import { AgentPieceTool } from '@activepieces/shared';
 
-import { usePieceToolsDialogStore } from '../stores/pieces-tools';
-
-export function sanitizeToolName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 128);
-}
+import { useAgentToolsStore } from '../store';
 
 type AgentPieceToolProps = {
   disabled?: boolean;
@@ -35,7 +31,7 @@ export const AgentPieceToolComponent = ({
   tools,
   removeTool,
 }: AgentPieceToolProps) => {
-  const { openAddPieceToolDialog } = usePieceToolsDialogStore();
+  const { openPieceDialog } = useAgentToolsStore();
 
   const { metadata } = stepsHooks.useAllStepsMetadata({
     searchQuery: '',
@@ -67,7 +63,7 @@ export const AgentPieceToolComponent = ({
   }
 
   const handleEditTool = (tool: AgentPieceTool) => {
-    openAddPieceToolDialog({ page: 'action-inputs', tool });
+    openPieceDialog({ defaultPage: 'action-selected', tool });
   };
 
   return (
@@ -101,9 +97,7 @@ export const AgentPieceToolComponent = ({
           {tools.map((tool) => {
             const toolName = pieceMetadata.suggestedActions?.find(
               (action) =>
-                sanitizeToolName(
-                  `${pieceMetadata.pieceName}-${action.name}`,
-                ) === tool.toolName,
+                `${pieceMetadata.pieceName}-${action.name}` === tool.toolName,
             )?.displayName;
             return (
               <div
@@ -153,8 +147,8 @@ export const AgentPieceToolComponent = ({
           className="mt-4"
           size="xs"
           onClick={() =>
-            openAddPieceToolDialog({
-              page: 'actions-list',
+            openPieceDialog({
+              defaultPage: 'piece-selected',
               piece: pieceMetadata,
             })
           }

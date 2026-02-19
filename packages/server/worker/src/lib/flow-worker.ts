@@ -4,8 +4,8 @@ import { FastifyBaseLogger } from 'fastify'
 import { appSocket } from './app-socket'
 import { registryPieceManager } from './cache/pieces/production/registry-piece-manager'
 import { workerCache } from './cache/worker-cache'
-import { sandboxPool } from './compute/sandbox/sandbox-pool'
-import { sandboxWebsocketServer } from './compute/sandbox/websocket-server'
+import { engineRunner } from './compute'
+import { engineRunnerSocket } from './compute/engine-runner-socket'
 import { jobQueueWorker } from './consume/job-queue-worker'
 import { workerMachine } from './utils/machine'
 import { workerDistributedLock, workerDistributedStore, workerRedisConnections } from './utils/worker-redis'
@@ -18,16 +18,14 @@ export const runsMetadataQueue = runsMetadataQueueFactory({
 export const flowWorker = (log: FastifyBaseLogger) => ({
     async init({ workerToken: token, markAsHealthy }: FlowWorkerInitParams): Promise<void> {
         rejectedPromiseHandler(workerCache(log).deleteStaleCache(), log)
-
-        sandboxWebsocketServer.init(log)
+        await engineRunnerSocket(log).init()
 
         await appSocket(log).init({
             workerToken: token,
             onConnect: async () => {
-                const request = await workerMachine.getSystemInfo(log)
+                const request = await workerMachine.getSystemInfo()
                 const response = await appSocket(log).emitWithAck<WorkerSettingsResponse>(WebsocketServerEvent.FETCH_WORKER_SETTINGS, request)
                 await workerMachine.init(response, token, log)
-                sandboxPool.init(log)
                 await registryPieceManager(log).warmup()
                 await jobQueueWorker(log).start()
                 await initRunsMetadataQueue(log)
@@ -38,8 +36,7 @@ export const flowWorker = (log: FastifyBaseLogger) => ({
     },
 
     async close(): Promise<void> {
-        await sandboxPool.drain()
-        await sandboxWebsocketServer.shutdown()
+        await engineRunnerSocket(log).disconnect()
         appSocket(log).disconnect()
 
         if (runsMetadataQueue.isInitialized()) {
@@ -49,6 +46,9 @@ export const flowWorker = (log: FastifyBaseLogger) => ({
         await workerRedisConnections.destroy()
         await workerDistributedLock(log).destroy()
         
+        if (workerMachine.hasSettings()) {
+            await engineRunner(log).shutdownAllWorkers()
+        }
         await jobQueueWorker(log).close()
     },
 })

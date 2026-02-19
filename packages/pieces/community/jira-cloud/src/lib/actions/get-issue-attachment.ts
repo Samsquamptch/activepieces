@@ -34,8 +34,7 @@ export const getIssueAttachmentAction = createAction({
                 username: context.auth.props.email,
                 password: context.auth.props.apiToken,
             },
-            responseType: 'arraybuffer',
-            followRedirects: true,
+            responseType:'arraybuffer'
         })
 
         return {

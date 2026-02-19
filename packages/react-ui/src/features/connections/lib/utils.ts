@@ -190,10 +190,7 @@ export const newConnectionUtils = {
                 type: AppConnectionType.OAUTH2,
                 client_id: '',
                 redirect_url: redirectUrl,
-                code:
-                  grantType === OAuth2GrantType.CLIENT_CREDENTIALS
-                    ? 'FAKE_CODE'
-                    : '',
+                code: '',
                 scope: auth.scope.join(' '),
                 authorization_method: auth.authorizationMethod,
                 props: formUtils.getDefaultValueForProperties({

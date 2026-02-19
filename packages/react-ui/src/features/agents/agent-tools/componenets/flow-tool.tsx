@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/tooltip';
 import { AgentFlowTool } from '@activepieces/shared';
 
-import { useFlowToolDialogStore } from '../stores/flows-tools';
+import { useAgentToolsStore } from '../store';
 
 type AgentFlowToolsAccordionProps = {
   disabled?: boolean;
@@ -27,7 +27,7 @@ export const AgentFlowToolComponent = ({
   tools,
   removeTool,
 }: AgentFlowToolsAccordionProps) => {
-  const { setShowAddFlowDialog } = useFlowToolDialogStore();
+  const { setShowAddFlowDialog } = useAgentToolsStore();
 
   return (
     <AccordionItem value="flows" className="border-b last:border-0">

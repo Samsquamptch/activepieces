@@ -1,8 +1,9 @@
 import fs, { rm } from 'node:fs/promises'
 import path from 'node:path'
 import { cryptoUtils, fileSystemUtils } from '@activepieces/server-shared'
-import { ExecutionMode, FlowVersionState, SourceCode, tryCatch } from '@activepieces/shared'
+import { ExecutionMode, tryCatch } from '@activepieces/shared'
 import { FastifyBaseLogger } from 'fastify'
+import { CodeArtifact } from '../compute/engine-runner-types'
 import { workerMachine } from '../utils/machine'
 import { cacheState, NO_SAVE_GUARD } from './cache-state'
 import { packageManager } from './package-manager'
@@ -196,14 +197,6 @@ type ProcessCodeStepParams = {
     codesFolderPath: string
     log: FastifyBaseLogger
 }
-
-export type CodeArtifact = {
-    name: string
-    sourceCode: SourceCode
-    flowVersionId: string
-    flowVersionState: FlowVersionState
-}
-
 
 type InstallDependenciesParams = {
     path: string

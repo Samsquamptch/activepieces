@@ -50,10 +50,6 @@ export const FlowVersionEntity = new EntitySchema<FlowVersionSchema>({
             type: 'jsonb',
             nullable: true,
         },
-        notes: {
-            type: 'jsonb',
-            nullable: false,
-        },
     },
     indices: [
         {

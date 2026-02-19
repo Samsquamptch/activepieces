@@ -62,12 +62,6 @@ export const profilePicture = Property.ShortText({
   required: false,
 });
 
-export const iconEmoji = Property.ShortText({
-  displayName: 'Icon Emoji',
-  description: 'The icon emoji of the bot',
-  required: false,
-});
-
 export const threadTs = Property.ShortText({
   displayName: 'Reply to Thread (Thread Message Link/Timestamp)',
   description:

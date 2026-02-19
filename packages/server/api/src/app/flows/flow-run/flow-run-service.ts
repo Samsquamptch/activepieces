@@ -56,13 +56,6 @@ export const flowRunRepo = repoFactory<FlowRun>(FlowRunEntity)
 const USE_SIGNED_URL = system.getBoolean(AppSystemProp.S3_USE_SIGNED_URLS) ?? false
 
 export const flowRunService = (log: FastifyBaseLogger) => ({
-    async upsert({ id, projectId }: { id: FlowRunId, projectId: ProjectId }): Promise<FlowRun> {
-        const existingFlowRun = await flowRunRepo().findOneBy({ id, projectId })
-        if (isNil(existingFlowRun)) {
-            return flowRunRepo().save({ id, projectId })
-        }
-        return existingFlowRun
-    },
     async list(params: ListParams): Promise<SeekPage<FlowRun>> {
         const decodedCursor = paginationHelper.decodeCursor(params.cursor)
         const paginator = buildPaginator<FlowRun>({
@@ -352,31 +345,6 @@ export const flowRunService = (log: FastifyBaseLogger) => ({
             sampleData: !isNil(stepNameToTest) ? await sampleDataService(log).getSampleDataForFlow(projectId, flowVersion, SampleDataFileType.OUTPUT) : undefined,
         }, log)
     },
-    async startManualTrigger({ projectId, flowVersionId, triggeredBy }: StartManualTriggerParams): Promise<FlowRun> {
-        const flowVersion = await flowVersionService(log).getOneOrThrow(flowVersionId)
-        const triggerPayload = {}
-        const flowRun = await queueOrCreateInstantly({
-            projectId,
-            flowId: flowVersion.flowId,
-            flowVersionId: flowVersion.id,
-            environment: RunEnvironment.PRODUCTION,
-            parentRunId: undefined,
-            failParentOnFailure: undefined,
-            stepNameToTest: undefined,
-            triggeredBy,
-        }, log)
-        return addToQueue({
-            flowRun,
-            payload: triggerPayload,
-            executionType: ExecutionType.BEGIN,
-            synchronousHandlerId: undefined,
-            httpRequestId: undefined,
-            platformId: await projectService.getPlatformId(projectId),
-            executeTrigger: false,
-            progressUpdateType: ProgressUpdateType.TEST_FLOW,
-            sampleData: undefined,
-        }, log)
-    },
     async getOne(params: GetOneParams): Promise<FlowRun | null> {
         const flowRun = await queryBuilderForFlowRun(flowRunRepo()).where({
             id: params.id,
@@ -636,7 +604,6 @@ async function queueOrCreateInstantly(params: CreateParams, log: FastifyBaseLogg
         stepNameToTest: params.stepNameToTest,
         created: now,
         updated: now,
-        tags: [],
         steps: {},
         triggeredBy: params.triggeredBy,
     }
@@ -722,11 +689,6 @@ type TestParams = {
     stepNameToTest?: string
 }
 
-type StartManualTriggerParams = {
-    projectId: ProjectId
-    flowVersionId: FlowVersionId
-    triggeredBy: string
-}
 type RetryParams = {
     flowRunId: FlowRunId
     strategy: FlowRetryStrategy

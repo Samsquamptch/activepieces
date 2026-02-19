@@ -5,18 +5,14 @@ import {
   CreateProjectReleaseRequestBody,
   ProjectRelease,
   DiffReleaseRequest,
-  ListProjectReleasesRequest,
 } from '@activepieces/shared';
 
 export const projectReleaseApi = {
   async get(releaseId: string) {
     return await api.get<ProjectRelease>(`/v1/project-releases/${releaseId}`);
   },
-  async list(query: ListProjectReleasesRequest) {
-    return await api.get<SeekPage<ProjectRelease>>(
-      `/v1/project-releases`,
-      query,
-    );
+  async list() {
+    return await api.get<SeekPage<ProjectRelease>>(`/v1/project-releases`);
   },
   async create(requestBody: CreateProjectReleaseRequestBody) {
     return await api.post<ProjectRelease>('/v1/project-releases', requestBody);

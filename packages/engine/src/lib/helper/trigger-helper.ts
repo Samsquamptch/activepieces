@@ -36,7 +36,6 @@ export const triggerHelper = {
             engineToken: constants.engineToken,
             devPieces: constants.devPieces,
             propertySettings,
-            stepNames: constants.stepNames,
         })
         const isOldVersionOrNotSupported = isNil(pieceTrigger.onStart)
         if (isOldVersionOrNotSupported) {
@@ -90,7 +89,6 @@ export const triggerHelper = {
             engineToken: params.engineToken,
             devPieces: constants.devPieces,
             propertySettings,
-            stepNames: constants.stepNames,
         })
 
         const appListeners: Listener[] = []
@@ -274,7 +272,7 @@ type ExecuteTriggerParams = {
     constants: EngineConstants
 }
 
-async function prepareTriggerExecution({ pieceName, pieceVersion, triggerName, input, propertySettings, projectId, apiUrl, engineToken, devPieces, stepNames }: PrepareTriggerExecutionParams) {
+async function prepareTriggerExecution({ pieceName, pieceVersion, triggerName, input, propertySettings, projectId, apiUrl, engineToken, devPieces }: PrepareTriggerExecutionParams) {
     const { piece, pieceTrigger } = await pieceLoader.getPieceAndTriggerOrThrow({
         pieceName,
         pieceVersion,
@@ -287,7 +285,6 @@ async function prepareTriggerExecution({ pieceName, pieceVersion, triggerName, i
         projectId,
         engineToken,
         contextVersion: piece.getContextInfo?.().version,
-        stepNames,
     }).resolve<StaticPropsValue<PiecePropertyMap>>({
         unresolvedInput: input,
         executionState: FlowExecutorContext.empty(),
@@ -312,5 +309,4 @@ type PrepareTriggerExecutionParams = {
     apiUrl: string
     engineToken: string
     devPieces: string[]
-    stepNames: string[]
 }

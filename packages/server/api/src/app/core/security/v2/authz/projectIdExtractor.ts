@@ -1,5 +1,5 @@
 import { EntitySourceType, ProjectBodyResource, ProjectParamResource, ProjectQueryResource, ProjectTableResource } from '@activepieces/server-shared'
-import { ActivepiecesError, assertNotNullOrUndefined, ErrorCode, isNil, isObject } from '@activepieces/shared'
+import { assertNotNullOrUndefined, isNil, isObject } from '@activepieces/shared'
 import { FastifyRequest } from 'fastify'
 import { databaseConnection } from '../../../../database/database-connection'
 
@@ -31,16 +31,7 @@ export const projectIdExtractor = {
         const entity = await databaseConnection().getRepository(projectTableResource.tableName).findOneBy({
             [entityField]: entityValue,
         })
-        if (isNil(entity)) {
-            throw new ActivepiecesError({
-                code: ErrorCode.ENTITY_NOT_FOUND,
-                params: {
-                    entityId: entityValue,
-                    entityType: projectTableResource.tableName.options.name,
-                },
-            })
-        }
-        return entity.projectId ?? entity.projectIds?.[0] ?? undefined
+        return entity?.projectId ?? entity?.projectIds?.[0] ?? undefined
     },
 
     fromBody(request: FastifyRequest, projectBodyResource: ProjectBodyResource): string | undefined {

@@ -6,21 +6,23 @@ import { useDebounce } from 'use-debounce';
 
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { AgentTool, isNil } from '@activepieces/shared';
-
-import { sanitizeToolName } from '../../componenets/piece-tool';
-import { usePieceToolsDialogStore } from '../../stores/pieces-tools';
+import { PieceStepMetadataWithSuggestions } from '@/lib/types';
+import { ActionBase } from '@activepieces/pieces-framework';
+import { AgentTool } from '@activepieces/shared';
 
 interface PieceActionsDialogProps {
+  piece: PieceStepMetadataWithSuggestions;
+  setSelectedAction: (action: ActionBase) => void;
   tools: AgentTool[];
 }
 
 export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
+  piece,
   tools,
+  setSelectedAction,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery] = useDebounce(searchQuery, 200);
-  const { handleActionSelect, selectedPiece } = usePieceToolsDialogStore();
 
   const selectedActionNames = useMemo(
     () => new Set(tools.map((tool) => tool.toolName)),
@@ -28,10 +30,9 @@ export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
   );
 
   const fuse = useMemo(() => {
-    if (isNil(selectedPiece) || isNil(selectedPiece.suggestedActions))
-      return null;
+    if (!piece.suggestedActions) return null;
 
-    return new Fuse(selectedPiece.suggestedActions, {
+    return new Fuse(piece.suggestedActions, {
       keys: [
         { name: 'displayName', weight: 0.8 },
         { name: 'description', weight: 0.2 },
@@ -39,18 +40,15 @@ export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
       threshold: 0.35,
       ignoreLocation: true,
     });
-  }, [selectedPiece?.suggestedActions]);
+  }, [piece.suggestedActions]);
 
   const filteredActions = useMemo(() => {
-    if (!debouncedQuery.trim() || isNil(fuse))
-      return selectedPiece?.suggestedActions || [];
+    if (!piece.suggestedActions) return [];
+    if (!debouncedQuery.trim()) return piece.suggestedActions;
+    if (!fuse) return piece.suggestedActions;
 
     return fuse.search(debouncedQuery).map((r) => r.item);
-  }, [debouncedQuery, fuse, selectedPiece?.suggestedActions]);
-
-  if (isNil(selectedPiece)) {
-    return <p>{t('No app is selected')}</p>;
-  }
+  }, [debouncedQuery, fuse, piece.suggestedActions]);
 
   return (
     <ScrollArea className="overflow-y-auto">
@@ -68,9 +66,7 @@ export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
 
       <div className="flex p-4 flex-col gap-2">
         {filteredActions.map((action) => {
-          const isDisabled = selectedActionNames.has(
-            sanitizeToolName(`${selectedPiece.pieceName}-${action.name}`),
-          );
+          const isDisabled = selectedActionNames.has(action.name);
 
           return (
             <div
@@ -85,7 +81,7 @@ export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
               `}
               onClick={() => {
                 if (!isDisabled) {
-                  handleActionSelect(action);
+                  setSelectedAction(action);
                 }
               }}
             >
@@ -93,8 +89,8 @@ export const PieceActionsList: React.FC<PieceActionsDialogProps> = ({
                 <div className="size-9 flex items-center justify-center rounded-sm border bg-background">
                   <img
                     className="size-6 object-contain"
-                    src={selectedPiece.logoUrl}
-                    alt={selectedPiece.displayName}
+                    src={piece.logoUrl}
+                    alt={piece.displayName}
                   />
                 </div>
 

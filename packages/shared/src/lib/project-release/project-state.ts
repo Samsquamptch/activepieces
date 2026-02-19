@@ -1,7 +1,7 @@
 import { Static, Type } from '@sinclair/typebox'
 import { Nullable, NullableEnum } from '../common'
 import { PopulatedFlow } from '../flows/flow'
-import { TableAutomationStatus, TableAutomationTrigger } from '../tables/table'
+import { TableAutomationStatus, TableAutomationTrigger } from '../tables'
 
 export enum FlowProjectOperationType {
     UPDATE_FLOW = 'UPDATE_FLOW',

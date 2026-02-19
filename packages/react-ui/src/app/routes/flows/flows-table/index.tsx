@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { t } from 'i18next';
 import { CheckIcon, Link2, Workflow } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useEmbedding } from '@/components/embed-provider';
@@ -14,7 +14,6 @@ import {
   folderIdParamName,
 } from '@/features/folders/component/folder-filter-list';
 import { piecesHooks } from '@/features/pieces/lib/pieces-hooks';
-import { ownerColumnHooks } from '@/hooks/owner-column-hooks';
 import { authenticationSession } from '@/lib/authentication-session';
 import { useNewWindow } from '@/lib/navigation-utils';
 import { formatUtils } from '@/lib/utils';
@@ -83,14 +82,14 @@ export const FlowsTable = ({ refetch: parentRefetch }: FlowsTableProps) => {
     }
   };
 
-  const columns = ownerColumnHooks.useOwnerColumn<PopulatedFlow>(
-    flowsTableColumns({
+  const columns = useMemo(() => {
+    return flowsTableColumns({
       refetch: handleRefetch,
       refresh,
       setRefresh,
-    }),
-    3,
-  );
+      isEmbedded: embedState.isEmbedded,
+    });
+  }, [refresh, handleRefetch, embedState.isEmbedded]);
 
   const filters: DataTableFilters<
     keyof PopulatedFlow | 'connectionExternalId' | 'name'

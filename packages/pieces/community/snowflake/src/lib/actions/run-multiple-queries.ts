@@ -1,5 +1,5 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
-import snowflake, { RowStatement, SnowflakeError } from 'snowflake-sdk';
+import snowflake, { Statement, SnowflakeError } from 'snowflake-sdk';
 import { snowflakeAuth } from '../../index';
 import { configureConnection } from '../common';
 
@@ -109,7 +109,7 @@ export const runMultipleQueries = createAction({
                     binds: binds as snowflake.Binds,
                     complete: (
                       err: SnowflakeError | undefined,
-                      stmt: RowStatement,
+                      stmt: Statement,
                       rows: QueryResult
                     ) => {
                       if (err) {

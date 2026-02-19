@@ -13,13 +13,12 @@ import {
 import '@xyflow/react/dist/style.css';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
+import { RightSideBarType } from '@/lib/types';
 import {
   FlowActionType,
   flowStructureUtil,
-  FlowTriggerType,
   FlowVersion,
   isNil,
-  Note,
   Step,
 } from '@activepieces/shared';
 
@@ -53,7 +52,6 @@ export const FlowCanvas = React.memo(
       panningMode,
       selectStepByName,
       rightSidebar,
-      notes,
     ] = useBuilderStateContext((state) => {
       return [
         state.flowVersion,
@@ -63,7 +61,6 @@ export const FlowCanvas = React.memo(
         state.panningMode,
         state.selectStepByName,
         state.rightSidebar,
-        state.flowVersion.notes,
       ];
     });
     const containerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +68,7 @@ export const FlowCanvas = React.memo(
     flowCanvasHooks.useFocusOnStep();
     useHandleKeyPressOnCanvas();
     flowCanvasHooks.useResizeCanvas(containerRef, setHasCanvasBeenInitialised);
-    const reactFlowStore = useStoreApi();
+    const storeApi = useStoreApi();
     const isShiftKeyPressed = useKeyPress('Shift');
     const inGrabPanningMode = !isShiftKeyPressed && panningMode === 'grab';
     const onSelectionChange = useCallback(
@@ -84,14 +81,13 @@ export const FlowCanvas = React.memo(
       },
       [setSelectedNodes, selectedStep],
     );
-    const graphKey = createGraphKey(flowVersion, notes, selectedStep ?? '');
+    const graphKey = createGraphKey(flowVersion);
     const graph = useMemo(() => {
-      return flowCanvasUtils.createFlowGraph(flowVersion, notes);
+      return flowCanvasUtils.convertFlowVersionToGraph(flowVersion);
     }, [graphKey]);
     const [contextMenuType, setContextMenuType] = useState<ContextMenuType>(
       ContextMenuType.CANVAS,
     );
-
     const onContextMenu = useCallback(
       (ev: React.MouseEvent<HTMLDivElement>) => {
         if (
@@ -107,7 +103,7 @@ export const FlowCanvas = React.memo(
 
           if (stepElement && stepName) {
             selectStepByName(stepName);
-            reactFlowStore.getState().addSelectedNodes([stepName]);
+            storeApi.getState().addSelectedNodes([stepName]);
           }
           const targetIsSelectionChevron = ev.target.closest(
             `[data-${flowCanvasConsts.SELECTION_RECT_CHEVRON_ATTRIBUTE}]`,
@@ -118,7 +114,11 @@ export const FlowCanvas = React.memo(
           const showStepContextMenu =
             stepElement || targetIsSelectionRect || targetIsSelectionChevron;
           if (showStepContextMenu) {
-            setContextMenuType(ContextMenuType.STEP);
+            if (rightSidebar === RightSideBarType.NONE) {
+              setTimeout(() => setContextMenuType(ContextMenuType.STEP), 10000);
+            } else {
+              setContextMenuType(ContextMenuType.STEP);
+            }
           } else {
             setContextMenuType(ContextMenuType.CANVAS);
           }
@@ -137,17 +137,9 @@ export const FlowCanvas = React.memo(
     );
 
     const onSelectionEnd = useCallback(() => {
-      const isUnselectingNodes =
-        document.querySelector(
-          `.${flowCanvasConsts.NODE_SELECTION_RECT_CLASS_NAME}`,
-        ) !== null;
-      if (isUnselectingNodes) {
-        reactFlowStore.getState().addSelectedNodes([]);
-        return;
-      }
-      const selectedSteps = selectedNodes
-        .map((node) => flowStructureUtil.getStep(node, flowVersion.trigger))
-        .filter((step) => !isNil(step));
+      const selectedSteps = selectedNodes.map((node) =>
+        flowStructureUtil.getStepOrThrow(node, flowVersion.trigger),
+      );
       selectedSteps.forEach((step) => {
         if (
           step.type === FlowActionType.LOOP_ON_ITEMS ||
@@ -165,24 +157,23 @@ export const FlowCanvas = React.memo(
       if (selectedNodes.length === 0 && step) {
         selectedSteps.push(step);
       }
-      reactFlowStore
+      storeApi
         .getState()
         .addSelectedNodes(selectedSteps.map((step) => step.name));
-    }, [selectedNodes, reactFlowStore, selectedStep]);
+    }, [selectedNodes, storeApi, selectedStep]);
 
     const { setCursorPosition } = useCursorPosition();
     const translateExtent = useMemo(() => {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight + 100;
       const nodes = graph.nodes;
       const graphRectangle = getNodesBounds(nodes);
+      const stepWidth = flowCanvasConsts.AP_NODE_SIZE.STEP.width;
       const start = {
-        x: graphRectangle.x - windowWidth,
-        y: graphRectangle.y - windowHeight,
+        x: -graphRectangle.width - 5 * stepWidth,
+        y: -graphRectangle.height,
       };
       const end = {
-        x: graphRectangle.x + graphRectangle.width + windowWidth,
-        y: graphRectangle.y + graphRectangle.height + windowHeight,
+        x: 2.5 * graphRectangle.width + 5 * stepWidth,
+        y: 2 * graphRectangle.height,
       };
       const extent: CoordinateExtent = [
         [start.x, start.y],
@@ -190,7 +181,6 @@ export const FlowCanvas = React.memo(
       ];
       return extent;
     }, [graphKey]);
-
     return (
       <div
         ref={containerRef}
@@ -206,7 +196,7 @@ export const FlowCanvas = React.memo(
               className="bg-builder-background"
               onContextMenu={onContextMenu}
               onPaneClick={() => {
-                reactFlowStore.getState().unselectNodesAndEdges();
+                storeApi.getState().unselectNodesAndEdges();
               }}
               translateExtent={translateExtent}
               nodeTypes={flowCanvasConsts.nodeTypes}
@@ -274,12 +264,8 @@ const getChildrenKey = (step: Step) => {
       return '';
   }
 };
-const createGraphKey = (
-  flowVersion: FlowVersion,
-  notes: Note[],
-  selectedStep: string,
-) => {
-  const flowGraphKey = flowStructureUtil
+const createGraphKey = (flowVersion: FlowVersion) => {
+  return flowStructureUtil
     .getAllSteps(flowVersion.trigger)
     .reduce((acc, step) => {
       const branchesNames =
@@ -290,14 +276,7 @@ const createGraphKey = (
       return `${acc}-${step.displayName}-${step.type}-${
         step.nextAction ? step.nextAction.name : ''
       }-${
-        step.type === FlowActionType.PIECE ||
-        step.type === FlowTriggerType.PIECE
-          ? step.settings.pieceName
-          : ''
+        step.type === FlowActionType.PIECE ? step.settings.pieceName : ''
       }-${branchesNames}-${childrenKey}}`;
     }, '');
-  const notesGraphKey = notes
-    .map((note) => `${note.id}-${note.position.x}-${note.position.y}`)
-    .join('-');
-  return `${flowVersion.id}-${flowGraphKey}-${notesGraphKey}-${selectedStep}`;
 };

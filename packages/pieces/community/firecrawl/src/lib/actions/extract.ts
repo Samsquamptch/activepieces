@@ -152,7 +152,7 @@ export const extract = createAction({
       url: `${FIRECRAWL_API_BASE_URL}/extract`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.secret_text}`,
+        'Authorization': `Bearer ${auth}`,
       },
       body: body,
     });

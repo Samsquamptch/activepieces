@@ -72,8 +72,6 @@ export const github = createPiece({
     'khaledmashaly',
     'abuaboud',
     'tintinthedev',
-    'murex971',
-    'sanket-a11y',
   ],
   triggers: githubTriggers,
 });

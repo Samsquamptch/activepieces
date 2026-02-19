@@ -2,21 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 
-import { Template, TemplateType } from '@activepieces/shared';
+import { Template, TemplateType, TemplateCategory } from '@activepieces/shared';
 
 import { templatesApi } from '../lib/templates-api';
 
 export const templatesHooks = {
-  useTemplateCategories: () => {
-    return useQuery<string[], Error>({
-      queryKey: ['template', 'categories'],
-      queryFn: async () => {
-        const result = await templatesApi.getCategories();
-        return (result?.value ?? []) as string[];
-      },
-    });
-  },
-
   useTemplate: (id: string) => {
     return useQuery<Template, Error>({
       queryKey: ['template', id],
@@ -41,7 +31,9 @@ export const templatesHooks = {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const search = searchParams.get('search') ?? '';
-    const category = searchParams.get('category') ?? undefined;
+    const category =
+      (searchParams.get('category') as TemplateCategory | undefined) ??
+      undefined;
 
     const [debouncedSearch] = useDebounce(search, 300);
 
@@ -70,7 +62,7 @@ export const templatesHooks = {
       });
     };
 
-    const setCategory = (newCategory: string) => {
+    const setCategory = (newCategory: TemplateCategory | 'All') => {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
         if (newCategory && newCategory !== 'All') {

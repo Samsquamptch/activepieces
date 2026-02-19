@@ -15,8 +15,7 @@ import {
 } from '@activepieces/shared'
 import { FastifyBaseLogger } from 'fastify'
 import { pieceWorkerCache } from '../cache/piece-worker-cache'
-
-import { operationHandler } from '../compute/operation-handler'
+import { engineRunner } from '../compute'
 import { workerMachine } from './machine'
 import { webhookUtils } from './webhook-utils'
 import { workerRedisConnections } from './worker-redis'
@@ -82,7 +81,7 @@ async function getTriggerPayloadsAndStatus(
 ): Promise<ExtractPayloadsResult> {
     const { payload, flowVersion, projectId, simulate, timeoutInSeconds } = params
     try {
-        const { status, result, standardError } = await operationHandler(log).executeTrigger(engineToken, {
+        const { status, result, standardError } = await engineRunner(log).executeTrigger(engineToken, {
             hookType: TriggerHookType.RUN,
             flowVersion,
             triggerPayload: payload,
@@ -110,7 +109,7 @@ async function getTriggerPayloadsAndStatus(
         }
     }
     catch (e) {
-        const isTimeoutError = e instanceof ActivepiecesError && e.error.code === ErrorCode.SANDBOX_EXECUTION_TIMEOUT
+        const isTimeoutError = e instanceof ActivepiecesError && e.error.code === ErrorCode.EXECUTION_TIMEOUT
         if (isTimeoutError) {
             return {
                 payloads: [],

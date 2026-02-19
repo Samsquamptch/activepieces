@@ -23,6 +23,9 @@ export const triggerEventsApi = {
     );
   },
   saveTriggerMockdata(request: SaveTriggerEventRequest) {
-    return api.post<TriggerEventWithPayload>(`/v1/trigger-events`, request);
+    return api.post<TriggerEventWithPayload>(`/v1/trigger-events`, {
+      flowId: request.flowId,
+      mockData: request.mockData,
+    });
   },
 };

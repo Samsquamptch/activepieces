@@ -12,7 +12,6 @@ import {
     StepOutputStatus,
 } from '@activepieces/shared'
 import { createPropsResolver } from '../../variables/props-resolver'
-import { EngineConstants } from './engine-constants'
 import { FlowExecutorContext } from './flow-execution-context'
 
 export const testExecutionContext = {
@@ -23,7 +22,6 @@ export const testExecutionContext = {
         engineToken,
         apiUrl,
         sampleData,
-        engineConstants,
     }: TestExecutionParams): Promise<FlowExecutorContext> {
         let flowExecutionContext = FlowExecutorContext.empty()
         if (isNil(flowVersion)) {
@@ -57,7 +55,6 @@ export const testExecutionContext = {
                         projectId,
                         engineToken,
                         contextVersion: LATEST_CONTEXT_VERSION,
-                        stepNames: engineConstants.stepNames,
                     }).resolve<{ items: unknown[] }>({
                         unresolvedInput: step.settings,
                         executionState: flowExecutionContext,
@@ -93,7 +90,6 @@ export const testExecutionContext = {
 
 
 type TestExecutionParams = {
-    engineConstants: EngineConstants
     flowVersion?: FlowVersion
     excludedStepName?: string
     projectId: string
