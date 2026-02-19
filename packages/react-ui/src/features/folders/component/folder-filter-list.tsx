@@ -57,12 +57,12 @@ const FolderItem = ({
         onClick={() => updateSearchParams(folder.id)}
       >
         <TextWithIcon
-          className="flex-grow"
+          className="grow"
           icon={<FolderIcon />}
           text={
             <div
               className={cn(
-                'flex-grow max-w-[150px] text-start truncate whitespace-nowrap overflow-hidden',
+                'grow max-w-[150px] text-start truncate whitespace-nowrap overflow-hidden',
                 {
                   'font-medium': selectedFolderId === folder.id,
                 },
@@ -72,7 +72,11 @@ const FolderItem = ({
             </div>
           }
         >
-          <FolderActions folder={folder} refetch={refetch} />
+          <FolderActions
+            folder={folder}
+            refetch={refetch}
+            hideFlowCount={true}
+          />
         </TextWithIcon>
       </Button>
     </div>
@@ -108,7 +112,8 @@ const FolderFilterList = ({ refresh }: { refresh: number }) => {
 
   const { data: allFlowsCount, refetch: refetchAllFlowsCount } = useQuery({
     queryKey: ['flowsCount', authenticationSession.getProjectId()],
-    queryFn: flowsApi.count,
+    queryFn: () =>
+      flowsApi.count({ projectId: authenticationSession.getProjectId()! }),
   });
 
   useEffect(() => {
@@ -146,7 +151,7 @@ const FolderFilterList = ({ refresh }: { refresh: number }) => {
           <TextWithIcon
             icon={<TableProperties className="w-4 h-4"></TableProperties>}
             text={
-              <div className="flex-grow whitespace-break-spaces break-all text-start truncate">
+              <div className="grow whitespace-break-spaces break-all text-start truncate">
                 {t('All flows')}
               </div>
             }
@@ -168,7 +173,7 @@ const FolderFilterList = ({ refresh }: { refresh: number }) => {
           <TextWithIcon
             icon={<Shapes className="w-4 h-4"></Shapes>}
             text={
-              <div className="flex-grow whitespace-break-spaces break-all text-start truncate">
+              <div className="grow whitespace-break-spaces break-all text-start truncate">
                 {t('Uncategorized')}
               </div>
             }

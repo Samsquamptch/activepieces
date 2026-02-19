@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { platformHooks } from '@/hooks/platform-hooks';
-import { projectHooks } from '@/hooks/project-hooks';
+import { projectCollectionUtils } from '@/hooks/project-collection';
 import { userHooks } from '@/hooks/user-hooks';
 import { cn } from '@/lib/utils';
 import {
@@ -45,7 +45,7 @@ export const GeneralSettings = ({ form, isSaving }: GeneralSettingsProps) => {
   const { platform } = platformHooks.useCurrentPlatform();
   const platformRole = userHooks.getCurrentUserPlatformRole();
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
-  const { project } = projectHooks.useCurrentProject();
+  const { project } = projectCollectionUtils.useCurrentProject();
   const showGeneralSettings = project.type === ProjectType.TEAM;
   const showExternalIdSettings =
     platform.plan.embeddingEnabled && platformRole === PlatformRole.ADMIN;
@@ -78,7 +78,7 @@ export const GeneralSettings = ({ form, isSaving }: GeneralSettingsProps) => {
                             disabled={isSaving}
                           >
                             <div
-                              className="h-3 w-3 rounded-none flex-shrink-0"
+                              className="h-3 w-3 rounded-none shrink-0"
                               style={{
                                 backgroundColor:
                                   PROJECT_COLOR_PALETTE[currentColor].color,

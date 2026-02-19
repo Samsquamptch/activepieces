@@ -2536,6 +2536,31 @@
                       "type",
                       "request"
                     ]
+                  },
+                  {
+                    "title": "Update Minutes Saved",
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "UPDATE_MINUTES_SAVED"
+                        ]
+                      },
+                      "request": {
+                        "type": "object",
+                        "properties": {
+                          "timeSavedPerRun": {
+                            "type": "number",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "request"
+                    ]
                   }
                 ]
               },
@@ -3411,6 +3436,9 @@
                   "finishTime": {
                     "type": "string"
                   },
+                  "triggeredBy": {
+                    "type": "string"
+                  },
                   "environment": {
                     "anyOf": [
                       {
@@ -3431,6 +3459,9 @@
                     "type": "string"
                   },
                   "flowVersionId": {
+                    "type": "string"
+                  },
+                  "stepNameToTest": {
                     "type": "string"
                   },
                   "status": {
@@ -3599,6 +3630,9 @@
                   "finishTime": {
                     "type": "string"
                   },
+                  "triggeredBy": {
+                    "type": "string"
+                  },
                   "environment": {
                     "anyOf": [
                       {
@@ -3619,6 +3653,9 @@
                     "type": "string"
                   },
                   "flowVersionId": {
+                    "type": "string"
+                  },
+                  "stepNameToTest": {
                     "type": "string"
                   },
                   "status": {
@@ -4400,7 +4437,7 @@
           "data"
         ]
       },
-      "flow-template": {
+      "template": {
         "type": "object",
         "properties": {
           "id": {
@@ -4415,29 +4452,148 @@
           "name": {
             "type": "string"
           },
-          "description": {
-            "type": "string"
-          },
           "type": {
             "anyOf": [
               {
                 "type": "string",
                 "enum": [
-                  "PLATFORM"
+                  "OFFICIAL"
                 ]
               },
               {
                 "type": "string",
                 "enum": [
-                  "PROJECT"
+                  "SHARED"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "CUSTOM"
                 ]
               }
             ]
           },
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "tags": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "color": {
+                  "pattern": "^#[0-9A-Fa-f]{6}$",
+                  "type": "string"
+                },
+                "icon": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "color"
+              ]
+            }
+          },
+          "blogUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          },
+          "usageCount": {
+            "type": "number"
+          },
+          "author": {
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "ANALYTICS"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "COMMUNICATION"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "CONTENT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "CUSTOMER_SUPPORT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "DEVELOPMENT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "E_COMMERCE"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "FINANCE"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "HR"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "IT_OPERATIONS"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "MARKETING"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "PRODUCTIVITY"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "SALES"
+                  ]
+                }
+              ]
             }
           },
           "pieces": {
@@ -4446,175 +4602,183 @@
               "type": "string"
             }
           },
-          "schemaVersion": {
+          "platformId": {
             "type": "string",
             "nullable": true
           },
-          "blogUrl": {
-            "type": "string"
-          },
-          "template": {
-            "type": "object",
-            "properties": {
-              "displayName": {
-                "type": "string"
-              },
-              "trigger": {
-                "anyOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "valid": {
-                        "type": "boolean"
-                      },
-                      "displayName": {
-                        "type": "string"
-                      },
-                      "nextAction": {},
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "PIECE_TRIGGER"
-                        ]
-                      },
-                      "settings": {
-                        "type": "object",
-                        "properties": {
-                          "sampleData": {
-                            "additionalProperties": true,
-                            "type": "object",
-                            "properties": {
-                              "sampleDataFileId": {
-                                "type": "string"
-                              },
-                              "sampleDataInputFileId": {
-                                "type": "string"
-                              },
-                              "lastTestDate": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "propertySettings": {
-                            "type": "object",
-                            "additionalProperties": {
+          "flows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": "string"
+                },
+                "trigger": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "nextAction": {},
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "PIECE_TRIGGER"
+                          ]
+                        },
+                        "settings": {
+                          "type": "object",
+                          "properties": {
+                            "sampleData": {
+                              "additionalProperties": true,
                               "type": "object",
                               "properties": {
-                                "type": {
-                                  "anyOf": [
-                                    {
-                                      "type": "string",
-                                      "enum": [
-                                        "MANUAL"
-                                      ]
-                                    },
-                                    {
-                                      "type": "string",
-                                      "enum": [
-                                        "DYNAMIC"
-                                      ]
-                                    }
-                                  ]
+                                "sampleDataFileId": {
+                                  "type": "string"
                                 },
-                                "schema": {}
-                              },
-                              "required": [
-                                "type"
-                              ]
+                                "sampleDataInputFileId": {
+                                  "type": "string"
+                                },
+                                "lastTestDate": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "propertySettings": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "MANUAL"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "DYNAMIC"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "schema": {}
+                                },
+                                "required": [
+                                  "type"
+                                ]
+                              }
+                            },
+                            "customLogoUrl": {
+                              "type": "string"
+                            },
+                            "pieceName": {
+                              "type": "string"
+                            },
+                            "pieceVersion": {
+                              "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
+                              "type": "string"
+                            },
+                            "triggerName": {
+                              "type": "string"
+                            },
+                            "input": {
+                              "type": "object",
+                              "additionalProperties": {}
                             }
                           },
-                          "customLogoUrl": {
-                            "type": "string"
-                          },
-                          "pieceName": {
-                            "type": "string"
-                          },
-                          "pieceVersion": {
-                            "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
-                            "type": "string"
-                          },
-                          "triggerName": {
-                            "type": "string"
-                          },
-                          "input": {
-                            "type": "object",
-                            "additionalProperties": {}
-                          }
+                          "required": [
+                            "propertySettings",
+                            "pieceName",
+                            "pieceVersion",
+                            "input"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "valid",
+                        "displayName",
+                        "type",
+                        "settings"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
                         },
-                        "required": [
-                          "propertySettings",
-                          "pieceName",
-                          "pieceVersion",
-                          "input"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "valid",
-                      "displayName",
-                      "type",
-                      "settings"
-                    ]
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "nextAction": {},
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "EMPTY"
+                          ]
+                        },
+                        "settings": {}
                       },
-                      "valid": {
-                        "type": "boolean"
-                      },
-                      "displayName": {
-                        "type": "string"
-                      },
-                      "nextAction": {},
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "EMPTY"
-                        ]
-                      },
-                      "settings": {}
-                    },
-                    "required": [
-                      "name",
-                      "valid",
-                      "displayName",
-                      "type",
-                      "settings"
-                    ]
-                  }
+                      "required": [
+                        "name",
+                        "valid",
+                        "displayName",
+                        "type",
+                        "settings"
+                      ]
+                    }
+                  ]
+                },
+                "valid": {
+                  "type": "boolean"
+                },
+                "schemaVersion": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "displayName",
+                "trigger",
+                "valid"
+              ]
+            }
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "PUBLISHED"
                 ]
               },
-              "valid": {
-                "type": "boolean"
-              },
-              "schemaVersion": {
+              {
                 "type": "string",
-                "nullable": true
+                "enum": [
+                  "ARCHIVED"
+                ]
               }
-            },
-            "required": [
-              "displayName",
-              "trigger",
-              "valid"
             ]
-          },
-          "projectId": {
-            "type": "string"
-          },
-          "platformId": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
           }
         },
         "required": [
@@ -4622,12 +4786,15 @@
           "created",
           "updated",
           "name",
-          "description",
           "type",
+          "summary",
+          "description",
           "tags",
+          "usageCount",
+          "author",
+          "categories",
           "pieces",
-          "template",
-          "platformId"
+          "status"
         ]
       },
       "folder": {
@@ -5151,6 +5318,10 @@
           "externalId": {
             "type": "string"
           },
+          "ownerId": {
+            "type": "string",
+            "nullable": true
+          },
           "folderId": {
             "type": "string",
             "nullable": true
@@ -5207,6 +5378,10 @@
                 ]
               }
             ]
+          },
+          "timeSavedPerRun": {
+            "type": "number",
+            "nullable": true
           }
         },
         "required": [
@@ -5242,6 +5417,9 @@
           },
           "failParentOnFailure": {
             "type": "boolean"
+          },
+          "triggeredBy": {
+            "type": "string"
           },
           "tags": {
             "type": "array",
@@ -10662,6 +10840,10 @@
                     "externalId": {
                       "type": "string"
                     },
+                    "ownerId": {
+                      "type": "string",
+                      "nullable": true
+                    },
                     "folderId": {
                       "type": "string",
                       "nullable": true
@@ -10718,6 +10900,10 @@
                           ]
                         }
                       ]
+                    },
+                    "timeSavedPerRun": {
+                      "type": "number",
+                      "nullable": true
                     },
                     "version": {
                       "type": "object",
@@ -11132,6 +11318,10 @@
                           "externalId": {
                             "type": "string"
                           },
+                          "ownerId": {
+                            "type": "string",
+                            "nullable": true
+                          },
                           "folderId": {
                             "type": "string",
                             "nullable": true
@@ -11188,6 +11378,10 @@
                                 ]
                               }
                             ]
+                          },
+                          "timeSavedPerRun": {
+                            "type": "number",
+                            "nullable": true
                           },
                           "version": {
                             "type": "object",
@@ -13843,6 +14037,31 @@
                       "type",
                       "request"
                     ]
+                  },
+                  {
+                    "title": "Update Minutes Saved",
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "UPDATE_MINUTES_SAVED"
+                        ]
+                      },
+                      "request": {
+                        "type": "object",
+                        "properties": {
+                          "timeSavedPerRun": {
+                            "type": "number",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "request"
+                    ]
                   }
                 ]
               }
@@ -13923,6 +14142,10 @@
                     "externalId": {
                       "type": "string"
                     },
+                    "ownerId": {
+                      "type": "string",
+                      "nullable": true
+                    },
                     "folderId": {
                       "type": "string",
                       "nullable": true
@@ -13979,6 +14202,10 @@
                           ]
                         }
                       ]
+                    },
+                    "timeSavedPerRun": {
+                      "type": "number",
+                      "nullable": true
                     },
                     "version": {
                       "type": "object",
@@ -14308,13 +14535,32 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "created": {
-                      "type": "string"
-                    },
-                    "updated": {
-                      "type": "string"
-                    },
                     "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "OFFICIAL"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "SHARED"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "CUSTOM"
+                          ]
+                        }
+                      ]
+                    },
+                    "summary": {
                       "type": "string"
                     },
                     "description": {
@@ -14323,7 +14569,114 @@
                     "tags": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "color": {
+                            "pattern": "^#[0-9A-Fa-f]{6}$",
+                            "type": "string"
+                          },
+                          "icon": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "color"
+                        ]
+                      }
+                    },
+                    "blogUrl": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "nullable": true,
+                      "additionalProperties": {}
+                    },
+                    "author": {
+                      "type": "string"
+                    },
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "ANALYTICS"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "COMMUNICATION"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "CONTENT"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "CUSTOMER_SUPPORT"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "DEVELOPMENT"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "E_COMMERCE"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "FINANCE"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "HR"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "IT_OPERATIONS"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "MARKETING"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "PRODUCTIVITY"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "SALES"
+                            ]
+                          }
+                        ]
                       }
                     },
                     "pieces": {
@@ -14332,179 +14685,191 @@
                         "type": "string"
                       }
                     },
-                    "schemaVersion": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "blogUrl": {
-                      "type": "string"
-                    },
-                    "template": {
-                      "type": "object",
-                      "properties": {
-                        "displayName": {
-                          "type": "string"
-                        },
-                        "trigger": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "name": {
-                                  "type": "string"
-                                },
-                                "valid": {
-                                  "type": "boolean"
-                                },
-                                "displayName": {
-                                  "type": "string"
-                                },
-                                "nextAction": {},
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "PIECE_TRIGGER"
-                                  ]
-                                },
-                                "settings": {
-                                  "type": "object",
-                                  "properties": {
-                                    "sampleData": {
-                                      "additionalProperties": true,
-                                      "type": "object",
-                                      "properties": {
-                                        "sampleDataFileId": {
-                                          "type": "string"
-                                        },
-                                        "sampleDataInputFileId": {
-                                          "type": "string"
-                                        },
-                                        "lastTestDate": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "propertySettings": {
-                                      "type": "object",
-                                      "additionalProperties": {
+                    "flows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "trigger": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "valid": {
+                                    "type": "boolean"
+                                  },
+                                  "displayName": {
+                                    "type": "string"
+                                  },
+                                  "nextAction": {},
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "PIECE_TRIGGER"
+                                    ]
+                                  },
+                                  "settings": {
+                                    "type": "object",
+                                    "properties": {
+                                      "sampleData": {
+                                        "additionalProperties": true,
                                         "type": "object",
                                         "properties": {
-                                          "type": {
-                                            "anyOf": [
-                                              {
-                                                "type": "string",
-                                                "enum": [
-                                                  "MANUAL"
-                                                ]
-                                              },
-                                              {
-                                                "type": "string",
-                                                "enum": [
-                                                  "DYNAMIC"
-                                                ]
-                                              }
-                                            ]
+                                          "sampleDataFileId": {
+                                            "type": "string"
                                           },
-                                          "schema": {}
-                                        },
-                                        "required": [
-                                          "type"
-                                        ]
+                                          "sampleDataInputFileId": {
+                                            "type": "string"
+                                          },
+                                          "lastTestDate": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      },
+                                      "propertySettings": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                          "type": "object",
+                                          "properties": {
+                                            "type": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "MANUAL"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "DYNAMIC"
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "schema": {}
+                                          },
+                                          "required": [
+                                            "type"
+                                          ]
+                                        }
+                                      },
+                                      "customLogoUrl": {
+                                        "type": "string"
+                                      },
+                                      "pieceName": {
+                                        "type": "string"
+                                      },
+                                      "pieceVersion": {
+                                        "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
+                                        "type": "string"
+                                      },
+                                      "triggerName": {
+                                        "type": "string"
+                                      },
+                                      "input": {
+                                        "type": "object",
+                                        "additionalProperties": {}
                                       }
                                     },
-                                    "customLogoUrl": {
-                                      "type": "string"
-                                    },
-                                    "pieceName": {
-                                      "type": "string"
-                                    },
-                                    "pieceVersion": {
-                                      "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
-                                      "type": "string"
-                                    },
-                                    "triggerName": {
-                                      "type": "string"
-                                    },
-                                    "input": {
-                                      "type": "object",
-                                      "additionalProperties": {}
-                                    }
+                                    "required": [
+                                      "propertySettings",
+                                      "pieceName",
+                                      "pieceVersion",
+                                      "input"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "valid",
+                                  "displayName",
+                                  "type",
+                                  "settings"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
                                   },
-                                  "required": [
-                                    "propertySettings",
-                                    "pieceName",
-                                    "pieceVersion",
-                                    "input"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "name",
-                                "valid",
-                                "displayName",
-                                "type",
-                                "settings"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "name": {
-                                  "type": "string"
+                                  "valid": {
+                                    "type": "boolean"
+                                  },
+                                  "displayName": {
+                                    "type": "string"
+                                  },
+                                  "nextAction": {},
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "EMPTY"
+                                    ]
+                                  },
+                                  "settings": {}
                                 },
-                                "valid": {
-                                  "type": "boolean"
-                                },
-                                "displayName": {
-                                  "type": "string"
-                                },
-                                "nextAction": {},
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "EMPTY"
-                                  ]
-                                },
-                                "settings": {}
-                              },
-                              "required": [
-                                "name",
-                                "valid",
-                                "displayName",
-                                "type",
-                                "settings"
-                              ]
-                            }
+                                "required": [
+                                  "name",
+                                  "valid",
+                                  "displayName",
+                                  "type",
+                                  "settings"
+                                ]
+                              }
+                            ]
+                          },
+                          "valid": {
+                            "type": "boolean"
+                          },
+                          "schemaVersion": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "displayName",
+                          "trigger",
+                          "valid"
+                        ]
+                      }
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PUBLISHED"
                           ]
                         },
-                        "valid": {
-                          "type": "boolean"
-                        },
-                        "schemaVersion": {
+                        {
                           "type": "string",
-                          "nullable": true
+                          "enum": [
+                            "ARCHIVED"
+                          ]
                         }
-                      },
-                      "required": [
-                        "displayName",
-                        "trigger",
-                        "valid"
                       ]
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {}
                     }
                   },
                   "required": [
-                    "created",
-                    "updated",
                     "name",
+                    "type",
+                    "summary",
                     "description",
                     "tags",
+                    "author",
+                    "categories",
                     "pieces",
-                    "template"
+                    "status"
                   ]
                 }
               }
@@ -14524,6 +14889,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "projectId": {
+                    "type": "string"
+                  },
                   "flowVersionId": {
                     "type": "string"
                   },
@@ -14532,6 +14900,7 @@
                   }
                 },
                 "required": [
+                  "projectId",
                   "flowVersionId",
                   "stepName"
                 ]
@@ -14792,7 +15161,7 @@
               "type": "boolean"
             },
             "in": "query",
-            "name": "archived",
+            "name": "includeArchived",
             "required": false
           }
         ],
@@ -14834,6 +15203,9 @@
                           },
                           "failParentOnFailure": {
                             "type": "boolean"
+                          },
+                          "triggeredBy": {
+                            "type": "string"
                           },
                           "tags": {
                             "type": "array",
@@ -15053,6 +15425,9 @@
                     },
                     "failParentOnFailure": {
                       "type": "boolean"
+                    },
+                    "triggeredBy": {
+                      "type": "string"
                     },
                     "tags": {
                       "type": "array",
@@ -16512,20 +16887,37 @@
                         "plan": {
                           "type": "string"
                         },
-                        "openRouterApiKeyHash": {
-                          "type": "string"
-                        },
-                        "openRouterApiKey": {
-                          "type": "string"
-                        },
                         "includedAiCredits": {
                           "type": "number"
                         },
-                        "aiCreditsOverageLimit": {
+                        "lastFreeAiCreditsRenewalDate": {
+                          "type": "string"
+                        },
+                        "aiCreditsAutoTopUpState": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "enabled"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "disabled"
+                              ]
+                            }
+                          ]
+                        },
+                        "aiCreditsAutoTopUpThreshold": {
                           "type": "number"
                         },
-                        "aiCreditsOverageState": {
-                          "type": "string"
+                        "aiCreditsAutoTopUpCreditsToAdd": {
+                          "type": "number"
+                        },
+                        "maxAutoTopUpCreditsMonthly": {
+                          "type": "number",
+                          "nullable": true
                         },
                         "environmentsEnabled": {
                           "type": "boolean"
@@ -16650,6 +17042,7 @@
                       },
                       "required": [
                         "includedAiCredits",
+                        "aiCreditsAutoTopUpState",
                         "environmentsEnabled",
                         "analyticsEnabled",
                         "showPoweredBy",
@@ -16674,7 +17067,16 @@
                     "usage": {
                       "type": "object",
                       "properties": {
-                        "aiCredits": {
+                        "totalAiCreditsUsed": {
+                          "type": "number"
+                        },
+                        "totalAiCreditsUsedThisMonth": {
+                          "type": "number"
+                        },
+                        "aiCreditsRemaining": {
+                          "type": "number"
+                        },
+                        "aiCreditsLimit": {
                           "type": "number"
                         },
                         "activeFlows": {
@@ -16682,7 +17084,10 @@
                         }
                       },
                       "required": [
-                        "aiCredits",
+                        "totalAiCreditsUsed",
+                        "totalAiCreditsUsedThisMonth",
+                        "aiCreditsRemaining",
+                        "aiCreditsLimit",
                         "activeFlows"
                       ]
                     },
@@ -16784,7 +17189,7 @@
         }
       }
     },
-    "/v1/projects/{projectId}/mcp-server": {
+    "/v1/projects/{projectId}/mcp-server/{projectId}": {
       "get": {
         "tags": [
           "mcp"
@@ -16811,7 +17216,9 @@
             "description": "Default Response"
           }
         }
-      },
+      }
+    },
+    "/v1/projects/{projectId}/mcp-server": {
       "post": {
         "tags": [
           "mcp"
@@ -17892,6 +18299,14 @@
         "parameters": [
           {
             "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "projectId",
+            "required": true
+          },
+          {
+            "schema": {
               "type": "number"
             },
             "in": "query",
@@ -18365,6 +18780,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "tableId": {
+                    "type": "string"
+                  },
                   "ids": {
                     "type": "array",
                     "items": {
@@ -18373,6 +18791,7 @@
                   }
                 },
                 "required": [
+                  "tableId",
                   "ids"
                 ]
               }
@@ -18635,6 +19054,981 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/templates/{id}": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Get a template.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Update a template.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "color": {
+                          "pattern": "^#[0-9A-Fa-f]{6}$",
+                          "type": "string"
+                        },
+                        "icon": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "color"
+                      ]
+                    }
+                  },
+                  "blogUrl": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {}
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "PUBLISHED"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "ARCHIVED"
+                        ]
+                      }
+                    ]
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "ANALYTICS"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "COMMUNICATION"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "CONTENT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "CUSTOMER_SUPPORT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "DEVELOPMENT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "E_COMMERCE"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "FINANCE"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "HR"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "IT_OPERATIONS"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MARKETING"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PRODUCTIVITY"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "SALES"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "flows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "trigger": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "valid": {
+                                  "type": "boolean"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "nextAction": {},
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "PIECE_TRIGGER"
+                                  ]
+                                },
+                                "settings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "sampleData": {
+                                      "additionalProperties": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "sampleDataFileId": {
+                                          "type": "string"
+                                        },
+                                        "sampleDataInputFileId": {
+                                          "type": "string"
+                                        },
+                                        "lastTestDate": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "propertySettings": {
+                                      "type": "object",
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "enum": [
+                                                  "MANUAL"
+                                                ]
+                                              },
+                                              {
+                                                "type": "string",
+                                                "enum": [
+                                                  "DYNAMIC"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "schema": {}
+                                        },
+                                        "required": [
+                                          "type"
+                                        ]
+                                      }
+                                    },
+                                    "customLogoUrl": {
+                                      "type": "string"
+                                    },
+                                    "pieceName": {
+                                      "type": "string"
+                                    },
+                                    "pieceVersion": {
+                                      "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
+                                      "type": "string"
+                                    },
+                                    "triggerName": {
+                                      "type": "string"
+                                    },
+                                    "input": {
+                                      "type": "object",
+                                      "additionalProperties": {}
+                                    }
+                                  },
+                                  "required": [
+                                    "propertySettings",
+                                    "pieceName",
+                                    "pieceVersion",
+                                    "input"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "valid",
+                                "displayName",
+                                "type",
+                                "settings"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "valid": {
+                                  "type": "boolean"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "nextAction": {},
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "EMPTY"
+                                  ]
+                                },
+                                "settings": {}
+                              },
+                              "required": [
+                                "name",
+                                "valid",
+                                "displayName",
+                                "type",
+                                "settings"
+                              ]
+                            }
+                          ]
+                        },
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "schemaVersion": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "displayName",
+                        "trigger",
+                        "valid"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Delete a template.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/v1/templates/categories": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Get categories of templates.",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/v1/templates": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "description": "List templates.",
+        "parameters": [
+          {
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "OFFICIAL"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "SHARED"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "CUSTOM"
+                  ]
+                }
+              ]
+            },
+            "in": "query",
+            "name": "type",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "pieces",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "tags",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": false
+          },
+          {
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "ANALYTICS"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "COMMUNICATION"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "CONTENT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "CUSTOMER_SUPPORT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "DEVELOPMENT"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "E_COMMERCE"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "FINANCE"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "HR"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "IT_OPERATIONS"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "MARKETING"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "PRODUCTIVITY"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "SALES"
+                  ]
+                }
+              ]
+            },
+            "in": "query",
+            "name": "category",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Create a template.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "color": {
+                          "pattern": "^#[0-9A-Fa-f]{6}$",
+                          "type": "string"
+                        },
+                        "icon": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "color"
+                      ]
+                    }
+                  },
+                  "blogUrl": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {}
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "ANALYTICS"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "COMMUNICATION"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "CONTENT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "CUSTOMER_SUPPORT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "DEVELOPMENT"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "E_COMMERCE"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "FINANCE"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "HR"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "IT_OPERATIONS"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "MARKETING"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "PRODUCTIVITY"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "SALES"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "type": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "OFFICIAL"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "SHARED"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "CUSTOM"
+                        ]
+                      }
+                    ]
+                  },
+                  "flows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "trigger": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "valid": {
+                                  "type": "boolean"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "nextAction": {},
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "PIECE_TRIGGER"
+                                  ]
+                                },
+                                "settings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "sampleData": {
+                                      "additionalProperties": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "sampleDataFileId": {
+                                          "type": "string"
+                                        },
+                                        "sampleDataInputFileId": {
+                                          "type": "string"
+                                        },
+                                        "lastTestDate": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "propertySettings": {
+                                      "type": "object",
+                                      "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                          "type": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "enum": [
+                                                  "MANUAL"
+                                                ]
+                                              },
+                                              {
+                                                "type": "string",
+                                                "enum": [
+                                                  "DYNAMIC"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "schema": {}
+                                        },
+                                        "required": [
+                                          "type"
+                                        ]
+                                      }
+                                    },
+                                    "customLogoUrl": {
+                                      "type": "string"
+                                    },
+                                    "pieceName": {
+                                      "type": "string"
+                                    },
+                                    "pieceVersion": {
+                                      "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
+                                      "type": "string"
+                                    },
+                                    "triggerName": {
+                                      "type": "string"
+                                    },
+                                    "input": {
+                                      "type": "object",
+                                      "additionalProperties": {}
+                                    }
+                                  },
+                                  "required": [
+                                    "propertySettings",
+                                    "pieceName",
+                                    "pieceVersion",
+                                    "input"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "valid",
+                                "displayName",
+                                "type",
+                                "settings"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "valid": {
+                                  "type": "boolean"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "nextAction": {},
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "EMPTY"
+                                  ]
+                                },
+                                "settings": {}
+                              },
+                              "required": [
+                                "name",
+                                "valid",
+                                "displayName",
+                                "type",
+                                "settings"
+                              ]
+                            }
+                          ]
+                        },
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "schemaVersion": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "displayName",
+                        "trigger",
+                        "valid"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "summary",
+                  "description",
+                  "author",
+                  "categories",
+                  "type"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/v1/templates/{id}/increment-usage-count": {
+      "post": {
+        "tags": [
+          "templates"
+        ],
+        "description": "Increment usage count of a template.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/v1/flow-templates": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "description": "List flow templates. This endpoint is deprecated, use /v1/templates instead.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "pieces",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "tags",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": false
+          }
+        ],
+        "deprecated": true,
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
           }
         }
       }
@@ -20036,6 +21430,9 @@
                     "title": "NPM Piece",
                     "type": "object",
                     "properties": {
+                      "projectId": {
+                        "type": "string"
+                      },
                       "packageType": {
                         "type": "string",
                         "enum": [
@@ -20058,6 +21455,7 @@
                       }
                     },
                     "required": [
+                      "projectId",
                       "packageType",
                       "scope",
                       "pieceName",
@@ -20085,330 +21483,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/v1/flow-templates/{id}": {
-      "get": {
-        "tags": [
-          "flow-templates"
-        ],
-        "description": "Get a flow template",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "flow-templates"
-        ],
-        "description": "Delete a flow template",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        }
-      }
-    },
-    "/v1/flow-templates": {
-      "get": {
-        "tags": [
-          "flow-templates"
-        ],
-        "description": "List flow templates",
-        "parameters": [
-          {
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "in": "query",
-            "name": "pieces",
-            "required": false
-          },
-          {
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "in": "query",
-            "name": "tags",
-            "required": false
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "query",
-            "name": "search",
-            "required": false
-          }
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "flow-templates"
-        ],
-        "description": "Create a flow template",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "description": {
-                    "type": "string"
-                  },
-                  "template": {
-                    "type": "object",
-                    "properties": {
-                      "displayName": {
-                        "type": "string"
-                      },
-                      "trigger": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string"
-                              },
-                              "valid": {
-                                "type": "boolean"
-                              },
-                              "displayName": {
-                                "type": "string"
-                              },
-                              "nextAction": {},
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "PIECE_TRIGGER"
-                                ]
-                              },
-                              "settings": {
-                                "type": "object",
-                                "properties": {
-                                  "sampleData": {
-                                    "additionalProperties": true,
-                                    "type": "object",
-                                    "properties": {
-                                      "sampleDataFileId": {
-                                        "type": "string"
-                                      },
-                                      "sampleDataInputFileId": {
-                                        "type": "string"
-                                      },
-                                      "lastTestDate": {
-                                        "type": "string"
-                                      }
-                                    }
-                                  },
-                                  "propertySettings": {
-                                    "type": "object",
-                                    "additionalProperties": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "anyOf": [
-                                            {
-                                              "type": "string",
-                                              "enum": [
-                                                "MANUAL"
-                                              ]
-                                            },
-                                            {
-                                              "type": "string",
-                                              "enum": [
-                                                "DYNAMIC"
-                                              ]
-                                            }
-                                          ]
-                                        },
-                                        "schema": {}
-                                      },
-                                      "required": [
-                                        "type"
-                                      ]
-                                    }
-                                  },
-                                  "customLogoUrl": {
-                                    "type": "string"
-                                  },
-                                  "pieceName": {
-                                    "type": "string"
-                                  },
-                                  "pieceVersion": {
-                                    "pattern": "^([~^])?[0-9]+\\.[0-9]+\\.[0-9]+$",
-                                    "type": "string"
-                                  },
-                                  "triggerName": {
-                                    "type": "string"
-                                  },
-                                  "input": {
-                                    "type": "object",
-                                    "additionalProperties": {}
-                                  }
-                                },
-                                "required": [
-                                  "propertySettings",
-                                  "pieceName",
-                                  "pieceVersion",
-                                  "input"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "name",
-                              "valid",
-                              "displayName",
-                              "type",
-                              "settings"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string"
-                              },
-                              "valid": {
-                                "type": "boolean"
-                              },
-                              "displayName": {
-                                "type": "string"
-                              },
-                              "nextAction": {},
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "EMPTY"
-                                ]
-                              },
-                              "settings": {}
-                            },
-                            "required": [
-                              "name",
-                              "valid",
-                              "displayName",
-                              "type",
-                              "settings"
-                            ]
-                          }
-                        ]
-                      },
-                      "valid": {
-                        "type": "boolean"
-                      },
-                      "schemaVersion": {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    },
-                    "required": [
-                      "displayName",
-                      "trigger",
-                      "valid"
-                    ]
-                  },
-                  "blogUrl": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "enum": [
-                          "PLATFORM"
-                        ]
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          "PROJECT"
-                        ]
-                      }
-                    ]
-                  },
-                  "tags": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "id": {
-                    "type": "string"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {}
-                  }
-                },
-                "required": [
-                  "template",
-                  "type"
-                ]
-              }
-            }
-          },
-          "required": true
-        },
-        "security": [
-          {
-            "apiKey": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response"
           }
         }
       }

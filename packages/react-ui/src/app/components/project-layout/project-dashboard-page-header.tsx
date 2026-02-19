@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { UserPlus, UsersRound, Settings, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -15,7 +16,10 @@ import { projectMembersHooks } from '@/features/members/lib/project-members-hook
 import { useAuthorization } from '@/hooks/authorization-hooks';
 import { flagsHooks } from '@/hooks/flags-hooks';
 import { platformHooks } from '@/hooks/platform-hooks';
-import { getProjectName, projectHooks } from '@/hooks/project-hooks';
+import {
+  getProjectName,
+  projectCollectionUtils,
+} from '@/hooks/project-collection';
 import { userHooks } from '@/hooks/user-hooks';
 import {
   ApFlagId,
@@ -29,15 +33,13 @@ import { ApProjectDisplay } from '../ap-project-display';
 import { ProjectSettingsDialog } from '../project-settings';
 
 export const ProjectDashboardPageHeader = ({
-  title,
   children,
   description,
 }: {
-  title: string;
   children?: React.ReactNode;
   description?: React.ReactNode;
 }) => {
-  const { project } = projectHooks.useCurrentProject();
+  const { project } = projectCollectionUtils.useCurrentProject();
   const { platform } = platformHooks.useCurrentPlatform();
   const [inviteOpen, setInviteOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -92,12 +94,6 @@ export const ProjectDashboardPageHeader = ({
     return 'pieces';
   };
 
-  const showSettingsButton =
-    hasGeneralSettings ||
-    (project.type === ProjectType.TEAM &&
-      showProjectMembersFlag &&
-      userHasPermissionToReadProjectMembers);
-
   const titleContent = (
     <div className="flex items-center gap-2">
       <ApProjectDisplay
@@ -114,7 +110,9 @@ export const ProjectDashboardPageHeader = ({
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                This is your private project. Only you can see and access it.
+                {t(
+                  'This is your private project. Only you can see and access it.',
+                )}
               </p>
             </TooltipContent>
           </Tooltip>
@@ -152,19 +150,17 @@ export const ProjectDashboardPageHeader = ({
           <span className="text-sm font-medium">Invite</span>
         </Button>
       )}
-      {showSettingsButton && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => {
-            setSettingsInitialTab(getFirstAvailableTab());
-            setSettingsOpen(true);
-          }}
-        >
-          <Settings className="w-4 h-4" />
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => {
+          setSettingsInitialTab(getFirstAvailableTab());
+          setSettingsOpen(true);
+        }}
+      >
+        <Settings className="w-4 h-4" />
+      </Button>
     </div>
   ) : (
     children

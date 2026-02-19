@@ -22,8 +22,8 @@ import {
   SidebarGroupContent,
   SidebarSkeleton,
 } from '@/components/ui/sidebar-shadcn';
-import { CreateFlowDropdown } from '@/features/flows/lib/create-flow-dropdown';
 import { flowHooks } from '@/features/flows/lib/flow-hooks';
+import { NewFlowButton } from '@/features/flows/lib/new-flow-button';
 import { CreateFolderDialog } from '@/features/folders/component/create-folder-dialog';
 import { FolderActions } from '@/features/folders/component/folder-actions';
 import { foldersHooks } from '@/features/folders/lib/folders-hooks';
@@ -233,14 +233,13 @@ function DefaultFolder({
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton className="px-2 group/item mb-1 pr-0">
-            <Shapes className="!size-3.5" />
+            <Shapes className="size-3.5!" />
             <span>{t('Uncategorized')}</span>
             <div className="ml-auto relative">
-              <CreateFlowDropdown
+              <NewFlowButton
                 folderId={UncategorizedFolderId}
                 variant="small"
                 className="opacity-0 group-hover/item:opacity-100"
-                refetch={refetch}
               />
             </div>
           </SidebarMenuButton>
@@ -289,15 +288,14 @@ function RegularFolder({
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton className="px-2 group/item mb-1 pr-0">
-            <Folder className="!size-3.5 group-data-[state=open]/collapsible:hidden" />
-            <FolderOpen className="!size-3.5 hidden group-data-[state=open]/collapsible:block" />
+            <Folder className="size-3.5! group-data-[state=open]/collapsible:hidden" />
+            <FolderOpen className="size-3.5! hidden group-data-[state=open]/collapsible:block" />
             <span className="truncate">{folder.displayName}</span>
             <div className="flex items-center justify-center ml-auto">
-              <CreateFlowDropdown
+              <NewFlowButton
                 folderId={folder.id}
                 variant="small"
                 className="group-hover/item:opacity-100 opacity-0"
-                refetch={refetch}
               />
               <FolderActions
                 hideFlowCount={true}
@@ -378,7 +376,7 @@ function FlowItem({ flow, isActive, onClick, refetch }: FlowItemProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto group-hover/item:opacity-100 opacity-0"
+            className="ml-auto !bg-transparent group-hover/item:opacity-100 opacity-0"
             onClick={(e) => e.stopPropagation()}
           >
             <EllipsisVertical className="size-4" />
