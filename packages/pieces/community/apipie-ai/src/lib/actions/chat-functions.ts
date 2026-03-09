@@ -135,7 +135,7 @@ export const chatFunctions = createAction({
     const body = {
       model: context.propsValue.model,
       messages,
-      tools: context.propsValue.functions,
+      tools: JSON.parse(context.propsValue.functions),
       // tools_model: context.propsValue.model,
       ...optionalParams,
     };
