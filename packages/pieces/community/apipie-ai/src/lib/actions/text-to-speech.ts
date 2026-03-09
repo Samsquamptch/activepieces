@@ -28,10 +28,6 @@ export const textToSpeech = createAction({
       refreshers: ['auth'],
       options: async ({ auth }) => {
         if (!auth) return disabledState('Please connect your account first');
-        // return retrievedModels(
-        //   'subtype=text-to-speech',
-        //   auth.secret_text
-        // );
         try {
           const data = await httpClient.sendRequest<ApiPieModels>({
             url: `https://apipie.ai/v1/models?subtype=text-to-speech`,

@@ -16,30 +16,6 @@ export const upsertVectorCollection = createAction({
   description:
     'Update or upsert a vector into a specified collection with metadata and data.',
   props: {
-    // collection: Property.Dropdown({
-    //   displayName: 'Collection',
-    //   description: 'The collection you wish to ',
-    //   required: true,
-    //   auth: apipieAuth,
-    //   refreshers: ['auth'],
-    //   options: async ({ auth }) => {
-    //     if (!auth) {
-    //       return {
-    //         disabled: true,
-    //         options: [],
-    //         placeholder: 'Please connect your account first',
-    //       };
-    //     }
-    //     const modelResponse = await retriveVectorCollections(auth.secret_text);
-    //     return {
-    //       options: modelResponse.options,
-    //       disabled: modelResponse.disabled,
-    //       ...(modelResponse.placeholder && {
-    //         placeholder: modelResponse.placeholder,
-    //       }),
-    //     };
-    //   },
-    // }),
     collection: vectorCommon.collection,
     vectorID: Property.ShortText({
       displayName: 'Vector ID',

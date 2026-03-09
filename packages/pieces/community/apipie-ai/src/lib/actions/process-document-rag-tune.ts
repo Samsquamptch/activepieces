@@ -11,32 +11,6 @@ export const processDocumentRagTune = createAction({
   description:
     'Processes a document by extracting its content and generating embeddings to be used for RAG tuning. Supported file types: PDF, DOC, DOCX, TXT, CSV, XLS, XLSX.',
   props: {
-    // collection: Property.Dropdown({
-    //   displayName: 'Collection Name',
-    //   description:
-    //     'The collection you wish to add the document to. If you wish to make a new collection, please use the "Create Vector Collection" action.',
-    //   required: true,
-    //   auth: apipieAuth,
-    //   refreshers: ['auth'],
-    //   options: async ({ auth }) => {
-    //     if (!auth) {
-    //       return {
-    //         disabled: true,
-    //         options: [],
-    //         placeholder: 'Please connect your account first',
-    //       };
-    //     }
-    //     const modelResponse = await retriveVectorCollections(auth.secret_text);
-    //     return {
-    //       options: modelResponse.options,
-    //       disabled: modelResponse.disabled,
-    //       ...(modelResponse.placeholder && {
-    //         placeholder: modelResponse.placeholder,
-    //       }),
-    //     };
-    //   },
-    // }),
-    // collection: vectorCommon.collection,
     collection: Property.ShortText({
       displayName: 'RAG Tune Collection',
       description: 'The ragtune collection.',

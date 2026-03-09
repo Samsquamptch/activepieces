@@ -27,12 +27,6 @@ export const chatFunctions = createAction({
       },
     }),
     userMessage: chatCommon.userMessage,
-    // userMessage: Property.LongText({
-    //   displayName: 'User Message',
-    //   required: true,
-    //   description:
-    //     "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
-    // }),
     functions: Property.LongText({
       displayName: 'Functions',
       required: true,
@@ -67,12 +61,6 @@ export const chatFunctions = createAction({
         ]`,
     }),
     systemInstructions: chatCommon.systemInstructions,
-    // systemInstructions: Property.LongText({
-    //   displayName: 'System Instructions',
-    //   required: false,
-    //   description:
-    //     "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
-    // }),
     toolChoice: Property.StaticDropdown({
       displayName: 'Tool Choice',
       required: false,
@@ -136,7 +124,6 @@ export const chatFunctions = createAction({
       model: context.propsValue.model,
       messages,
       tools: JSON.parse(context.propsValue.functions),
-      // tools_model: context.propsValue.model,
       ...optionalParams,
     };
 

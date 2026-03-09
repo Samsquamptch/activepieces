@@ -20,6 +20,7 @@ import {
 import { Property } from '@activepieces/pieces-framework';
 import { apipieAuth } from '../..';
 
+// Helper function to remove undefined or unused input fields
 export function omitUndefined<T extends Record<string, unknown>>(
   obj: T
 ): Partial<T> {
@@ -28,10 +29,12 @@ export function omitUndefined<T extends Record<string, unknown>>(
   ) as Partial<T>;
 }
 
+// Joins lists into a string or sets them to undefined
 export function joinOrUndefined(arr?: unknown[]): string | undefined {
   return Array.isArray(arr) && arr.length ? arr.join(',') : undefined;
 }
 
+// Helper function for returning disabled dropdown menus
 export function disabledState(placeholder: string) {
   return {
     disabled: true,

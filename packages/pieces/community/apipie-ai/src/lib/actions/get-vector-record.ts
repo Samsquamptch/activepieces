@@ -16,32 +16,6 @@ export const getVectorRecord = createAction({
   description:
     'Fetch the content of a specific record in a selected vector collection by ID.',
   props: {
-    // collection: Property.Dropdown({
-    //   displayName: 'Collection Name',
-    //   description: 'The collection to be deleted.',
-    //   required: true,
-    //   auth: apipieAuth,
-    //   refreshers: ['auth'],
-    //   options: async ({ auth }) => {
-    //     if (!auth) {
-    //       return {
-    //         disabled: true,
-    //         options: [],
-    //         placeholder: 'Please connect your account first',
-    //       };
-    //     }
-    //     const collectionResponse = await retriveVectorCollections(
-    //       auth.secret_text
-    //     );
-    //     return {
-    //       options: collectionResponse.options,
-    //       disabled: collectionResponse.disabled,
-    //       ...(collectionResponse.placeholder && {
-    //         placeholder: collectionResponse.placeholder,
-    //       }),
-    //     };
-    //   },
-    // }),
     collection: vectorCommon.collection,
     vectorIDs: Property.Dropdown({
       displayName: 'Vector IDs',

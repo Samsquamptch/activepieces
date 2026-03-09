@@ -22,45 +22,6 @@ export const chatWebSearch = createAction({
   displayName: 'Chat (Web Search)',
   description: 'Send a chat to a selected LLM model using web search results.',
   props: {
-    // model: Property.Dropdown({
-    //   displayName: 'Model',
-    //   description: 'The ID of the LLM model to use for completions.',
-    //   required: true,
-    //   auth: apipieAuth,
-    //   refreshers: [],
-    //   options: async ({ auth }) => {
-    //     if (!auth) {
-    //       return {
-    //         disabled: true,
-    //         options: [],
-    //         placeholder: 'Please connect your account first',
-    //       };
-    //     }
-    //     const modelResponse = await retrievedModels(
-    //       'type=llm',
-    //       auth.secret_text
-    //     );
-    //     return {
-    //       options: modelResponse.options,
-    //       disabled: modelResponse.disabled,
-    //       ...(modelResponse.placeholder && {
-    //         placeholder: modelResponse.placeholder,
-    //       }),
-    //     };
-    //   },
-    // }),
-    // userMessage: Property.LongText({
-    //   displayName: 'User Message',
-    //   required: true,
-    //   description:
-    //     "The content of the message sent to the model with the user role. For example: 'Why is the sky blue?'",
-    // }),
-    // systemInstructions: Property.LongText({
-    //   displayName: 'System Instructions',
-    //   required: false,
-    //   description:
-    //     "Instructions to give for the system role. For example 'You are a helpful assistant that speaks only in Swedish.'",
-    // }),
     model: chatCommon.model,
     userMessage: chatCommon.userMessage,
     systemInstructions: chatCommon.systemInstructions,
@@ -79,49 +40,6 @@ export const chatWebSearch = createAction({
     searchBlacklist: searchCommon.searchBlacklist,
     searchGeo: searchCommon.searchGeo,
     searchLang: searchCommon.searchLang,
-    // searchProvider: Property.StaticDropdown({
-    //   displayName: 'Search Provider',
-    //   description:
-    //     'Search provider to use for inline internet augmentation. Can be "valyu" or "google". Default is "valyu".',
-    //   required: false,
-    //   options: {
-    //     options: [
-    //       {
-    //         label: 'Valyu',
-    //         value: 'valyu',
-    //       },
-    //       {
-    //         label: 'Google',
-    //         value: 'google',
-    //       },
-    //     ],
-    //     disabled: false,
-    //   },
-    // }),
-    // searchWhitelist: Property.Array({
-    //   displayName: 'URL Whitelist',
-    //   description:
-    //     'List of root FQDNs to allow for AI search (e.g. bbc.com, apnews.com). One per line.',
-    //   required: false,
-    // }),
-    // searchBlacklist: Property.Array({
-    //   displayName: 'URL Blacklist',
-    //   description:
-    //     'List of root FQDNs to block for AI search (e.g. cnn.com, foxnews.com). One per line.',
-    //   required: false,
-    // }),
-    // searchGeo: Property.ShortText({
-    //   displayName: 'Country Code',
-    //   description:
-    //     "Enter your country code for localized results (e.g. 'gb'). Defaults to 'us'.",
-    //   required: false,
-    // }),
-    // searchLang: Property.ShortText({
-    //   displayName: 'Language',
-    //   description:
-    //     "The language of search results (e.g. 'en'). Defaults to 'en'.",
-    //   required: false,
-    // }),
   },
   async run(context) {
     await propsValidation.validateZod(context.propsValue, {
